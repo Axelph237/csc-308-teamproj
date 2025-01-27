@@ -17,13 +17,13 @@ function MyApp() {
           setCharacters(updatedCharacters);
         }
         else {
-          console.log(`User not found with id: ${userToDelete.id}`)
+          console.log(`User not found with id: ${userToDelete._id}`)
         }
       })
   }
 
   function deleteUser(person) {
-    const promise = fetch(`http://localhost:8000/users/${person.id}`, {
+    const promise = fetch(`http://localhost:8000/users/${person._id}`, {
       method: "DELETE",
     });
     return promise;
