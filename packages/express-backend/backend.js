@@ -1,36 +1,38 @@
 // backend.js
 import express from "express"; // import express
 import cors from "cors";
+import userServices from "./user-services.js";
 
-const users = {
-    users_list: [
-        {
-            id: "xyz789",
-            name: "Charlie",
-            job: "Janitor"
-        },
-        {
-            id: "abc123",
-            name: "Mac",
-            job: "Bouncer"
-        },
-        {
-            id: "ppp222",
-            name: "Mac",
-            job: "Professor"
-        },
-        {
-            id: "yat999",
-            name: "Dee",
-            job: "Aspring actress"
-        },
-        {
-            id: "zap555",
-            name: "Dennis",
-            job: "Bartender"
-        }
-    ]
-};
+
+// const users = {
+//     users_list: [
+//         {
+//             id: "xyz789",
+//             name: "Charlie",
+//             job: "Janitor"
+//         },
+//         {
+//             id: "abc123",
+//             name: "Mac",
+//             job: "Bouncer"
+//         },
+//         {
+//             id: "ppp222",
+//             name: "Mac",
+//             job: "Professor"
+//         },
+//         {
+//             id: "yat999",
+//             name: "Dee",
+//             job: "Aspring actress"
+//         },
+//         {
+//             id: "zap555",
+//             name: "Dennis",
+//             job: "Bartender"
+//         }
+//     ]
+// };
 
 const app = express(); // create an instance of express
 const port = 8000; // constant of port 
@@ -44,9 +46,17 @@ const findUserByName = (name) => {
     );
 };
 const findUserByNameAndJob = (name, job) => {
-    return users["users_list"].filter(
-        (user) => user["name"] === name && user["job"] === job
+    // return users["users_list"].filter(
+    //     (user) => user["name"] === name && user["job"] === job
+    // );
+    const userByName = userServices.findUserByName(name);
+    const userByJob = userServices.findUserByJob(job);
+
+    const filteredUsers = usersByName.filter(user =>
+        usersByJob.some(jobUser => jobUser._id.equals(user._id))
     );
+
+    return filteredUsers;
 };
 const findUsersById = (id) =>
     users["users_list"].find((user) => user["id"] === id); //returns the first occurrence that matches the condition
@@ -74,15 +84,23 @@ app.post("/users", (req, res) => {
         if (!userToAdd.id) {
             userToAdd.id = generateID(userToAdd);
         }
-        
+
         // Reordered so the id is at the top of the attributes (not necessary but just for organization)
         const reorderedUser = {
             id: userToAdd.id,
             name: userToAdd.name,
             job: userToAdd.job
         };
-        addUser(reorderedUser);
-        res.status(201).send(reorderedUser);
+        userServices.addUser(reorderedUser)
+            .then((addedUser) => {
+                res.status(201).send(addedUser);
+            })
+            .catch((error) => {
+                res.status(500).send("Error adding user");
+            });
+    }
+    else {
+        res.status(400).send("Invalid user data");
     }
 });
 
@@ -100,33 +118,91 @@ app.delete("/users/:id", (req, res) => {
 
 app.get("/users/:id", (req, res) => {
     const id = req.params["id"]; // req.params.id
-    let result = findUsersById(id);
-    if (result === undefined) {
-        res.status(404).send("Resource not found.");
-    } else {
-        res.send(result);
-    }
+
+    userServices.findUserById(id)
+        .then((user) => {
+            if (!user) {
+                res.status(404).send("Resource not found");
+            } else {
+                res.send(user);
+            }
+        })
+        .catch((error) => {
+            res.status(500).send("Error finding user");
+        })
+    // let result = findUsersById(id);
+    // if (result === undefined) {
+    //     res.status(404).send("Resource not found.");
+    // } else {
+    //     res.send(result);
+    // }
 });
 
 app.get("/users", (req, res) => {
     const name = req.query.name;
     const job = req.query.job;
 
+    // if (job != undefined && name != undefined) {
+    //     let result = findUserByNameAndJob(name, job);
+    //     result = { users_list: result };
+    //     res.send(result);
+    // } else if (name != undefined) {
+    //     let result = userServices.findUserByName(name);
+    //     result = { users_list: result };
+    //     res.send(result);
+    // } else {
+    //     res.send(users);
+    // }
     if (job != undefined && name != undefined) {
-        let result = findUserByNameAndJob(name, job);
-        result = { users_list: result };
-        res.send(result);
-    } else if (name != undefined) {
-        let result = findUserByName(name);
-        result = { users_list: result };
-        res.send(result);
-    } else {
-        res.send(users);
+        const userByName = userServices.findUserByName(name);
+        const userByJob = userServices.findUserByJob(job);
+
+        const filteredUsers = usersByName.filter(user =>
+            usersByJob.some(jobUser => jobUser._id.equals(user._id))
+        );
+        res.send(filteredUsers);
+    }
+    else if (name != undefined) {
+        userServices.findUserByName(name)
+            .then((user) => {
+                if (!user) {
+                    res.status(404).send("User not found");
+                }
+                else {
+                    res.send(user);
+                }
+            })
+            .catch((error) => {
+                res.status(500).send("Error finding user by name.");
+            })
+    }
+    else if (job != undefined) {
+        userServices.findUserByJob(job)
+            .then((user) => {
+                if (!user) {
+                    res.status(404).send("User not found");
+                }
+                else {
+                    res.send(user);
+                }
+            })
+            .catch((error) => {
+                res.status(500).send("Error finding user by job.");
+            })
+    }
+    else {
+        userServices.getUsers()
+        .then((users) => {
+            res.send({users_list: users});
+        })
+        .catch((error) => {
+            res.status(500).send("Error fetching users.");
+        });
     }
 });
 
 app.get("/", (req, res) => {
-    res.send("Hello World!");
+    res.send("localhost:8000/users");
 });
 
 app.listen(port, () => {
@@ -134,3 +210,48 @@ app.listen(port, () => {
         `Example app listening at http://localhost:${port}`
     );
 });
+
+/*
+*
+* Make this code asynchronous.
+* findUserById is the thing that takes time.
+* .then part will be if statement
+* .catch error status 404
+app.get('/users/:id',
+    (req, res) => {
+        const id = req.params['id'];
+        let result = findUserById(id);
+        if (result === undefined) {
+            res.status(404)
+                .send('Resource not found.');
+        } else {
+            res.send(result);
+        }
+    }
+);
+============================================
+app.get('/users/:id',
+    (req, res) => {
+        const id = req.params['id'];
+        //Asynch part:
+        findUser = new Promise ( (resolve, reject) =>
+        {
+            user = findUserById(id);
+            if(user === undefined)
+                reject("User Undefined");
+            else
+                resolve (user );    
+        });
+        // Promise waiting part
+        findUser.then ( (result ) => {
+            if(result.length() == 0)
+                throw new Error("not found");
+            else
+                res.status(200).send(result);
+            })
+        .catch( (error) => res.status(404).send(error) );
+
+    }
+);
+
+*/
