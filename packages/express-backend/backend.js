@@ -3,51 +3,12 @@ import express from "express"; // import express
 import cors from "cors";
 import userServices from "./user-services.js";
 
-
-// const users = {
-//     users_list: [
-//         {
-//             id: "xyz789",
-//             name: "Charlie",
-//             job: "Janitor"
-//         },
-//         {
-//             id: "abc123",
-//             name: "Mac",
-//             job: "Bouncer"
-//         },
-//         {
-//             id: "ppp222",
-//             name: "Mac",
-//             job: "Professor"
-//         },
-//         {
-//             id: "yat999",
-//             name: "Dee",
-//             job: "Aspring actress"
-//         },
-//         {
-//             id: "zap555",
-//             name: "Dennis",
-//             job: "Bartender"
-//         }
-//     ]
-// };
-
 const app = express(); // create an instance of express
 const port = 8000; // constant of port 
 
 app.use(cors());
 app.use(express.json()); // process incoming data in JSON format
 
-const deleteUser = (id) => {
-    const index = users["users_list"].findIndex((user) => user["id"] === id);
-    if (index !== -1) {
-        users["users_list"].splice(index, 1);
-        return true;
-    }
-    return false;
-}
 // generates ID using name and random number 0-99
 function generateID(user) {
     return `${user.name}${Math.floor(Math.random() * 100)}`;
@@ -80,14 +41,18 @@ app.post("/users", (req, res) => {
 
 app.delete("/users/:id", (req, res) => {
     const id = req.params.id;
-    const success = deleteUser(id);
-    if (success) {
-        res.status(204).send();
-    }
-    else {
-        res.status(404).send("User not found.");
-    }
 
+    userServices.deleteById(id)
+        .then((deletedUser) => {
+            if(deletedUser) {
+                res.status(204).send();
+            } else {
+                res.status(404).send("Resource not found.");
+            }
+        })
+        .catch((error) => {
+            res.status(500).send("Error deleting ", error);
+        });
 })
 
 app.get("/users/:id", (req, res) => {
@@ -118,7 +83,6 @@ app.get("/users", (req, res) => {
             console.log(error);
             res.status(500).send("Error fetching users.");
         });
-    
 });
 
 app.get("/", (req, res) => {
