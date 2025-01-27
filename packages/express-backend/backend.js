@@ -40,32 +40,6 @@ const port = 8000; // constant of port
 app.use(cors());
 app.use(express.json()); // process incoming data in JSON format
 
-const findUserByName = (name) => {
-    return users["users_list"].filter(
-        (user) => user["name"] === name
-    );
-};
-const findUserByNameAndJob = (name, job) => {
-    // return users["users_list"].filter(
-    //     (user) => user["name"] === name && user["job"] === job
-    // );
-    const userByName = userServices.findUserByName(name);
-    const userByJob = userServices.findUserByJob(job);
-
-    const filteredUsers = usersByName.filter(user =>
-        usersByJob.some(jobUser => jobUser._id.equals(user._id))
-    );
-
-    return filteredUsers;
-};
-const findUsersById = (id) =>
-    users["users_list"].find((user) => user["id"] === id); //returns the first occurrence that matches the condition
-
-const addUser = (user) => {
-    users["users_list"].push(user);
-    return user;
-}
-
 const deleteUser = (id) => {
     const index = users["users_list"].findIndex((user) => user["id"] === id);
     if (index !== -1) {
@@ -130,75 +104,21 @@ app.get("/users/:id", (req, res) => {
         .catch((error) => {
             res.status(500).send("Error finding user");
         })
-    // let result = findUsersById(id);
-    // if (result === undefined) {
-    //     res.status(404).send("Resource not found.");
-    // } else {
-    //     res.send(result);
-    // }
 });
 
 app.get("/users", (req, res) => {
     const name = req.query.name;
     const job = req.query.job;
 
-    // if (job != undefined && name != undefined) {
-    //     let result = findUserByNameAndJob(name, job);
-    //     result = { users_list: result };
-    //     res.send(result);
-    // } else if (name != undefined) {
-    //     let result = userServices.findUserByName(name);
-    //     result = { users_list: result };
-    //     res.send(result);
-    // } else {
-    //     res.send(users);
-    // }
-    if (job != undefined && name != undefined) {
-        const userByName = userServices.findUserByName(name);
-        const userByJob = userServices.findUserByJob(job);
-
-        const filteredUsers = usersByName.filter(user =>
-            usersByJob.some(jobUser => jobUser._id.equals(user._id))
-        );
-        res.send(filteredUsers);
-    }
-    else if (name != undefined) {
-        userServices.findUserByName(name)
-            .then((user) => {
-                if (!user) {
-                    res.status(404).send("User not found");
-                }
-                else {
-                    res.send(user);
-                }
-            })
-            .catch((error) => {
-                res.status(500).send("Error finding user by name.");
-            })
-    }
-    else if (job != undefined) {
-        userServices.findUserByJob(job)
-            .then((user) => {
-                if (!user) {
-                    res.status(404).send("User not found");
-                }
-                else {
-                    res.send(user);
-                }
-            })
-            .catch((error) => {
-                res.status(500).send("Error finding user by job.");
-            })
-    }
-    else {
-        userServices.getUsers()
+    userServices.getUsers(name, job)
         .then((users) => {
-            res.send({users_list: users});
+            res.send({users_list: users });
         })
         .catch((error) => {
+            console.log(error);
             res.status(500).send("Error fetching users.");
         });
-    }
+    
 });
 
 app.get("/", (req, res) => {
