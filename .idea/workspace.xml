@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="13c1627b-b293-4fa6-8dc8-beef816eef59" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/eslint.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/express-backend/backend.js" beforeDir="false" afterPath="$PROJECT_DIR$/packages/express-backend/backend.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/express-backend/user-services.js" beforeDir="false" afterPath="$PROJECT_DIR$/packages/express-backend/user-services.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/express-backend/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/packages/express-backend/user.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/react-frontend/src/Form.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/packages/react-frontend/src/Form.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/react-frontend/src/MyApp.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/packages/react-frontend/src/MyApp.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/react-frontend/src/Table.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/packages/react-frontend/src/Table.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/react-frontend/src/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/packages/react-frontend/src/main.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/react-frontend/src/main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/packages/react-frontend/src/main.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/react-frontend/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/packages/react-frontend/vite.config.js" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FormatOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="2sdKsv9HIdc20px3RoKXvNkBm1o" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "actions.on.save",
+    "ts.external.directory.path": "/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-822845ee3bb5-JavaScript-WS-243.23654.157" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="13c1627b-b293-4fa6-8dc8-beef816eef59" name="Changes" comment="" />
+      <created>1738780221568</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1738780221568</updated>
+      <workItem from="1738780223308" duration="848000" />
+      <workItem from="1738950007849" duration="3921000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/packages/react-frontend/src/MyApp.jsx</url>
+          <line>1</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
