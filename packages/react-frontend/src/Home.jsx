@@ -1,5 +1,5 @@
 // src/Table.jsx
-import React from "react";
+import PropTypes from "prop-types";
 
 // src/Table.jsx
 function HomeHeader() {
@@ -54,9 +54,21 @@ function Home() {
             <NavigationBar/>
             <HomeHeader/>
             <HomeBody/>
+            <Journal diaryName={'Diary'}/>
         </div>
     );
 }
 
 export default Home;
 
+function Journal({diaryName}) {
+    return (
+        <div className='flex flex-col justify-center items-center rounded-xl w-fit h-fit p-6 bg-gray-500'>
+            <h1 className='text-white text-2xl font-bold'>{diaryName}</h1>
+        </div>
+    )
+}
+
+Journal.propTypes = {
+    diaryName: PropTypes.string.isRequired,
+}
