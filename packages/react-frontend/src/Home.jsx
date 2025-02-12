@@ -1,7 +1,6 @@
-// src/Table.jsx
+// src/Home.jsx
 import React from "react";
 
-// src/Table.jsx
 function HomeHeader() {
     return (
         <>
@@ -10,16 +9,6 @@ function HomeHeader() {
     );
 }
 
-function NavigationBar() {
-    return (
-        <div style={{display: "flex", gap: "100px"}}>
-            <a href="/home">Home</a>
-            <a>Random Page</a>
-            <a>New Entry</a>
-            <a>Settings</a>
-        </div>
-    );
-}
 
 function HomeBody() {
     const diaries = [
@@ -51,7 +40,6 @@ function HomeBody() {
 function Home() {
     return (
         <div>
-            <NavigationBar/>
             <HomeHeader/>
             <HomeBody/>
         </div>

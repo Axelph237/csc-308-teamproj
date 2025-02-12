@@ -1,11 +1,72 @@
 // src/MyApp.jsx
 import React, {useState, useEffect} from "react";
+import {BrowserRouter} from "react-router-dom";
+import {Routes, Route, Link} from "react-router-dom";
 // import Table from "./Table";
 // import Form from "./Form";
 import Home from "./Home.jsx";
 
+function NavigationBar() {
+    return (
+        <div style={{display: "flex", gap: "100px"}}>
+            <Link to="/">Home</Link>
+            <Link to="/random">Random Page</Link>
+            <Link to="/new-entry">New Entry</Link>
+            <Link to="/settings">Settings</Link>
+        </div>
+
+    );
+}
+
+function Random() {
+    return (
+        <div style={{display: "flex", gap: "100px"}}>
+            RANDOM PAGE
+        </div>
+    );
+}
+
+function NewEntry() {
+    return (
+        <div style={{display: "flex", gap: "100px"}}>
+            Write your Entry!
+        </div>
+    );
+}
+
+function Settings() {
+    return (
+        <div style={{display: "flex", gap: "100px"}}>
+            Change Profile Picture
+            Sign out
+        </div>
+    );
+}
+
 function MyApp() {
-    const [characters, setCharacters] = useState([]);
+
+    return (
+        <BrowserRouter>
+            <div>
+                <NavigationBar/>
+            </div>
+            <div className="container">
+                <Routes>
+                    <Route path="/" element={<Home/>}/>
+                    <Route path="/random" element={<Random/>}/>
+                    <Route path="/new-entry" element={<NewEntry/>}/>
+                    <Route path="/settings" element={<Settings/>}/>
+                </Routes>
+                {/*<Home/>*/}
+            </div>
+        </BrowserRouter>
+    );
+}
+
+export default MyApp;
+
+/*
+const [characters, setCharacters] = useState([]);
 
     function removeOneCharacter(index) {
         const userToDelete = characters[index];
@@ -76,12 +137,4 @@ function MyApp() {
     }, []); //should be called only when the MyApp component first mounts by passing an empty array
 
 
-    return (
-        <div className="container">
-            <Home/>
-        </div>
-    );
-}
-
-export default MyApp;
-
+ */
