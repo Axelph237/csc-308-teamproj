@@ -7,3 +7,8 @@
     --color-secondary-alt: #E9A6A6;
     --color-accent: #A5DD9B;
 }
+
+body {
+    background: var(--color-primary);
+    color: white;
+}

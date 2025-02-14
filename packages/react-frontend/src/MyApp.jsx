@@ -8,7 +8,7 @@ import Home from "./Home.jsx";
 
 function NavigationBar() {
     return (
-        <div style={{display: "flex", gap: "100px"}}>
+        <div className="flex flex-col gap-12">
             <Link to="/">Home</Link>
             <Link to="/random">Random Page</Link>
             <Link to="/new-entry">New Entry</Link>
