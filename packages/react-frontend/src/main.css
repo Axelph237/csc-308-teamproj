@@ -26,14 +26,17 @@
 }
 
 body {
-    background: var(--color-primary-600);
-    color: white;
+    @apply text-white bg-primary-600;
 }
 
 h1 {
     @apply font-bold text-3xl;
 }
 
-.icon {
+.icon-sm {
+    @apply w-8 h-8;
+}
+
+.icon-md {
     @apply w-10 h-10;
 }

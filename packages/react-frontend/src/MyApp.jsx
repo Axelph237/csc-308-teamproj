@@ -1,27 +1,28 @@
 // src/MyApp.jsx
 import { Outlet, Link } from "react-router-dom";
 
-import {HomeIcon} from "./assets/icons";
+import {ChatIcon, HomeIcon, PenIcon, UserCircleIcon} from "./assets/icons";
 
 function NavigationBar() {
     const pages = [
-        { link: "/home", name: "Home" },
-        { link: "/random", name: "Random" },
-        { link: "/write", name: "Write" },
-        { link: "/account", name: "Account" },
+        { link: "/home", name: "Home", icon: <HomeIcon className="icon-sm" /> },
+        { link: "/random", name: "Random", icon: <ChatIcon className="icon-sm" /> },
+        { link: "/write", name: "Write", icon: <PenIcon className="icon-sm" /> },
+        { link: "/account", name: "Account", icon: <UserCircleIcon className="icon-sm" /> },
     ]
 
     return (
-        <div className="flex flex-col gap-12 p-2 bg-secondary-500 w-fit h-full justify-center items-center">
+        <div className="fixed bottom-0 md:static flex flex-row md:flex-col gap-12 p-3 bg-secondary-500 md:w-fit md:h-full w-full h-fit justify-center items-center">
 
             {pages.map((page, index) => (
 
-                <Link key={index} to={page.link} className="flex flex-col items-center justify-center hover:text-primary-800">
-                    <HomeIcon className="icon"/>
-                    <p>{page.name}</p>
-                </Link>
+                <div key={index} className="hover:text-primary-500 transition-all duration-150 font-semibold" >
+                    <Link to={page.link} className="flex flex-col items-center justify-center">
+                        {page.icon}
+                        <p>{page.name}</p>
+                    </Link>
+                </div>
             ))}
-
         </div>
 
     );
@@ -31,17 +32,18 @@ export default function MyApp() {
     return (
         <div className="flex flex-col w-screen h-screen">
             {/* Header */}
-            <div className="flex flex-row justify-center items-center bg-primary-800 p-4">
+            <div className="hidden md:flex flex-row justify-center items-center bg-primary-800 p-4">
                 <h1>Diary</h1>
             </div>
 
-            {/* Content */}
-                <div className="flex flex-row h-full w-full">
+            {/* Content on Desktop */}
+            <div className="flex flex-col md:flex-row h-full w-full">
+                <NavigationBar/>
 
-                    <NavigationBar/>
-
-                    <Outlet />
+                <div className="h-full w-full overflow-y-auto">
+                    <Outlet/>
                 </div>
+            </div>
         </div>
     );
 }
