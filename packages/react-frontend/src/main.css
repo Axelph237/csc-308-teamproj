@@ -26,10 +26,14 @@
 }
 
 body {
-    background: var(--color-primary-900);
+    background: var(--color-primary-600);
     color: white;
 }
 
 h1 {
     @apply font-bold text-3xl;
+}
+
+.icon {
+    @apply w-10 h-10;
 }

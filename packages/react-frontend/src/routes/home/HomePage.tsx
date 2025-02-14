@@ -1,6 +1,4 @@
 // src/Home.jsx
-import React from "react";
-
 function HomeHeader() {
     return (
         <>
@@ -21,7 +19,7 @@ function HomeBody() {
         rows.push(diaries.slice(i, i + 2));
     }
     return (
-        <table border="1" style={{width: "100%"}}>
+        <table border={1} style={{width: "100%"}}>
             <tbody>
             {rows.map((row, rowIndex) => (
                 <tr key={rowIndex}>
@@ -37,7 +35,7 @@ function HomeBody() {
     );
 }
 
-function Home() {
+function HomePage() {
     return (
         <div>
             <HomeHeader/>
@@ -46,5 +44,5 @@ function Home() {
     );
 }
 
-export default Home;
+export default HomePage;
 
