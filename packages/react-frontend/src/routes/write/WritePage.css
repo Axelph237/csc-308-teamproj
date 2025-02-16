@@ -1,29 +1,40 @@
 @import "tailwindcss";
 
+#md-editor:focus {
+    outline: none;
+}
+
+/* Content highlighting */
 .content > h1 {
     font-size: 2.5em;
     font-weight: bolder;
-    @apply text-violet-50;
+    @apply text-violet-50 mb-6 mt-3;
 }
 .content > h2 {
     font-size: 2em;
     font-weight: bolder;
-    @apply text-violet-100;
+    @apply text-violet-100 mb-1 mt-2;
 }
 .content > h3 {
     font-size: 1.5em;
     font-weight: bold;
-    @apply text-violet-200;
+    @apply text-violet-200 mb-1 mt-1;
 }
 .content > h4 {
     font-size: 1.5em;
     font-weight: bold;
-    @apply text-violet-300;
+    @apply text-violet-300 mb-1 mt-1;
 }
 .content > h5 {
     font-size: 1.5em;
     font-weight: bold;
-    @apply text-violet-400;
+    @apply text-violet-400 mb-1 mt-1;
+}
+.content *> a {
+    @apply text-emerald-400 underline;
+}
+.content > hr {
+    @apply my-2;
 }
 
 /* Code block highlighting */
@@ -31,7 +42,8 @@ pre code.hljs {
     display: block;
     border-radius: 0.25rem;
     overflow-x: auto;
-    padding: 1em
+    padding: 1em;
+    margin: 16px;
 }
 code.hljs {
     padding: 3px 5px
