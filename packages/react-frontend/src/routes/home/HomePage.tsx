@@ -1,4 +1,6 @@
-// src/Home.jsx
+//src/routes/home
+import {Link} from "react-router-dom";
+
 function HomeHeader() {
     return (
         <>
@@ -25,7 +27,7 @@ function HomeBody() {
                 <tr key={rowIndex}>
                     {row.map((diary, index) => (
                         <td key={index}>
-                            <a href={"#"}>{diary.title}</a>
+                            <Link to={`/diary/${rowIndex * 2 + index + 1}`}>{diary.title}</Link>
                         </td>
                     ))}
                 </tr>
