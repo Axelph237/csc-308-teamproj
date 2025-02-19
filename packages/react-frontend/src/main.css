@@ -11,18 +11,27 @@
     --color-primary-200: #372d4b;
     --color-primary-100: #3f3352;
 
-    --color-secondary-900: #5e2145;
-    --color-secondary-800: #682a51;
-    --color-secondary-700: #72345c;
-    --color-secondary-600: #7b3d69;
-    --color-secondary-500: #864879;
-    --color-secondary-400: #a15c80;
-    --color-secondary-300: #bb738b;
-    --color-secondary-200: #d38b97;
-    --color-secondary-100: #e9a5a5;
-    --color-secondary-alt: #E9A6A6;
+    --color-secondary-900: var(--color-violet-900);
+    --color-secondary-800: var(--color-violet-800);
+    --color-secondary-700: var(--color-violet-700);
+    --color-secondary-600: var(--color-violet-600);
+    --color-secondary-500: var(--color-violet-500);
+    --color-secondary-400: var(--color-violet-400);
+    --color-secondary-300: var(--color-violet-300);
+    --color-secondary-200: var(--color-violet-200);
+    --color-secondary-100: var(--color-violet-100);
+    --color-secondary-50: var(--color-violet-50);
 
-    --color-accent: #A5DD9B;
+    --color-accent-900: var(--color-emerald-900);
+    --color-accent-800: var(--color-emerald-800);
+    --color-accent-700: var(--color-emerald-700);
+    --color-accent-600: var(--color-emerald-600);
+    --color-accent-500: var(--color-emerald-500);
+    --color-accent-400: var(--color-emerald-400);
+    --color-accent-300: var(--color-emerald-300);
+    --color-accent-200: var(--color-emerald-200);
+    --color-accent-100: var(--color-emerald-100);
+    --color-accent-50: var(--color-emerald-50);
 }
 
 body {
@@ -33,10 +42,16 @@ h1 {
     @apply font-bold text-3xl;
 }
 
+.icon-xs {
+    @apply w-4 h-4;
+}
 .icon-sm {
     @apply w-8 h-8;
 }
-
 .icon-md {
     @apply w-10 h-10;
+}
+
+.btn {
+    @apply flex flex-row justify-center items-center gap-2 cursor-pointer text-accent-900 hover:text-white font-medium bg-accent-400 hover:bg-accent-700 transition-all duration-300 py-2 px-6 rounded-full;
 }
