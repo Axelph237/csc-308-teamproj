@@ -8,6 +8,7 @@ import RandomPage from "./routes/random/RandomPage.tsx";
 import WritePage from "./routes/write/WritePage.tsx";
 import AccountsPage from "./routes/account/AccountPage.tsx";
 import MyApp from "./MyApp.jsx";
+import DiaryPage from "./routes/view-diary/DiaryPage.tsx";
 
 const container = document.getElementById("root");
 
@@ -38,6 +39,7 @@ root.render(
             <Route path={"/"} element={<MyApp />} >
                 {/* Children of that app route */}
                 <Route path={"home"} element={<HomePage />} />
+                <Route path={"diary/:index"} element={<DiaryPage />} />
                 <Route path={"random"} element={<RandomPage />} />
                 <Route path={"write"} element={<WritePage />} />
                 <Route path={"account"} element={<AccountsPage />} />

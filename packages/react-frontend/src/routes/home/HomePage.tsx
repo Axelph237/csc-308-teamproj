@@ -1,9 +1,11 @@
-// src/Home.jsx
+//src/routes/home
+import {Link} from "react-router-dom";
+
 function HomeHeader() {
     return (
-        <>
+        <div className="flex p-6">
             <h1>Welcome to Diary </h1>
-        </>
+        </div>
     );
 }
 
@@ -13,25 +15,20 @@ function HomeBody() {
         {title: "Diary 1", date: "2021-01-01"},
         {title: "Diary 2", date: "2021-02-01"},
     ]
-    // const rows = props.characterData.map((row, index) => {
-    const rows = [];
-    for (let i = 0; i < diaries.length; i += 2) {
-        rows.push(diaries.slice(i, i + 2));
-    }
+
     return (
-        <table border={1} style={{width: "100%"}}>
-            <tbody>
-            {rows.map((row, rowIndex) => (
-                <tr key={rowIndex}>
-                    {row.map((diary, index) => (
-                        <td key={index}>
-                            <a href={"#"}>{diary.title}</a>
-                        </td>
-                    ))}
-                </tr>
+        <div className="grid grid-cols-2 gap-6 p-6">
+            {diaries.map((diary, index) => (
+                <Link key={index}
+                    to={`/diary/${index + 1}`}
+                    className="border border-accent-900 rounded-2xl p-6 shadow-lg bg-accent-900 text-white relative justify-between hover:bg-accent-800 transition"
+                    style={{minHeight: "150px" }}
+                >
+                    <h2 className="text-xl font-bold text-accent-300">{diary.title}</h2>
+                    <p className="text-sm text-secondary-200">{diary.date}</p>
+                </Link>
             ))}
-            </tbody>
-        </table>
+        </div>
     );
 }
 
