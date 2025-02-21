@@ -3,7 +3,7 @@ import { markedHighlight } from "marked-highlight";
 import hljs from "highlight.js";
 import "./Markdown.css"
 
-export default function Markdown({rawBody}: {rawBody: string} ) {
+export default function Markdown({source}: {source: string} ) {
     // Create mark down handler with marked
     // Add syntax highlighting for code blocks
     const marked = new Marked(
@@ -23,6 +23,6 @@ export default function Markdown({rawBody}: {rawBody: string} ) {
     });
 
     return (
-        <div className="content" dangerouslySetInnerHTML={{ __html: marked.parse(rawBody) }}/>
+        <div className="content" dangerouslySetInnerHTML={{ __html: marked.parse(source) }}/>
     )
 }
