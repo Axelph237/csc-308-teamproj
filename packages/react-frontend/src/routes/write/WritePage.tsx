@@ -1,40 +1,17 @@
-import {Marked} from "marked";
 import {Fragment, KeyboardEvent, useRef, useState} from "react";
-import { markedHighlight } from "marked-highlight";
-import hljs from "highlight.js";
-import "./WritePage.css";
 import {useEditable} from "use-editable";
 import {SaveIcon} from "../../assets/icons";
+import Markdown from "../../components/Markdown";
+import "./WritePage.css";
 
 
 export default function WritePage() {
-    const marked = new Marked(
-        markedHighlight({
-            emptyLangClass: 'hljs language-plaintext',
-            langPrefix: 'hljs language-',
-            highlight(code, lang, info) {
-                const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-                return hljs.highlight(code, { language }).value;
-            }
-        })
-    );
-    marked.setOptions({
-        breaks: true, // Enable single newline as a line break
-        gfm: true,
-    });
-
     const [text, setText] = useState("");
-    const [html, setHtml] = useState("");
     const editorRef = useRef(null);
 
     const editorHandler = useEditable(editorRef, (text) => {
         setText(text);
-        setHtml(marked.parse(text) as string);
     })
-
-    // const handleInput = (e: ChangeEvent<HTMLDivElement>) => {
-    //     setHtml(marked.parse(e.currentTarget.innerText) as string);
-    // }
 
     const handleKeyPress = (e: KeyboardEvent<HTMLDivElement>) => {
         const TAB_REPLACE = "&emsp;";
@@ -94,7 +71,9 @@ export default function WritePage() {
                 </div>
 
                 {/* Preview */}
-                <div className="content py-2 px-6 h-full w-full flex-1" dangerouslySetInnerHTML={{__html: html}}/>
+                <div className="content py-2 px-6 h-full w-full flex-1" >
+                    <Markdown rawBody={text} />
+                </div>
             </div>
         </div>
     );
