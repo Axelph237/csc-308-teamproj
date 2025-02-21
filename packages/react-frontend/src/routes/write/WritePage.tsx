@@ -72,7 +72,7 @@ export default function WritePage() {
 
                 {/* Preview */}
                 <div className="content py-2 px-6 h-full w-full flex-1" >
-                    <Markdown rawBody={text} />
+                    <Markdown source={text} />
                 </div>
             </div>
         </div>
