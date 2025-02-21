@@ -12,8 +12,8 @@ function DiaryHeader({index}) {
 
 function DiaryEntries() {
     const entries = [
-        {title: "First Entry!", date: "2021-01-01", body: "Today I did a lot of stuff. I also did stuff here and there. I went rock climbing it was really fun." },
-        {title: "Nothing", date: "2021-01-05", body: "Today I did absolutely nothing." },
+        {title: "First Entry!", date: "2021-01-01", body: "# Intro\nToday I did a lot of stuff. I also did stuff here and there.\n## Other things\nI went rock climbing it was really fun." },
+        {title: "Nothing", date: "2021-01-05", body: "Today I did absolutely **_nothing_**." },
     ]
     // const rows = props.characterData.map((row, index) => {
     const rows = [];
