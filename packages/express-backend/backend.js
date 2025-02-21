@@ -13,6 +13,7 @@ app.use(express.json()); // process incoming data in JSON format
 function generateID(user) {
     return `${user.name}${Math.floor(Math.random() * 100)}`;
 }
+
 app.post("/users", (req, res) => {
     const userToAdd = req.body;
     if (userToAdd.name && userToAdd.job) {
@@ -33,8 +34,7 @@ app.post("/users", (req, res) => {
             .catch((error) => {
                 res.status(500).send("Error adding user");
             });
-    }
-    else {
+    } else {
         res.status(400).send("Invalid user data");
     }
 });
@@ -44,7 +44,7 @@ app.delete("/users/:id", (req, res) => {
 
     userServices.deleteById(id)
         .then((deletedUser) => {
-            if(deletedUser) {
+            if (deletedUser) {
                 res.status(204).send();
             } else {
                 res.status(404).send("Resource not found.");
@@ -77,7 +77,7 @@ app.get("/users", (req, res) => {
 
     userServices.getUsers(name, job)
         .then((users) => {
-            res.send({users_list: users });
+            res.send({users_list: users});
         })
         .catch((error) => {
             console.log(error);
