@@ -1,4 +1,5 @@
 import {useParams} from 'react-router-dom';
+import Markdown from "../../components/Markdown";
 
 function DiaryHeader({index}) {
     return (
@@ -28,7 +29,10 @@ function DiaryEntries() {
                 >
                     <h2 className="text-xl font-bold text-accent-300">{entry.title}</h2>
                     <p className="text-sm text-secondary-200">{entry.date}</p>
-                    <p className={"mt-3 text-secondary-50"}>{entry.body}</p>
+                    {/* Markdown parser */}
+                    <div className="mt-3">
+                        <Markdown source={entry.body} />
+                    </div>
                 </div>
             )}
         </div>
