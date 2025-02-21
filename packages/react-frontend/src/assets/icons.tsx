@@ -1,5 +1,8 @@
 import {SVGProps} from "react";
 
+// All icons from this collection:
+// https://www.svgrepo.com/collection/solar-bold-icons/
+
 export function HomeIcon(props: SVGProps<SVGSVGElement>) {
     return (
         <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
