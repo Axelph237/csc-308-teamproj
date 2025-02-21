@@ -1,4 +1,5 @@
 import {useParams} from 'react-router-dom';
+import Markdown from "../../components/Markdown";
 
 function DiaryHeader({index}) {
     return (
@@ -11,8 +12,8 @@ function DiaryHeader({index}) {
 
 function DiaryEntries() {
     const entries = [
-        {title: "First Entry!", date: "2021-01-01", body: "Today I did a lot of stuff. I also did stuff here and there. I went rock climbing it was really fun." },
-        {title: "Nothing", date: "2021-01-05", body: "Today I did absolutely nothing." },
+        {title: "First Entry!", date: "2021-01-01", body: "# Intro\nToday I did a lot of stuff. I also did stuff here and there.\n## Other things\nI went rock climbing it was really fun." },
+        {title: "Nothing", date: "2021-01-05", body: "Today I did absolutely **_nothing_**." },
     ]
     // const rows = props.characterData.map((row, index) => {
     const rows = [];
@@ -28,7 +29,10 @@ function DiaryEntries() {
                 >
                     <h2 className="text-xl font-bold text-accent-300">{entry.title}</h2>
                     <p className="text-sm text-secondary-200">{entry.date}</p>
-                    <p className={"mt-3 text-secondary-50"}>{entry.body}</p>
+                    {/* Markdown parser */}
+                    <div className="mt-3">
+                        <Markdown source={entry.body} />
+                    </div>
                 </div>
             )}
         </div>
