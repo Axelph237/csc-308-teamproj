@@ -20,7 +20,7 @@ function HomeBody() {
         <div className="grid grid-cols-2 gap-6 p-6">
             {diaries.map((diary, index) => (
                 <Link key={index}
-                    to={`/diary/${index + 1}`}
+                    to={`/diaries/${index + 1}`}
                     className="border border-accent-900 rounded-2xl p-6 shadow-lg bg-accent-900 text-white relative justify-between hover:bg-accent-800 transition"
                     style={{minHeight: "150px" }}
                 >
