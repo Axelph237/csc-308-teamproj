@@ -1,88 +1,49 @@
 // src/MyApp.jsx
-import React, { useState, useEffect } from "react";
-import Table from "./Table";
-import Form from "./Form";
+import { Outlet, Link } from "react-router-dom";
 
-function MyApp() {
-  const [characters, setCharacters] = useState([]);
+import {ChatIcon, HomeIcon, PenIcon, UserCircleIcon} from "./assets/icons";
 
-  function removeOneCharacter(index) {
-    const userToDelete = characters[index];
-    
-    deleteUser(userToDelete)
-      .then((res) => {
-        if (res.status === 204) {
-          // filter out character with the index
-          const updatedCharacters = characters.filter((_, i) => i !== index);
-          setCharacters(updatedCharacters);
-        }
-        else {
-          console.log(`User not found with id: ${userToDelete._id}`)
-        }
-      })
-  }
+function NavigationBar() {
+    const pages = [
+        { link: "/home", name: "Home", icon: <HomeIcon className="icon-sm" /> },
+        { link: "/random", name: "Random", icon: <ChatIcon className="icon-sm" /> },
+        { link: "/write", name: "Write", icon: <PenIcon className="icon-sm" /> },
+        { link: "/account", name: "Account", icon: <UserCircleIcon className="icon-sm" /> },
+    ]
 
-  function deleteUser(person) {
-    const promise = fetch(`http://localhost:8000/users/${person._id}`, {
-      method: "DELETE",
-    });
-    return promise;
-  }
+    return (
+        <div className="fixed bottom-0 md:static flex flex-row md:flex-col gap-12 p-3 bg-secondary-500 md:w-fit md:h-full w-full h-fit justify-center items-center">
 
-  //only update the table if our POST call is successful
-  function updateList(person) {
-    postUser(person)
-      .then((res) => {
-        if (res.status === 201) {
-          // console.log(`Created successfully ${res.status}`)
-          return res.json();
-        }
-        else {
-          console.log(`Error creating character ${res.status}`);
-        }
-      })
-      .then((newUser) => {
-        // update with the new user from POST
-        setCharacters([...characters, newUser]);
-      })
-      .catch((error) => {
-        console.log(error);
-      })
-  }
+            {pages.map((page, index) => (
 
-  function fetchUsers() {
-    const promise = fetch("http://localhost:8000/users");
-    return promise;
-  }
-  function postUser(person) {
-    const promise = fetch("http://localhost:8000/users", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(person),
-    });
+                <div key={index} className="hover:text-primary-500 transition-all duration-150 font-semibold" >
+                    <Link to={page.link} className="flex flex-col items-center justify-center">
+                        {page.icon}
+                        <p>{page.name}</p>
+                    </Link>
+                </div>
+            ))}
+        </div>
 
-    return promise;
-  }
-
-  useEffect(() => {
-    fetchUsers()
-      .then((res) => res.json())
-      .then((json) => setCharacters(json["users_list"]))
-      .catch((error) => { console.log(error); });
-  }, []); //should be called only when the MyApp component first mounts by passing an empty array
-
-
-  return (
-    <div className="container">
-      <Table
-        characterData={characters}
-        removeCharacter={removeOneCharacter}
-      />
-      <Form handleSubmit={updateList} />
-    </div>
-  );
+    );
 }
-export default MyApp;
 
+export default function MyApp() {
+    return (
+        <div className="flex flex-col w-screen h-screen">
+            {/* Header */}
+            <div className="hidden md:flex flex-row justify-center items-center bg-primary-800 p-4">
+                <h1>Diary</h1>
+            </div>
+
+            {/* Content on Desktop */}
+            <div className="flex flex-col md:flex-row h-full w-full">
+                <NavigationBar/>
+
+                <div className="h-full w-full overflow-y-auto">
+                    <Outlet/>
+                </div>
+            </div>
+        </div>
+    );
+}
