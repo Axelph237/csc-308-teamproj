@@ -4,21 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="13c1627b-b293-4fa6-8dc8-beef816eef59" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/eslint.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/express-backend/backend.js" beforeDir="false" afterPath="$PROJECT_DIR$/packages/express-backend/backend.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/express-backend/user-services.js" beforeDir="false" afterPath="$PROJECT_DIR$/packages/express-backend/user-services.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/express-backend/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/packages/express-backend/user.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/react-frontend/src/Form.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/packages/react-frontend/src/Form.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/react-frontend/src/MyApp.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/packages/react-frontend/src/MyApp.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/react-frontend/src/Table.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/packages/react-frontend/src/Table.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/react-frontend/src/main.css" beforeDir="false" afterPath="$PROJECT_DIR$/packages/react-frontend/src/main.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/react-frontend/src/main.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/packages/react-frontend/src/main.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/react-frontend/vite.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/packages/react-frontend/vite.config.js" afterDir="false" />
-    </list>
+    <list default="true" id="13c1627b-b293-4fa6-8dc8-beef816eef59" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -38,25 +24,25 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "actions.on.save",
-    "ts.external.directory.path": "/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;actions.on.save&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Applications/WebStorm.app/Contents/plugins/javascript-plugin/jsLanguageServicesImpl/external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-822845ee3bb5-JavaScript-WS-243.23654.157" />
+        <option value="bundled-js-predefined-d6986cc7102b-76f8388c3a79-JavaScript-WS-243.24978.60" />
       </set>
     </attachedChunks>
   </component>
@@ -70,6 +56,7 @@
       <updated>1738780221568</updated>
       <workItem from="1738780223308" duration="848000" />
       <workItem from="1738950007849" duration="3921000" />
+      <workItem from="1739987547138" duration="260000" />
     </task>
     <servers />
   </component>
