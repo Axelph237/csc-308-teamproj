@@ -12,7 +12,7 @@ function DiaryHeader({index}) {
 
 function DiaryEntries() {
     const navigate = useNavigate();
-    
+
     const entries = [
         {
             title: "First Entry!",
