@@ -34,12 +34,35 @@
     --color-accent-50: var(--color-emerald-50);
 }
 
+/*html {*/
+/*    overflow-y: hidden;*/
+/*    overflow-x: hidden;*/
+/*}*/
+
 body {
     @apply text-white bg-primary-600;
 }
 
 h1 {
     @apply font-bold text-3xl;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+}
+/* Track */
+::-webkit-scrollbar-track {
+    background: var(--color-primary-800);
+}
+/* Handle */
+::-webkit-scrollbar-thumb {
+    border-radius: 1rem;
+    background: var(--color-secondary-500);
+}
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-secondary-400);
 }
 
 .icon-xs {
