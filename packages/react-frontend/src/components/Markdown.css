@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+.content {
+    @apply text-wrap break-words;
+}
+
 /* Content highlighting */
 .content > h1 {
     font-size: 2.5em;
@@ -26,7 +30,7 @@
     font-weight: bold;
     @apply text-violet-400 mb-1 mt-1;
 }
-.content *> a {
+.content * > a {
     @apply text-emerald-400 underline;
 }
 .content > hr {
