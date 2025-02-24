@@ -1,4 +1,4 @@
-import {useParams} from 'react-router-dom';
+import {useParams, useNavigate} from 'react-router-dom';
 import Markdown from "../../components/Markdown";
 
 function DiaryHeader({index}) {
@@ -11,9 +11,15 @@ function DiaryHeader({index}) {
 
 
 function DiaryEntries() {
+    const navigate = useNavigate();
+
     const entries = [
-        {title: "First Entry!", date: "2021-01-01", body: "# Intro\nToday I did a lot of stuff. I also did stuff here and there.\n## Other things\nI went rock climbing it was really fun." },
-        {title: "Nothing", date: "2021-01-05", body: "Today I did absolutely **_nothing_**." },
+        {
+            title: "First Entry!",
+            date: "2021-01-01",
+            body: "# Intro\nToday I did a lot of stuff. I also did stuff here and there.\n## Other things\nI went rock climbing it was really fun."
+        },
+        {title: "Nothing", date: "2021-01-05", body: "Today I did absolutely **_nothing_**."},
     ]
     // const rows = props.characterData.map((row, index) => {
     const rows = [];
@@ -25,13 +31,23 @@ function DiaryEntries() {
             {entries.map((entry, index) =>
                 <div key={index}
                      className="border border-accent-700 rounded-2xl p-6 shadow-lg bg-primary-100 text-white relative"
-                     style={{minHeight: "150px" }}
+                     style={{minHeight: "150px"}}
                 >
-                    <h2 className="text-xl font-bold text-accent-300">{entry.title}</h2>
+                    <div className="flex justify-between items-center">
+
+                        <h2 className="text-xl font-bold text-accent-300">{entry.title}</h2>
+                        <button
+                            className="border border-accent-300 bg-accent-400 rounded-sm p-2 hover:bg-accent-500 transition"
+                            onClick={() => navigate("/write")}
+                        >
+                            Edit Entry
+                        </button>
+                    </div>
+
                     <p className="text-sm text-secondary-200">{entry.date}</p>
                     {/* Markdown parser */}
                     <div className="mt-3">
-                        <Markdown source={entry.body} />
+                        <Markdown source={entry.body}/>
                     </div>
                 </div>
             )}
@@ -43,8 +59,8 @@ function DiaryPage() {
     let {index} = useParams();
     return (
         <div>
-            <DiaryHeader index={index} />
-            <DiaryEntries />
+            <DiaryHeader index={index}/>
+            <DiaryEntries/>
         </div>
     );
 }

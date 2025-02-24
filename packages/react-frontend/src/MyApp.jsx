@@ -1,22 +1,23 @@
 // src/MyApp.jsx
-import { Outlet, Link } from "react-router-dom";
+import {Outlet, Link} from "react-router-dom";
 
 import {ChatIcon, HomeIcon, PenIcon, UserCircleIcon} from "./assets/icons";
 
 function NavigationBar() {
     const pages = [
-        { link: "/home", name: "Home", icon: <HomeIcon className="icon-sm" /> },
-        { link: "/random", name: "Random", icon: <ChatIcon className="icon-sm" /> },
-        { link: "/write", name: "Write", icon: <PenIcon className="icon-sm" /> },
-        { link: "/account", name: "Account", icon: <UserCircleIcon className="icon-sm" /> },
+        {link: "/home", name: "Home", icon: <HomeIcon className="icon-sm"/>},
+        {link: "/random", name: "Random", icon: <ChatIcon className="icon-sm"/>},
+        {link: "/write", name: "Write", icon: <PenIcon className="icon-sm"/>},
+        {link: "/account", name: "Account", icon: <UserCircleIcon className="icon-sm"/>},
     ]
 
     return (
-        <div className="bottom-0 md:static flex flex-row md:flex-col gap-12 p-3 bg-secondary-500 md:w-fit md:h-full w-full h-fit justify-center items-center">
+        <div
+            className="bottom-0 md:static flex flex-row md:flex-col gap-12 p-3 bg-secondary-500 md:w-fit md:h-full w-full h-fit justify-center items-center">
 
             {pages.map((page, index) => (
 
-                <div key={index} className="hover:text-primary-500 transition-all duration-150 font-semibold" >
+                <div key={index} className="hover:text-primary-500 transition-all duration-150 font-semibold">
                     <Link to={page.link} className="flex flex-col items-center justify-center">
                         {page.icon}
                         <p>{page.name}</p>

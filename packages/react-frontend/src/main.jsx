@@ -36,13 +36,13 @@ root.render(
         <Routes>
             {/* Define a route and any child routes */}
             {/* Primary app route */}
-            <Route path={"/"} element={<MyApp />} >
+            <Route path={"/"} element={<MyApp/>}>
                 {/* Children of that app route */}
-                <Route path={"home"} element={<HomePage />} />
-                <Route path={"diaries/:index"} element={<DiaryPage />} />
-                <Route path={"random"} element={<RandomPage />} />
-                <Route path={"write"} element={<WritePage />} />
-                <Route path={"account"} element={<AccountsPage />} />
+                <Route path={"home"} element={<HomePage/>}/>
+                <Route path={"diaries/:index"} element={<DiaryPage/>}/>
+                <Route path={"random"} element={<RandomPage/>}/>
+                <Route path={"write"} element={<WritePage/>}/>
+                <Route path={"account"} element={<AccountsPage/>}/>
             </Route>
         </Routes>
     </BrowserRouter>
