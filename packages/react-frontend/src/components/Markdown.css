@@ -1,9 +1,5 @@
 @import "tailwindcss";
 
-#md-editor:focus {
-    outline: none;
-}
-
 /* Content highlighting */
 .content > h1 {
     font-size: 2.5em;
