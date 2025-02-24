@@ -45,7 +45,8 @@ export default function WritePage() {
                 </div>
             </div>
 
-            <div className="bg-primary-900 py-4 flex flex-row justify-center items-center h-full w-full">
+            {/* Editor */}
+            <div className="bg-primary-900 py-4 grid grid-cols-2 justify-center items-center">
                 {/* Input */}
                 <div
                     id="md-editor"
@@ -54,7 +55,7 @@ export default function WritePage() {
                     onKeyDown={handleKeyPress}
                     contentEditable={true}
                     suppressContentEditableWarning={true}
-                    className="py-2 px-6 h-full w-full md:border-r-2 border-secondary-400 flex-1">
+                    className="py-2 px-6 h-full w-full md:border-r-2 border-secondary-400">
                     {text.split(/\r?\n/).map((content, i, arr) => (
                         <Fragment key={i}>
                             {/* Split identifiers from text */}
@@ -71,7 +72,7 @@ export default function WritePage() {
                 </div>
 
                 {/* Preview */}
-                <div className="content py-2 px-6 h-full w-full flex-1" >
+                <div id="md-preview" className="py-2 px-6 size-full" >
                     <Markdown source={text} />
                 </div>
             </div>
