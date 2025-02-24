@@ -30,17 +30,17 @@ function NavigationBar() {
 
 export default function MyApp() {
     return (
-        <div className="flex flex-col w-screen h-screen">
+        <div className="flex flex-col h-screen w-screen">
             {/* Header */}
             <div className="hidden md:flex flex-row justify-center items-center bg-primary-800 p-4">
                 <h1>Diary</h1>
             </div>
 
             {/* Content on Desktop */}
-            <div className="flex flex-col md:flex-row h-full w-full">
+            <div className="flex flex-col md:flex-row flex-1">
                 <NavigationBar/>
 
-                <div className="h-full w-full overflow-y-auto">
+                <div className="overflow-y-auto flex-1">
                     <Outlet/>
                 </div>
             </div>
