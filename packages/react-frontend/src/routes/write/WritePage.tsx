@@ -23,7 +23,7 @@ export default function WritePage() {
     }
 
     const handleSubmit = () => {
-        const { text } = editorHandler.getState();
+        const {text} = editorHandler.getState();
 
         uploadEntry(text);
     }
@@ -46,7 +46,7 @@ export default function WritePage() {
             </div>
 
             {/* Editor */}
-            <div className="bg-primary-900 py-4 grid grid-cols-2 justify-center items-center">
+            <div className="bg-primary-900 py-4 grid grid-cols-2 justify-center items-center flex-1">
                 {/* Input */}
                 <div
                     id="md-editor"
@@ -61,7 +61,8 @@ export default function WritePage() {
                             {/* Split identifiers from text */}
                             {content.split(/(&[a-z]{4};)/).map((innerContent, i) => (
                                 <Fragment key={i}>
-                                    <span className={`${innerContent.match(/&[a-z]{4};/)?.length > 0 && 'text-gray-700'}`}>
+                                    <span
+                                        className={`${innerContent.match(/&[a-z]{4};/)?.length > 0 && 'text-gray-700'}`}>
                                         {innerContent}
                                     </span>
                                 </Fragment>
@@ -72,8 +73,8 @@ export default function WritePage() {
                 </div>
 
                 {/* Preview */}
-                <div id="md-preview" className="py-2 px-6 size-full" >
-                    <Markdown source={text} />
+                <div id="md-preview" className="py-2 px-6 size-full">
+                    <Markdown source={text}/>
                 </div>
             </div>
         </div>
