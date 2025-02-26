@@ -7,7 +7,7 @@ function NavigationBar() {
     const pages = [
         {link: "/home", name: "Home", icon: <HomeIcon className="icon-sm"/>},
         {link: "/random", name: "Random", icon: <ChatIcon className="icon-sm"/>},
-        {link: "/write", name: "Write", icon: <PenIcon className="icon-sm"/>},
+        {link: "/entries/write/", name: "Write", icon: <PenIcon className="icon-sm"/>},
         {link: "/account", name: "Account", icon: <UserCircleIcon className="icon-sm"/>},
     ]
 

@@ -1,5 +1,6 @@
 import {useParams, useNavigate} from 'react-router-dom';
 import Markdown from "../../components/Markdown";
+import {PenIcon} from "../../assets/icons";
 
 function DiaryHeader({index}) {
     return (
@@ -37,9 +38,10 @@ function DiaryEntries() {
 
                         <h2 className="text-xl font-bold text-accent-300">{entry.title}</h2>
                         <button
-                            className="border border-accent-300 bg-accent-400 rounded-sm p-2 hover:bg-accent-500 transition"
+                            className="btn"
                             onClick={() => navigate("/write")}
                         >
+                            <PenIcon className="icon-xs"/>
                             Edit Entry
                         </button>
                     </div>
