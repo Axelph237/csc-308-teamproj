@@ -37,7 +37,7 @@ function DiaryEntries() {
 
                         <h2 className="text-xl font-bold text-accent-300">{entry.title}</h2>
                         <button
-                            className="border border-accent-300 bg-accent-400 rounded-sm p-2 hover:bg-accent-500 transition"
+                            className="btn"
                             onClick={() => navigate("/write")}
                         >
                             Edit Entry
