@@ -41,6 +41,7 @@ function DiaryEntries() {
                             className="btn"
                             onClick={() => navigate("/write")}
                         >
+                            <PenIcon className="icon-xs"/>
                             Edit Entry
                         </button>
                     </div>
