@@ -42,6 +42,7 @@ root.render(
                 <Route path={"diaries/:index"} element={<DiaryPage/>}/>
                 <Route path={"entries/write/:entryId?"} element={<WritePage/>}/>
                 <Route path={"random"} element={<RandomPage/>}/>
+                <Route path={"write"} element={<WritePage/>}/>
                 <Route path={"account"} element={<AccountsPage/>}/>
             </Route>
         </Routes>
