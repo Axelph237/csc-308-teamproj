@@ -1,5 +1,6 @@
 import {useParams, useNavigate} from 'react-router-dom';
 import Markdown from "../../components/Markdown";
+import {PenIcon} from "../../assets/icons";
 
 function DiaryHeader({index}) {
     return (
@@ -40,6 +41,7 @@ function DiaryEntries() {
                             className="btn"
                             onClick={() => navigate("/entries/write/0")}
                         >
+                            <PenIcon className="icon-xs"/>
                             Edit Entry
                         </button>
                     </div>
