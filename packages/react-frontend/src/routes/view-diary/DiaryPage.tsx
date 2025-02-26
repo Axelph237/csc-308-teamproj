@@ -38,7 +38,7 @@ function DiaryEntries() {
                         <h2 className="text-xl font-bold text-accent-300">{entry.title}</h2>
                         <button
                             className="btn"
-                            onClick={() => navigate("/write")}
+                            onClick={() => navigate("/entries/write/0")}
                         >
                             Edit Entry
                         </button>
