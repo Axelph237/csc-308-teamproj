@@ -39,10 +39,9 @@ function DiaryEntries() {
                         <h2 className="text-xl font-bold text-accent-300">{entry.title}</h2>
                         <button
                             className="btn"
-                            onClick={() => navigate(`/entries/write/${index}`)} // TODO change index to actual id
+                            onClick={() => navigate("/write")}
                         >
-                            <PenIcon className="icon-xs"/>
-                            Edit
+                            Edit Entry
                         </button>
                     </div>
 
