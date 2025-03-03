@@ -62,11 +62,12 @@ function DiaryEntries() {
 
         fetchEntries();
     }, [index]);
-    //
-    // if (loading) return <div>Loading entries...</div>;
-    // if (err) return <div className="text-red-500">Error: {error}</div>;
-    //
+
     const navigate = useNavigate();
+    
+    if (loading) return <div>Loading entries...</div>;
+    if (error) return <div className="text-red-500">Error: {error}</div>;
+
 
     return (
         <div className="grid grid-cols-2 gap-6 p-6 ">
