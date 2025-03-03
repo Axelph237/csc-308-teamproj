@@ -1,3 +1,15 @@
+interface Diary {
+    title: string;
+    date: string;
+    entries: DiaryEntry[];
+}
+
+export interface DiaryEntry {
+    title: string,
+    date: string,
+    body: string
+}
+
 const user = {
     username: "DiaryUser1085",
     email: "DiaryUser1085@gmail.com",
@@ -9,7 +21,7 @@ const user = {
             entries: [
                 {
                     title: "Dear diary",
-                    data: "07-08-04",
+                    date: "07-08-04",
                     body: "Lorem ipsum odor amet, consectetuer adipiscing elit. Luctus fringilla vehicula rutrum habitasse arcu pretium integer pellentesque. Adipiscing efficitur praesent enim varius; posuere finibus pellentesque ornare. Et turpis magnis dapibus adipiscing eros scelerisque cras. Urna vulputate mus himenaeos ad quis gravida vulputate euismod. Eu mi tellus tincidunt sagittis magna congue semper ac. Fringilla magna cubilia per, risus suscipit ipsum. Mi sed vestibulum tincidunt amet, sollicitudin parturient. Venenatis himenaeos eu; natoque netus at at odio.\n" +
                         "\n" +
                         "Fames vivamus laoreet nisl consectetur netus tellus at. Posuere montes lacinia velit posuere accumsan lobortis risus curabitur. Curae porttitor dis torquent sapien aliquet aliquam adipiscing neque. Quisque metus nascetur mattis vitae torquent commodo aliquet. Tellus dictum sem ligula sociosqu integer sociosqu. Sagittis vivamus fermentum morbi molestie odio turpis eros. Posuere arcu malesuada neque mattis feugiat tempus ante finibus curabitur.\n" +
@@ -22,7 +34,7 @@ const user = {
                 },
                 {
                     title: "Dear diary",
-                    data: "07-08-04",
+                    date: "07-08-04",
                     body: "Lorem ipsum odor amet, consectetuer adipiscing elit. Luctus fringilla vehicula rutrum habitasse arcu pretium integer pellentesque. Adipiscing efficitur praesent enim varius; posuere finibus pellentesque ornare. Et turpis magnis dapibus adipiscing eros scelerisque cras. Urna vulputate mus himenaeos ad quis gravida vulputate euismod. Eu mi tellus tincidunt sagittis magna congue semper ac. Fringilla magna cubilia per, risus suscipit ipsum. Mi sed vestibulum tincidunt amet, sollicitudin parturient. Venenatis himenaeos eu; natoque netus at at odio.\n" +
                         "\n" +
                         "Fames vivamus laoreet nisl consectetur netus tellus at. Posuere montes lacinia velit posuere accumsan lobortis risus curabitur. Curae porttitor dis torquent sapien aliquet aliquam adipiscing neque. Quisque metus nascetur mattis vitae torquent commodo aliquet. Tellus dictum sem ligula sociosqu integer sociosqu. Sagittis vivamus fermentum morbi molestie odio turpis eros. Posuere arcu malesuada neque mattis feugiat tempus ante finibus curabitur.\n" +
@@ -35,7 +47,7 @@ const user = {
                 },
                 {
                     title: "Dear diary",
-                    data: "07-08-04",
+                    date: "07-08-04",
                     body: "Lorem ipsum odor amet, consectetuer adipiscing elit. Luctus fringilla vehicula rutrum habitasse arcu pretium integer pellentesque. Adipiscing efficitur praesent enim varius; posuere finibus pellentesque ornare. Et turpis magnis dapibus adipiscing eros scelerisque cras. Urna vulputate mus himenaeos ad quis gravida vulputate euismod. Eu mi tellus tincidunt sagittis magna congue semper ac. Fringilla magna cubilia per, risus suscipit ipsum. Mi sed vestibulum tincidunt amet, sollicitudin parturient. Venenatis himenaeos eu; natoque netus at at odio.\n" +
                         "\n" +
                         "Fames vivamus laoreet nisl consectetur netus tellus at. Posuere montes lacinia velit posuere accumsan lobortis risus curabitur. Curae porttitor dis torquent sapien aliquet aliquam adipiscing neque. Quisque metus nascetur mattis vitae torquent commodo aliquet. Tellus dictum sem ligula sociosqu integer sociosqu. Sagittis vivamus fermentum morbi molestie odio turpis eros. Posuere arcu malesuada neque mattis feugiat tempus ante finibus curabitur.\n" +
@@ -54,7 +66,7 @@ const user = {
             entries: [
                 {
                     title: "Dear diary",
-                    data: "07-08-04",
+                    date: "07-08-04",
                     body: "Lorem ipsum odor amet, consectetuer adipiscing elit. Luctus fringilla vehicula rutrum habitasse arcu pretium integer pellentesque. Adipiscing efficitur praesent enim varius; posuere finibus pellentesque ornare. Et turpis magnis dapibus adipiscing eros scelerisque cras. Urna vulputate mus himenaeos ad quis gravida vulputate euismod. Eu mi tellus tincidunt sagittis magna congue semper ac. Fringilla magna cubilia per, risus suscipit ipsum. Mi sed vestibulum tincidunt amet, sollicitudin parturient. Venenatis himenaeos eu; natoque netus at at odio.\n" +
                         "\n" +
                         "Fames vivamus laoreet nisl consectetur netus tellus at. Posuere montes lacinia velit posuere accumsan lobortis risus curabitur. Curae porttitor dis torquent sapien aliquet aliquam adipiscing neque. Quisque metus nascetur mattis vitae torquent commodo aliquet. Tellus dictum sem ligula sociosqu integer sociosqu. Sagittis vivamus fermentum morbi molestie odio turpis eros. Posuere arcu malesuada neque mattis feugiat tempus ante finibus curabitur.\n" +
@@ -67,7 +79,7 @@ const user = {
                 },
                 {
                     title: "Dear diary",
-                    data: "07-08-04",
+                    date: "07-08-04",
                     body: "Lorem ipsum odor amet, consectetuer adipiscing elit. Luctus fringilla vehicula rutrum habitasse arcu pretium integer pellentesque. Adipiscing efficitur praesent enim varius; posuere finibus pellentesque ornare. Et turpis magnis dapibus adipiscing eros scelerisque cras. Urna vulputate mus himenaeos ad quis gravida vulputate euismod. Eu mi tellus tincidunt sagittis magna congue semper ac. Fringilla magna cubilia per, risus suscipit ipsum. Mi sed vestibulum tincidunt amet, sollicitudin parturient. Venenatis himenaeos eu; natoque netus at at odio.\n" +
                         "\n" +
                         "Fames vivamus laoreet nisl consectetur netus tellus at. Posuere montes lacinia velit posuere accumsan lobortis risus curabitur. Curae porttitor dis torquent sapien aliquet aliquam adipiscing neque. Quisque metus nascetur mattis vitae torquent commodo aliquet. Tellus dictum sem ligula sociosqu integer sociosqu. Sagittis vivamus fermentum morbi molestie odio turpis eros. Posuere arcu malesuada neque mattis feugiat tempus ante finibus curabitur.\n" +
@@ -80,7 +92,7 @@ const user = {
                 },
                 {
                     title: "Dear diary",
-                    data: "07-08-04",
+                    date: "07-08-04",
                     body: "Lorem ipsum odor amet, consectetuer adipiscing elit. Luctus fringilla vehicula rutrum habitasse arcu pretium integer pellentesque. Adipiscing efficitur praesent enim varius; posuere finibus pellentesque ornare. Et turpis magnis dapibus adipiscing eros scelerisque cras. Urna vulputate mus himenaeos ad quis gravida vulputate euismod. Eu mi tellus tincidunt sagittis magna congue semper ac. Fringilla magna cubilia per, risus suscipit ipsum. Mi sed vestibulum tincidunt amet, sollicitudin parturient. Venenatis himenaeos eu; natoque netus at at odio.\n" +
                         "\n" +
                         "Fames vivamus laoreet nisl consectetur netus tellus at. Posuere montes lacinia velit posuere accumsan lobortis risus curabitur. Curae porttitor dis torquent sapien aliquet aliquam adipiscing neque. Quisque metus nascetur mattis vitae torquent commodo aliquet. Tellus dictum sem ligula sociosqu integer sociosqu. Sagittis vivamus fermentum morbi molestie odio turpis eros. Posuere arcu malesuada neque mattis feugiat tempus ante finibus curabitur.\n" +
@@ -99,7 +111,7 @@ const user = {
             entries: [
                 {
                     title: "Dear diary",
-                    data: "07-08-04",
+                    date: "07-08-04",
                     body: "Lorem ipsum odor amet, consectetuer adipiscing elit. Luctus fringilla vehicula rutrum habitasse arcu pretium integer pellentesque. Adipiscing efficitur praesent enim varius; posuere finibus pellentesque ornare. Et turpis magnis dapibus adipiscing eros scelerisque cras. Urna vulputate mus himenaeos ad quis gravida vulputate euismod. Eu mi tellus tincidunt sagittis magna congue semper ac. Fringilla magna cubilia per, risus suscipit ipsum. Mi sed vestibulum tincidunt amet, sollicitudin parturient. Venenatis himenaeos eu; natoque netus at at odio.\n" +
                         "\n" +
                         "Fames vivamus laoreet nisl consectetur netus tellus at. Posuere montes lacinia velit posuere accumsan lobortis risus curabitur. Curae porttitor dis torquent sapien aliquet aliquam adipiscing neque. Quisque metus nascetur mattis vitae torquent commodo aliquet. Tellus dictum sem ligula sociosqu integer sociosqu. Sagittis vivamus fermentum morbi molestie odio turpis eros. Posuere arcu malesuada neque mattis feugiat tempus ante finibus curabitur.\n" +
@@ -112,7 +124,7 @@ const user = {
                 },
                 {
                     title: "Dear diary",
-                    data: "07-08-04",
+                    date: "07-08-04",
                     body: "Lorem ipsum odor amet, consectetuer adipiscing elit. Luctus fringilla vehicula rutrum habitasse arcu pretium integer pellentesque. Adipiscing efficitur praesent enim varius; posuere finibus pellentesque ornare. Et turpis magnis dapibus adipiscing eros scelerisque cras. Urna vulputate mus himenaeos ad quis gravida vulputate euismod. Eu mi tellus tincidunt sagittis magna congue semper ac. Fringilla magna cubilia per, risus suscipit ipsum. Mi sed vestibulum tincidunt amet, sollicitudin parturient. Venenatis himenaeos eu; natoque netus at at odio.\n" +
                         "\n" +
                         "Fames vivamus laoreet nisl consectetur netus tellus at. Posuere montes lacinia velit posuere accumsan lobortis risus curabitur. Curae porttitor dis torquent sapien aliquet aliquam adipiscing neque. Quisque metus nascetur mattis vitae torquent commodo aliquet. Tellus dictum sem ligula sociosqu integer sociosqu. Sagittis vivamus fermentum morbi molestie odio turpis eros. Posuere arcu malesuada neque mattis feugiat tempus ante finibus curabitur.\n" +
@@ -125,7 +137,7 @@ const user = {
                 },
                 {
                     title: "Dear diary",
-                    data: "07-08-04",
+                    date: "07-08-04",
                     body: "Lorem ipsum odor amet, consectetuer adipiscing elit. Luctus fringilla vehicula rutrum habitasse arcu pretium integer pellentesque. Adipiscing efficitur praesent enim varius; posuere finibus pellentesque ornare. Et turpis magnis dapibus adipiscing eros scelerisque cras. Urna vulputate mus himenaeos ad quis gravida vulputate euismod. Eu mi tellus tincidunt sagittis magna congue semper ac. Fringilla magna cubilia per, risus suscipit ipsum. Mi sed vestibulum tincidunt amet, sollicitudin parturient. Venenatis himenaeos eu; natoque netus at at odio.\n" +
                         "\n" +
                         "Fames vivamus laoreet nisl consectetur netus tellus at. Posuere montes lacinia velit posuere accumsan lobortis risus curabitur. Curae porttitor dis torquent sapien aliquet aliquam adipiscing neque. Quisque metus nascetur mattis vitae torquent commodo aliquet. Tellus dictum sem ligula sociosqu integer sociosqu. Sagittis vivamus fermentum morbi molestie odio turpis eros. Posuere arcu malesuada neque mattis feugiat tempus ante finibus curabitur.\n" +
@@ -144,7 +156,7 @@ const user = {
             entries: [
                 {
                     title: "Dear diary",
-                    data: "07-08-04",
+                    date: "07-08-04",
                     body: "Lorem ipsum odor amet, consectetuer adipiscing elit. Luctus fringilla vehicula rutrum habitasse arcu pretium integer pellentesque. Adipiscing efficitur praesent enim varius; posuere finibus pellentesque ornare. Et turpis magnis dapibus adipiscing eros scelerisque cras. Urna vulputate mus himenaeos ad quis gravida vulputate euismod. Eu mi tellus tincidunt sagittis magna congue semper ac. Fringilla magna cubilia per, risus suscipit ipsum. Mi sed vestibulum tincidunt amet, sollicitudin parturient. Venenatis himenaeos eu; natoque netus at at odio.\n" +
                         "\n" +
                         "Fames vivamus laoreet nisl consectetur netus tellus at. Posuere montes lacinia velit posuere accumsan lobortis risus curabitur. Curae porttitor dis torquent sapien aliquet aliquam adipiscing neque. Quisque metus nascetur mattis vitae torquent commodo aliquet. Tellus dictum sem ligula sociosqu integer sociosqu. Sagittis vivamus fermentum morbi molestie odio turpis eros. Posuere arcu malesuada neque mattis feugiat tempus ante finibus curabitur.\n" +
@@ -157,7 +169,7 @@ const user = {
                 },
                 {
                     title: "Dear diary",
-                    data: "07-08-04",
+                    date: "07-08-04",
                     body: "Lorem ipsum odor amet, consectetuer adipiscing elit. Luctus fringilla vehicula rutrum habitasse arcu pretium integer pellentesque. Adipiscing efficitur praesent enim varius; posuere finibus pellentesque ornare. Et turpis magnis dapibus adipiscing eros scelerisque cras. Urna vulputate mus himenaeos ad quis gravida vulputate euismod. Eu mi tellus tincidunt sagittis magna congue semper ac. Fringilla magna cubilia per, risus suscipit ipsum. Mi sed vestibulum tincidunt amet, sollicitudin parturient. Venenatis himenaeos eu; natoque netus at at odio.\n" +
                         "\n" +
                         "Fames vivamus laoreet nisl consectetur netus tellus at. Posuere montes lacinia velit posuere accumsan lobortis risus curabitur. Curae porttitor dis torquent sapien aliquet aliquam adipiscing neque. Quisque metus nascetur mattis vitae torquent commodo aliquet. Tellus dictum sem ligula sociosqu integer sociosqu. Sagittis vivamus fermentum morbi molestie odio turpis eros. Posuere arcu malesuada neque mattis feugiat tempus ante finibus curabitur.\n" +
@@ -170,7 +182,7 @@ const user = {
                 },
                 {
                     title: "Dear diary",
-                    data: "07-08-04",
+                    date: "07-08-04",
                     body: "Lorem ipsum odor amet, consectetuer adipiscing elit. Luctus fringilla vehicula rutrum habitasse arcu pretium integer pellentesque. Adipiscing efficitur praesent enim varius; posuere finibus pellentesque ornare. Et turpis magnis dapibus adipiscing eros scelerisque cras. Urna vulputate mus himenaeos ad quis gravida vulputate euismod. Eu mi tellus tincidunt sagittis magna congue semper ac. Fringilla magna cubilia per, risus suscipit ipsum. Mi sed vestibulum tincidunt amet, sollicitudin parturient. Venenatis himenaeos eu; natoque netus at at odio.\n" +
                         "\n" +
                         "Fames vivamus laoreet nisl consectetur netus tellus at. Posuere montes lacinia velit posuere accumsan lobortis risus curabitur. Curae porttitor dis torquent sapien aliquet aliquam adipiscing neque. Quisque metus nascetur mattis vitae torquent commodo aliquet. Tellus dictum sem ligula sociosqu integer sociosqu. Sagittis vivamus fermentum morbi molestie odio turpis eros. Posuere arcu malesuada neque mattis feugiat tempus ante finibus curabitur.\n" +
@@ -187,17 +199,21 @@ const user = {
 }
 
 export async function getUser() {
-    const { username, email, password } = user;
-    return { username, email, password };
+    const {username, email, password} = user;
+    return {username, email, password};
 }
 
-export async function getUserDiaries() {
-    return user.diaries.map(({title, date}) => {
-        return { title, date }
-    });
+// Update getUserDiaries to return proper type
+export async function getUserDiaries(): Promise<{ title: string; date: string }[]> {
+    return user.diaries.map(({title, date}) => ({title, date}));
 }
 
-export async function getDiaryEntries(title: string) {
-    const diary = user.diaries.filter((diary) => diary.title === title);
-    return diary.entries;
+// Ensure getDiaryEntries has the correct return type
+export async function getDiaryEntries(title: string): Promise<DiaryEntry[]> {
+    const matchingDiaries = user.diaries.filter((diary) => diary.title === title);
+
+    // Map through each matching diary and collect all entries
+    const allEntries = matchingDiaries.flatMap(diary => diary.entries);
+
+    return allEntries;
 }
