@@ -21,14 +21,8 @@ const PageSchema = new mongoose.Schema({
 // Diary
 const DiarySchema = new mongoose.Schema({
     title: {type: String, required: true},
-<<<<<<< HEAD
     lastEntry: {type: String, required: true},
     numEntries: {type: Number, required: true, default: 0},
-=======
-    lastEntry: {type: Date, required: true, default: Date.now}, // also might not be Date
-
-    numEntries: this.entries.length, // does this work?
->>>>>>> 83f3b644556a9fe2c422fe39a520e6a489cd6bc4
     entries: [PageSchema]
 });
 
@@ -140,7 +134,6 @@ async function removePage(pageID, diaryID) {
     await diary.save();
     return page;
 }
-<<<<<<< HEAD
 
 // put the given user information into the given userID
 async function editUser(user, userID) {
@@ -163,8 +156,6 @@ async function editPage(diaryID, pageID, pageData) {
     return page;
 }
 
-=======
->>>>>>> 83f3b644556a9fe2c422fe39a520e6a489cd6bc4
 // exporting functions
 export default {
     findUserByID,
