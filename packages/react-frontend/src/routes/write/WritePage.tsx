@@ -23,7 +23,7 @@ export default function WritePage() {
     }
 
     const handleSubmit = () => {
-        const { text } = editorHandler.getState();
+        const {text} = editorHandler.getState();
 
         uploadEntry(text);
     }
@@ -45,7 +45,8 @@ export default function WritePage() {
                 </div>
             </div>
 
-            <div className="bg-primary-900 py-4 flex flex-row justify-center items-center h-full w-full">
+            {/* Editor */}
+            <div className="bg-primary-900 py-4 grid grid-cols-2 justify-center items-center flex-1">
                 {/* Input */}
                 <div
                     id="md-editor"
@@ -54,13 +55,14 @@ export default function WritePage() {
                     onKeyDown={handleKeyPress}
                     contentEditable={true}
                     suppressContentEditableWarning={true}
-                    className="py-2 px-6 h-full w-full md:border-r-2 border-secondary-400 flex-1">
+                    className="py-2 px-6 h-full w-full md:border-r-2 border-secondary-400">
                     {text.split(/\r?\n/).map((content, i, arr) => (
                         <Fragment key={i}>
                             {/* Split identifiers from text */}
                             {content.split(/(&[a-z]{4};)/).map((innerContent, i) => (
                                 <Fragment key={i}>
-                                    <span className={`${innerContent.match(/&[a-z]{4};/)?.length > 0 && 'text-gray-700'}`}>
+                                    <span
+                                        className={`${innerContent.match(/&[a-z]{4};/)?.length > 0 && 'text-gray-700'}`}>
                                         {innerContent}
                                     </span>
                                 </Fragment>
@@ -71,8 +73,8 @@ export default function WritePage() {
                 </div>
 
                 {/* Preview */}
-                <div className="content py-2 px-6 h-full w-full flex-1" >
-                    <Markdown source={text} />
+                <div id="md-preview" className="py-2 px-6 size-full">
+                    <Markdown source={text}/>
                 </div>
             </div>
         </div>
