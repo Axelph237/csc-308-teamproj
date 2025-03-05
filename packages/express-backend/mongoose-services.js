@@ -14,15 +14,15 @@ mongoose
 // Page
 const PageSchema = new mongoose.Schema({
     title: {type: String, required: true},
-    date: {type: Date, required: true, default: Date.now}, // might not be Date type
+    date: {type: String, required: true},
     body: {type: String, required: true},
 });
 
 // Diary
 const DiarySchema = new mongoose.Schema({
     title: {type: String, required: true},
-    lastEntry: {type: Date, required: true, default: Date.now}, // also might not be Date
-    numEntries: this.entries.length, // does this work?
+    lastEntry: {type: String, required: true},
+    numEntries: {type: Number, required: true, default: 0},
     entries: [PageSchema]
 });
 
@@ -103,6 +103,7 @@ async function addPage(page, diaryID) {
     const diary = await Diary.findById(diaryID);
     let newPage = new Page(page);
     diary.entries.push(newPage);
+    diary.numEntries++;
     await diary.save();
     return newPage;
 }
@@ -129,6 +130,7 @@ async function removePage(pageID, diaryID) {
     const diary = await Diary.findById(diaryID);
     const page = diary.entries.id(pageID);
     page.deleteOne()
+    diary.numEntries--;
     await diary.save();
     return page;
 }

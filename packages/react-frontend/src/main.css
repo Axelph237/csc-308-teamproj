@@ -51,26 +51,35 @@ h1 {
 ::-webkit-scrollbar {
     width: 10px;
 }
+
 /* Track */
 ::-webkit-scrollbar-track {
     background: var(--color-primary-800);
 }
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
     border-radius: 1rem;
     background: var(--color-secondary-500);
 }
+
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: var(--color-secondary-400);
 }
 
-.icon-xs {
+.icon-xxs {
     @apply w-4 h-4;
 }
+
+.icon-xs {
+    @apply w-6 h-6;
+}
+
 .icon-sm {
     @apply w-8 h-8;
 }
+
 .icon-md {
     @apply w-10 h-10;
 }
