@@ -65,7 +65,7 @@ app.post("/users", async (req, res) => {
 
         const newUser = await mongooseServices.addUser({ username, password, email, profilePicture });
         res.status(201).send({ id: newUser._id, username: newUser.username });
-    } catch (erro
+    } catch (error) {
         console.error("Error adding user:", error);
         res.status(500).send(`Error adding user: ${error.message}`);
     }
