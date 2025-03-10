@@ -84,6 +84,10 @@ h1 {
     @apply w-10 h-10;
 }
 
+.icon-lg {
+    @apply w-25 h-25;
+}
+
 .btn {
     @apply flex flex-row justify-center items-center gap-2 cursor-pointer text-accent-900 hover:text-white font-medium bg-accent-400 hover:bg-accent-700 transition-all duration-300 py-2 px-6 rounded-full;
 }
