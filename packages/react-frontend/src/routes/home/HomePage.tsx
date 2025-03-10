@@ -22,7 +22,7 @@ function HomeBody() {
             {diaries.map((diary, index) => (
                 <Link key={index} to={`/diaries/${index + 1}`}>
                     <div
-                        className="border border-secondary-900 rounded-2xl p-6 shadow-lg bg-secondary-500 hover:bg-secondary-700 transition min-h-[150px]">
+                        className="rounded-2xl p-6 shadow-lg bg-secondary-500 hover:bg-secondary-700 transition min-h-[150px]">
                         <h2 className="text-xl font-bold text-secondary-100">{diary.title}</h2>
                         <p className="text-sm text-secondary-300">{diary.date}</p>
                     </div>
