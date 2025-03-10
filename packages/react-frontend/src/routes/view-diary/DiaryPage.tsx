@@ -77,25 +77,26 @@ function DiaryEntries() {
                      style={{minHeight: "150px"}}
                 >
                     {/* Diary header */}
-                    <div className="flex flex-col p-4">
+                    <div className="flex flex-row p-4 justify-between items-center">
                         {/* Diary title */}
-                        <div className="flex justify-between items-center">
+                        <div className="flex flex-col">
                             <h2 className="text-3xl font-bold text-secondary-100">{entry.title}</h2>
-                            <button
-                                className="btn"
-                                onClick={() => navigate("/write")}
-                            >
-                                <PenIcon className="icon-xs"/>
-                                Edit Entry
-                            </button>
+
+                            <p className="text-sm text-secondary-100 opacity-75">{entry.date}</p>
                         </div>
+                        <button
+                            className="text-primary-700 opacity-50 hover:opacity-75 transition-all cursor-pointer"
+                            onClick={() => navigate("/write")}
+                        >
+                            <PenIcon className="icon-sm"/>
+                        </button>
                         {/* Date */}
-                        <p className="text-sm text-secondary-100 opacity-75">{entry.date}</p>
                     </div>
 
 
                     {/* Markdown parser */}
-                    <div className="flex border-t border-secondary-500 bg-primary-600 rounded-xl overflow-hidden p-4">
+                    <div
+                        className="flex bg-primary-600 overflow-y-scroll pl-4 pr-4">
                         <Markdown source={entry.body}/>
                     </div>
                 </div>
