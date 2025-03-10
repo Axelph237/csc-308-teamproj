@@ -3,12 +3,16 @@ import mongoose from "mongoose";
 
 mongoose.set("debug", true);
 
-mongoose
-    .connect("mongodb+srv://breakingbadder:<db_password>@breakingbadderdb.8njno.mongodb.net/?retryWrites=true&w=majority&appName=breakingBadderDB", {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
-    .catch((error) => console.log(error));
+mongoose.set("debug", true);
+
+mongoose.connect('mongodb://localhost:27017/users', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log("MongoDB connected successfully!");
+}).catch((error) => {
+    console.error("Error connecting to MongoDB:", error);
+});
 
 // Schema definitions
 // Page
@@ -45,7 +49,7 @@ const User = mongoose.model("User", UserSchema);
 
 // returns user based on ID
 function findUserByID(id) {
-    return User.findByID(id);
+    return User.findById(id);
 }
 
 // returns diaries associated with user based on userID

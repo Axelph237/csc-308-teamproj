@@ -3,7 +3,7 @@ import cors from "cors";
 import mongooseServices from "./mongoose-services.js";
 
 const app = express();
-const port = 8000;
+const port = 8001;
 
 app.use(cors());
 app.use(express.json());
@@ -60,15 +60,17 @@ app.post("/users", async (req, res) => {
     try {
         const { username, password, email, profilePicture } = req.body;
         if (!username || !password || !email) {
-            return res.status(400).send("missing required user fields");
+            return res.status(400).send("Missing required user fields");
         }
 
         const newUser = await mongooseServices.addUser({ username, password, email, profilePicture });
-        res.status(201).send(newUser);
-    } catch (error) {
-        res.status(500).send("error adding user");
+        res.status(201).send({ id: newUser._id, username: newUser.username });
+    } catch (erro
+        console.error("Error adding user:", error);
+        res.status(500).send(`Error adding user: ${error.message}`);
     }
 });
+
 
 app.post("/users/:id/diaries", async (req, res) => {
     try {
@@ -99,7 +101,7 @@ app.post("/diaries/:diaryId/pages", async (req, res) => {
 });
 
 app.get("/", (req, res) => {
-    res.send("localhost:8000/users");
+    res.send("localhost:8001/users");
 });
 
 app.listen(port, () => {
