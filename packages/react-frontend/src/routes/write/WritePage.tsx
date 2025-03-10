@@ -1,4 +1,4 @@
-import {Fragment, KeyboardEvent, useRef, useState} from "react";
+import {Fragment, KeyboardEvent, ClipboardEvent, useRef, useState} from "react";
 import {useEditable} from "use-editable";
 import {SaveIcon} from "../../assets/icons";
 import Markdown from "../../components/Markdown";
@@ -20,6 +20,15 @@ export default function WritePage() {
             e.preventDefault();
             editorHandler.insert(TAB_REPLACE)
         }
+    }
+
+    const handlePaste = (e: ClipboardEvent<HTMLDivElement>) => {
+        e.preventDefault();
+
+        if (typeof e.clipboardData === "string") {
+            editorHandler.insert(e.clipboardData);
+        }
+
     }
 
     const handleSubmit = () => {
@@ -53,6 +62,7 @@ export default function WritePage() {
                     ref={editorRef}
                     // onInput={handleInput}
                     onKeyDown={handleKeyPress}
+                    onPaste={handlePaste}
                     contentEditable={true}
                     suppressContentEditableWarning={true}
                     className="py-2 px-6 h-full w-full md:border-r-2 border-secondary-400">
