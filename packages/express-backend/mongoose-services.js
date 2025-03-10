@@ -14,15 +14,15 @@ mongoose
 // Page
 const PageSchema = new mongoose.Schema({
     title: {type: String, required: true},
-    date: {type: Date, required: true, default: Date.now}, // might not be Date type
+    date: {type: String, required: true},
     body: {type: String, required: true},
 });
 
 // Diary
 const DiarySchema = new mongoose.Schema({
     title: {type: String, required: true},
-    lastEntry: {type: Date, required: true, default: Date.now}, // also might not be Date
-    numEntries: this.entries.length, // does this work?
+    lastEntry: {type: String, required: true},
+    numEntries: {type: Number, required: true, default: 0},
     entries: [PageSchema]
 });
 
@@ -41,6 +41,8 @@ const Diary = mongoose.model("Diary", DiarySchema);
 const User = mongoose.model("User", UserSchema);
 
 // Data Functions
+// Read Functions
+
 // returns user based on ID
 function findUserByID(id) {
     return User.findByID(id);
@@ -76,6 +78,8 @@ function findRandomPage() {
     return randomDiary.entries[pageInd];
 }
 
+// Create Functions
+
 // adds a User
 function addUser(user) {
     let newUser = new User(user);
@@ -97,11 +101,60 @@ async function addDiary(diary, userID) {
 // adds a Page to the given Diary
 async function addPage(page, diaryID) {
     const diary = await Diary.findById(diaryID);
-    diary.entries.push(page);
+    let newPage = new Page(page);
+    diary.entries.push(newPage);
+    diary.numEntries++;
+    await diary.save();
+    return newPage;
+}
+
+// Delete Functions
+
+// deletes the given user
+function removeUser(userID) {
+    return User.findByIdAndDelete(userID);
+}
+
+// delete the given Diary based on given User
+async function removeDiary(diaryID, userID) {
+    const user = await User.findById(userID);
+    user.diariesID.pull(diaryID); // pull is how we remove an ID reference
+    await user.save();
+    const diary = await Diary.findById(diaryID);
+    await Diary.findByIdAndDelete(diaryID);
+    return diary;
+}
+
+// delete the given page based on the given diary
+async function removePage(pageID, diaryID) {
+    const diary = await Diary.findById(diaryID);
+    const page = diary.entries.id(pageID);
+    page.deleteOne()
+    diary.numEntries--;
     await diary.save();
     return page;
 }
 
+// put the given user information into the given userID
+async function editUser(user, userID) {
+    const allowedFields = ["username", "email", "profilePicture"];
+    const filteredUser = Object.fromEntries(Object.entries(user).filter(([key]) => allowedFields.includes(key)));
+    return await User.findByIdAndUpdate(userID, filteredUser, {new: true});
+}
+
+// updates password field only for security
+async function editPassword(userID, password) {
+    return await User.findByIdAndUpdate(userID, password, {new: true});
+}
+
+// updates a page by given diaryID and pageID
+async function editPage(diaryID, pageID, pageData) {
+    const diary = await Diary.findById(diaryID);
+    const page = diary.entries.id(pageID);
+    Object.assign(page, pageData);
+    await diary.save();
+    return page;
+}
 
 // exporting functions
 export default {
@@ -113,4 +166,10 @@ export default {
     addUser,
     addDiary,
     addPage,
+    removeUser,
+    removeDiary,
+    removePage,
+    editUser,
+    editPassword,
+    editPage,
 };
