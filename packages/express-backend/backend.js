@@ -20,7 +20,6 @@ app.get("/users/:id", async (req, res) => {
     }
 });
 
-
 app.get("/users/:id/diaries", async (req, res) => {
     try {
         const diaries = await mongooseServices.findDiariesByUser(req.params.id);
@@ -42,7 +41,6 @@ app.get("/diaries/:diaryId/pages", async (req, res) => {
         res.status(200).send(pages);
     } catch (error) {
         res.status(500).send("error fetching pages");
-
     }
 });
 
@@ -64,7 +62,6 @@ app.post("/users", async (req, res) => {
         if (!username || !password || !email) {
             return res.status(400).send("missing required user fields");
         }
-
 
         const newUser = await mongooseServices.addUser({ username, password, email, profilePicture });
         res.status(201).send(newUser);
@@ -99,7 +96,6 @@ app.post("/diaries/:diaryId/pages", async (req, res) => {
     } catch (error) {
         res.status(500).send("error adding page");
     }
-
 });
 
 app.get("/", (req, res) => {

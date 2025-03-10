@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
-.content {
-    @apply text-wrap break-words;
+#md-editor:focus {
+    outline: none;
 }
 
 /* Content highlighting */
@@ -30,7 +30,7 @@
     font-weight: bold;
     @apply text-violet-400 mb-1 mt-1;
 }
-.content * > a {
+.content *> a {
     @apply text-emerald-400 underline;
 }
 .content > hr {
