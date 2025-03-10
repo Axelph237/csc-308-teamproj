@@ -6,6 +6,7 @@ export default function AccountsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [preview, setPreview] = useState<string | null>(null);
+    const [profilePicture, setProfilePicture] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -19,6 +20,8 @@ export default function AccountsPage() {
         if (selectedFile) {
             console.log("uploading: ", selectedFile);
             alert("Profile picture updated!"); // replace later with actual logic
+
+            setProfilePicture(preview);
             setIsModalOpen(false);
             setSelectedFile(null);
             setPreview(null);
@@ -40,7 +43,17 @@ export default function AccountsPage() {
 
             {/* Profile Section*/}
             <div className="flex flex-col items-center p-6 rounded-lg">
-                <UserCircleIcon className="icon-lg"/>
+                {profilePicture && (
+                    <div className="rounded-full w-40 h-40 overflow-hidden border border-gray-300">
+                        <img
+                            alt="Profile Preview"
+                            width="250px"
+                            src={profilePicture}
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
+                )}
+                {/*<UserCircleIcon className="icon-lg"/>*/}
                 <button onClick={() => setIsModalOpen(true)}
                         className="mt-2 p-2 rounded-lg text-accent-200 hover:underline"
                 >
@@ -59,24 +72,23 @@ export default function AccountsPage() {
             </Link>
 
             {isModalOpen && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                        <h2 className="text-lg font-bold mb-4">Change Profile Picture</h2>
+                <div className="fixed inset-0 flex items-center justify-center ">
+                    <div className="flex flex-col bg-white items-center justify-center p-6 gap-5 rounded-lg w-96">
                         {/* File input*/}
                         <input type="file"
                                accept="image/*"
                                ref={fileInputRef}
                                onChange={handleFileChange}
-                               className="hidden"
+                               className="w-full h-full object-cover"
                         />
                         {/* Clickable Image Preview */}
                         <div
-                            className={"w-full h-40 flex items-center justify-center rounded-lg mb-4 border cursor-pointer  bg-gray-200 hover:bg-gray-300"}
+                            className={"rounded-full w-50 h-50 flex overflow-hidden items-center justify-center cursor-pointer  bg-gray-200 hover:bg-gray-300"}
                             onClick={triggerFileInput}
                         >
                             {preview ? (
                                 <img src={preview} alt="Profile Picture"
-                                     className="w-full h-40 object-cover rounded-lg mb-4 border"/>
+                                     className="w-full h-full object-cover "/>
                             ) : (
                                 <span className="text-gray-500">No image selected</span>
                             )}
