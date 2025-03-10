@@ -64,7 +64,7 @@ function DiaryEntries() {
     }, [index]);
 
     const navigate = useNavigate();
-    
+
     if (loading) return <div>Loading entries...</div>;
     if (error) return <div className="text-red-500">Error: {error}</div>;
 
@@ -73,24 +73,29 @@ function DiaryEntries() {
         <div className="grid grid-cols-2 gap-6 p-6 ">
             {entries.map((entry, index) =>
                 <div key={index}
-                     className="border border-accent-700 rounded-2xl p-6 shadow-lg bg-primary-100 text-white relative"
+                     className="flex flex-col border-2 border-secondary-500 rounded-2xl shadow-lg bg-secondary-500 overflow-hidden max-h-96"
                      style={{minHeight: "150px"}}
                 >
-                    <div className="flex justify-between items-center">
-
-                        <h2 className="text-xl font-bold text-accent-300">{entry.title}</h2>
-                        <button
-                            className="btn"
-                            onClick={() => navigate("/write")}
-                        >
-                            <PenIcon className="icon-xs"/>
-                            Edit Entry
-                        </button>
+                    {/* Diary header */}
+                    <div className="flex flex-col p-4">
+                        {/* Diary title */}
+                        <div className="flex justify-between items-center">
+                            <h2 className="text-3xl font-bold text-secondary-100">{entry.title}</h2>
+                            <button
+                                className="btn"
+                                onClick={() => navigate("/write")}
+                            >
+                                <PenIcon className="icon-xs"/>
+                                Edit Entry
+                            </button>
+                        </div>
+                        {/* Date */}
+                        <p className="text-sm text-secondary-100 opacity-75">{entry.date}</p>
                     </div>
 
-                    <p className="text-sm text-secondary-200">{entry.date}</p>
+
                     {/* Markdown parser */}
-                    <div className="mt-3">
+                    <div className="flex border-t border-secondary-500 bg-primary-600 rounded-xl overflow-hidden p-4">
                         <Markdown source={entry.body}/>
                     </div>
                 </div>
