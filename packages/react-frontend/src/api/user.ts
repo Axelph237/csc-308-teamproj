@@ -247,3 +247,9 @@ export async function getDiaryEntries(title: string): Promise<DiaryEntry[]> {
 
     return allEntries;
 }
+
+export function getRandomDiaryPage() {
+    const diary = user.diaries[Math.floor(Math.random() * user.diaries.length)];
+
+    return diary.entries[Math.floor(Math.random() * diary.entries.length)];
+}
