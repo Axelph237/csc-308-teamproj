@@ -8,7 +8,7 @@ export default function RandomPage() {
 
     const dims = el.getBoundingClientRect()
 
-    dims.return(
+    return (
         <div className="flex flex-row justify-center items-center gap-10">
             {/* Entry info */}
             <div className="rounded-lg border-2 border-secondary-500 p-4 flex flex-col gap-2 min-w-1/4">
