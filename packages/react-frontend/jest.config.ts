@@ -196,9 +196,12 @@ const config: Config = {
     // watchman: true,
 
     // Transforms test files to emit ESM rather than CJS
-    transform: {
-        "^.+\\.tsx?$": ["ts-jest", {useESM: true}],
-    },
+    // transform: {
+    //     "^.+\\.tsx?$": ["ts-jest", {useESM: true}],
+    // },
+    moduleNameMapper: {
+        '^.+\\.(css|less)$': '<rootDir>/jest/config/css_stub.ts'
+    }
 };
 
 export default config;
