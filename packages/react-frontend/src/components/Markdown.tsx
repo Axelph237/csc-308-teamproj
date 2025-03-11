@@ -1,9 +1,9 @@
 import {Marked} from "marked";
-import { markedHighlight } from "marked-highlight";
+import {markedHighlight} from "marked-highlight";
 import hljs from "highlight.js";
 import "./Markdown.css"
 
-export default function Markdown({source}: {source: string} ) {
+export default function Markdown({source}: { source: string }) {
     // Create mark down handler with marked
     // Add syntax highlighting for code blocks
     const marked = new Marked(
@@ -12,7 +12,7 @@ export default function Markdown({source}: {source: string} ) {
             langPrefix: 'hljs language-',
             highlight(code, lang, info) {
                 const language = hljs.getLanguage(lang) ? lang : 'plaintext';
-                return hljs.highlight(code, { language }).value;
+                return hljs.highlight(code, {language}).value;
             }
         })
     );
@@ -23,6 +23,6 @@ export default function Markdown({source}: {source: string} ) {
     });
 
     return (
-        <div className="content" dangerouslySetInnerHTML={{ __html: marked.parse(source) }}/>
+        <div className="content" dangerouslySetInnerHTML={{__html: marked.parse(source)}}/>
     )
 }
