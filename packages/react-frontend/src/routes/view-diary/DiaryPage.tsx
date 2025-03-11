@@ -12,7 +12,6 @@ function DiaryHeader() {
             try {
                 const diaries = await getUserDiaries();
                 const diary = diaries[index];
-                console.log(diary);
                 if (!diary) {
                     setDiaryTitle("Diary not found.");
                     return;
@@ -20,7 +19,6 @@ function DiaryHeader() {
                 setDiaryTitle(diary.title || "Untitled Diary");
 
             } catch (error) {
-                console.error("Error fetching diary title: ", error);
                 setDiaryTitle("Error Loading Title");
             }
         }
@@ -52,7 +50,6 @@ function DiaryEntries() {
                 }
                 const data: DiaryEntry[] = await getDiaryEntries(diary.title);
                 setEntries(data);
-                console.log(data);
             } catch (err) {
                 setError(error.message);
             } finally {

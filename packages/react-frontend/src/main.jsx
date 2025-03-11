@@ -9,6 +9,7 @@ import WritePage from "./routes/write/WritePage.tsx";
 import AccountsPage from "./routes/account/AccountPage.tsx";
 import MyApp from "./MyApp.jsx";
 import DiaryPage from "./routes/view-diary/DiaryPage.tsx";
+import LoginPage from "./routes/login/LoginPage.tsx";
 
 const container = document.getElementById("root");
 
@@ -44,6 +45,7 @@ root.render(
                 <Route path={"random"} element={<RandomPage/>}/>
                 <Route path={"write"} element={<WritePage/>}/>
                 <Route path={"account"} element={<AccountsPage/>}/>
+                <Route path={"login"} element={<LoginPage/>}/>
             </Route>
         </Routes>
     </BrowserRouter>
