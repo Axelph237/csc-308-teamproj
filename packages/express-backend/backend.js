@@ -1,92 +1,107 @@
-// backend.js
-import express from "express"; // import express
+import express from "express";
 import cors from "cors";
-import userServices from "./user-services.js";
+import mongooseServices from "./mongoose-services.js";
 
-const app = express(); // create an instance of express
-const port = 8000; // constant of port 
+const app = express();
+const port = 8001;
 
 app.use(cors());
-app.use(express.json()); // process incoming data in JSON format
+app.use(express.json());
 
-// generates ID using name and random number 0-99
-function generateID(user) {
-    return `${user.name}${Math.floor(Math.random() * 100)}`;
-}
-
-app.post("/users", (req, res) => {
-    const userToAdd = req.body;
-    if (userToAdd.name && userToAdd.job) {
-        if (!userToAdd.id) {
-            userToAdd.id = generateID(userToAdd);
+app.get("/users/:id", async (req, res) => {
+    try {
+        const user = await mongooseServices.findUserByID(req.params.id);
+        if (!user) {
+            return res.status(404).send("user not found");
         }
-
-        // Reordered so the id is at the top of the attributes (not necessary but just for organization)
-        const reorderedUser = {
-            id: userToAdd.id,
-            name: userToAdd.name,
-            job: userToAdd.job
-        };
-        userServices.addUser(reorderedUser)
-            .then((addedUser) => {
-                res.status(201).send(addedUser);
-            })
-            .catch((error) => {
-                res.status(500).send("Error adding user");
-            });
-    } else {
-        res.status(400).send("Invalid user data");
+        res.status(200).send(user);
+    } catch (error) {
+        res.status(500).send("error finding user");
     }
 });
 
-app.delete("/users/:id", (req, res) => {
-    const id = req.params.id;
-
-    userServices.deleteById(id)
-        .then((deletedUser) => {
-            if (deletedUser) {
-                res.status(204).send();
-            } else {
-                res.status(404).send("Resource not found.");
-            }
-        })
-        .catch((error) => {
-            res.status(500).send("Error deleting ", error);
-        });
-})
-
-app.get("/users/:id", (req, res) => {
-    const id = req.params["id"]; // req.params.id
-
-    userServices.findUserById(id)
-        .then((user) => {
-            if (!user) {
-                res.status(404).send("Resource not found");
-            } else {
-                res.send(user);
-            }
-        })
-        .catch((error) => {
-            res.status(500).send("Error finding user");
-        })
+app.get("/users/:id/diaries", async (req, res) => {
+    try {
+        const diaries = await mongooseServices.findDiariesByUser(req.params.id);
+        if (!diaries) {
+            return res.status(404).send("user or diaries not found");
+        }
+        res.status(200).send(diaries.diaryIds);
+    } catch (error) {
+        res.status(500).send("error fetching diaries");
+    }
 });
 
-app.get("/users", (req, res) => {
-    const name = req.query.name;
-    const job = req.query.job;
+app.get("/diaries/:diaryId/pages", async (req, res) => {
+    try {
+        const pages = await mongooseServices.findPagesByDiary(req.params.diaryId);
+        if (!pages) {
+            return res.status(404).send("diary not found");
+        }
+        res.status(200).send(pages);
+    } catch (error) {
+        res.status(500).send("error fetching pages");
+    }
+});
 
-    userServices.getUsers(name, job)
-        .then((users) => {
-            res.send({users_list: users});
-        })
-        .catch((error) => {
-            console.log(error);
-            res.status(500).send("Error fetching users.");
-        });
+app.get("/diaries/:diaryId/pages/:pageId", async (req, res) => {
+    try {
+        const page = await mongooseServices.findPageByDiaryAndPageID(req.params.diaryId, req.params.pageId);
+        if (!page) {
+            return res.status(404).send("page not found");
+        }
+        res.status(200).send(page);
+    } catch (error) {
+        res.status(500).send("error finding page");
+    }
+});
+
+app.post("/users", async (req, res) => {
+    try {
+        const { username, password, email, profilePicture } = req.body;
+        if (!username || !password || !email) {
+            return res.status(400).send("Missing required user fields");
+        }
+
+        const newUser = await mongooseServices.addUser({ username, password, email, profilePicture });
+        res.status(201).send({ id: newUser._id, username: newUser.username });
+    } catch (error) {
+        console.error("Error adding user:", error);
+        res.status(500).send(`Error adding user: ${error.message}`);
+    }
+});
+
+
+app.post("/users/:id/diaries", async (req, res) => {
+    try {
+        const { title } = req.body;
+        if (!title) {
+            return res.status(400).send("missing required diary title");
+        }
+
+        const newDiary = await mongooseServices.addDiary({ title }, req.params.id);
+        res.status(201).send(newDiary);
+    } catch (error) {
+        res.status(500).send("error adding diary");
+    }
+});
+
+app.post("/diaries/:diaryId/pages", async (req, res) => {
+    try {
+        const { title, body } = req.body;
+        if (!title || !body) {
+            return res.status(400).send("missing required page fields");
+        }
+
+        const newPage = await mongooseServices.addPage({ title, body, date: new Date() }, req.params.diaryId);
+        res.status(201).send(newPage);
+    } catch (error) {
+        res.status(500).send("error adding page");
+    }
 });
 
 app.get("/", (req, res) => {
-    res.send("localhost:8000/users");
+    res.send("localhost:8001/users");
 });
 
 app.listen(port, () => {
@@ -94,48 +109,3 @@ app.listen(port, () => {
         `Example app listening at http://localhost:${port}`
     );
 });
-
-/*
-*
-* Make this code asynchronous.
-* findUserById is the thing that takes time.
-* .then part will be if statement
-* .catch error status 404
-app.get('/users/:id',
-    (req, res) => {
-        const id = req.params['id'];
-        let result = findUserById(id);
-        if (result === undefined) {
-            res.status(404)
-                .send('Resource not found.');
-        } else {
-            res.send(result);
-        }
-    }
-);
-============================================
-app.get('/users/:id',
-    (req, res) => {
-        const id = req.params['id'];
-        //Asynch part:
-        findUser = new Promise ( (resolve, reject) =>
-        {
-            user = findUserById(id);
-            if(user === undefined)
-                reject("User Undefined");
-            else
-                resolve (user );    
-        });
-        // Promise waiting part
-        findUser.then ( (result ) => {
-            if(result.length() == 0)
-                throw new Error("not found");
-            else
-                res.status(200).send(result);
-            })
-        .catch( (error) => res.status(404).send(error) );
-
-    }
-);
-
-*/
