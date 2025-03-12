@@ -5,7 +5,7 @@ mongoose.set("debug", true);
 
 mongoose.set("debug", true);
 
-mongoose.connect('mongodb://localhost:27017/users', {
+mongoose.connect('mongodb+srv://user:weakpassword@breakbad.4hvan.mongodb.net/?retryWrites=true&w=majority&appName=breakbad', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {
