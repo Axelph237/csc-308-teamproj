@@ -7,35 +7,39 @@ import {expect, describe, it, jest} from "@jest/globals";
 
 // const {expect, describe, it} = require('@jest/globals');
 // Mock the API function
-jest.mock("../../../src/api/user.ts", () => ({
-    getUserDiaries: jest.fn(),
-}));
 
 describe("HomePage Component", () => {
-    it("renders the HomeHeader component", () => {
+    it("renders the HomeHeader component", async () => {
         render(
             <MemoryRouter>
                 <HomePage/>
             </MemoryRouter>
         );
-        expect(screen.getByText("Welcome to Diary")).toBeDefined();
+        await waitFor(() => {
+            expect(screen.getByText("Welcome to Diary")).toBeDefined();
+        });
     });
 
-    it("renders the loading state initially", () => {
+    it("renders the loading state initially", async () => {
         render(
             <MemoryRouter>
                 <HomePage/>
             </MemoryRouter>
         );
-        expect(screen.getByText("Loading diaries...")).toBeDefined();
+
+        await waitFor(() => {
+            expect(screen.getByText("Loading diaries...")).toBeDefined();
+        });
     });
 
-    it("renders the Create Diary button", () => {
+    it("renders the Create Diary button", async () => {
         render(
             <MemoryRouter>
                 <HomePage/>
             </MemoryRouter>
         );
-        expect(screen.getByText("Create Diary")).toBeDefined();
+        await waitFor(() => {
+            expect(screen.getByText("Create Diary")).toBeDefined();
+        });
     });
 });
