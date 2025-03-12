@@ -9,7 +9,7 @@ import {expect, describe, it, jest} from "@jest/globals";
 // Mock the API function
 
 describe("HomePage Component", () => {
-    it("renders the HomeHeader component", async () => {
+    it("renders HomeHeader component", async () => {
         render(
             <MemoryRouter>
                 <HomePage/>
@@ -20,7 +20,7 @@ describe("HomePage Component", () => {
         });
     });
 
-    it("renders the loading state initially", async () => {
+    it("renders loading state initially", async () => {
         render(
             <MemoryRouter>
                 <HomePage/>
@@ -32,7 +32,7 @@ describe("HomePage Component", () => {
         });
     });
 
-    it("renders the Create Diary button", async () => {
+    it("renders Create Diary button", async () => {
         render(
             <MemoryRouter>
                 <HomePage/>
@@ -42,4 +42,17 @@ describe("HomePage Component", () => {
             expect(screen.getByText("Create Diary")).toBeDefined();
         });
     });
+    test('renders Diary titles in user.ts is successful', async () => {
+        render(<MemoryRouter>
+            <HomePage/>
+        </MemoryRouter>);
+
+        await waitFor(() => {
+            expect(screen.findByText('Diary 1')).toBeDefined();
+            expect(screen.findByText('A Second Diary')).toBeDefined();
+        })
+
+        // expect(await screen.findByText('Another Entry')).toBeInTheDocument();
+    });
+
 });
