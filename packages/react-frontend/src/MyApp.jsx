@@ -13,7 +13,7 @@ function NavigationBar() {
 
     return (
         <div
-            className="bottom-0 md:static flex flex-row md:flex-col gap-12 p-3 bg-secondary-500 md:w-fit md:h-full w-full h-fit justify-center items-center">
+            className="fixed bottom-0 md:static flex flex-row md:flex-col gap-12 p-3 bg-secondary-500 md:w-fit md:h-full w-full h-fit justify-center items-center">
 
             {pages.map((page, index) => (
 
@@ -40,17 +40,10 @@ export default function MyApp() {
             {/* Content */}
             <div className="flex flex-col md:flex-row flex-1 overflow-y-auto overflow-x-hidden">
                 {/* Desktop scrollbar */}
-                <div className="hidden md:block">
-                    <NavigationBar/>
-                </div>
+                <NavigationBar/>
 
-                <div className="overflow-y-auto flex-1">
+                <div className="overflow-y-auto flex-1 pb-24">
                     <Outlet/>
-                </div>
-
-                {/* Phone scrollbar */}
-                <div className="md:hidden">
-                    <NavigationBar/>
                 </div>
             </div>
         </div>
