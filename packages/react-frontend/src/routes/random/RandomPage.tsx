@@ -4,10 +4,6 @@ import {EyeIcon, UserCircleIcon} from "../../assets/icons";
 
 export default function RandomPage() {
 
-    const el = document.getElementById("iasdkfj");
-
-    const dims = el.getBoundingClientRect()
-
     return (
         <div className="flex flex-row justify-center items-center gap-10">
             {/* Entry info */}
