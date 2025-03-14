@@ -74,12 +74,12 @@ app.post("/users", async (req, res) => {
 
 app.post("/users/:id/diaries", async (req, res) => {
     try {
-        const { title } = req.body;
+        const  title  = req.body;
         if (!title) {
             return res.status(400).send("missing required diary title");
         }
 
-        const newDiary = await mongooseServices.addDiary({ title }, req.params.id);
+        const newDiary = await mongooseServices.addDiary( title , req.params.id);
         res.status(201).send(newDiary);
     } catch (error) {
         res.status(500).send("error adding diary");
