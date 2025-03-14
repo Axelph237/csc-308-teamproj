@@ -58,7 +58,7 @@ app.get("/diaries/:diaryId/pages/:pageId", async (req, res) => {
 
 app.post("/users", async (req, res) => {
     try {
-        const { username, password, email, profilePicture } = req.body;
+        const  {username, password, email, profilePicture } = req.body;
         if (!username || !password || !email) {
             return res.status(400).send("Missing required user fields");
         }

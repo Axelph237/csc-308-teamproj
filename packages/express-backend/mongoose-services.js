@@ -1,11 +1,11 @@
 // packages/express-backend/mongoose-services.js
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 mongoose.set("debug", true);
 
 mongoose.set("debug", true);
-
-mongoose.connect('mongodb+srv://user:weakpassword@breakbad.4hvan.mongodb.net/?retryWrites=true&w=majority&appName=breakbad', {
+mongoose.connect('mongodb://localhost:27017/users', {
+//mongoose.connect('mongodb+srv://user:weakpassword@breakbad.4hvan.mongodb.net/?retryWrites=true&w=majority&appName=breakbad', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => {
@@ -161,7 +161,7 @@ async function editPage(diaryID, pageID, pageData) {
 }
 
 // exporting functions
-export default {
+module.exports = {
     findUserByID,
     findDiariesByUser,
     findPagesByDiary,
