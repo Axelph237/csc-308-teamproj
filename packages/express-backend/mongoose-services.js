@@ -53,8 +53,11 @@ function findUserByID(id) {
 }
 
 // returns diaries associated with user based on userID
-function findDiariesByUser(UserID) {
-    return User.findById(UserID).populate("diariesID");
+async function findDiariesByUser(UserID) {
+    const user = await User.findById(UserID);
+    await user.populate("diariesID");
+    await user.save();
+    return user.diariesID;
 }
 
 // returns all pages associated with a Diary

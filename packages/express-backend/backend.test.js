@@ -34,6 +34,20 @@ test("supposed to add a user", async () => {
     expect(foundUser.email).toBe("jamiil@gmail.com");
 });
 
+test("Testing addUser -- success", async () => {
+    const user = {
+        "_id": new mongoose.Types.ObjectId(),
+        "username": "test1",
+        "password": "password",
+        "email": "test@test.com"
+    };
+    const result = await mongooseServices.addUser(user);
+    expect(result).not.toBeNull();
+    expect(result).toMatchObject(user);
+    expect(result).toHaveProperty('diariesID');
+    expect(result).toHaveProperty('profilePicture');
+});
+
 test("should not return user", async () => {
     const result = await mongooseServices.findUserByID("6553e004d3d9c08b20300000"); // Fake ObjectID
     expect(result).toBeNull();
@@ -54,6 +68,8 @@ test("add diary to a user", async () => {
     expect(newDiary.title).toBe("nameofDiary");
 
     const updatedUser = await mongooseServices.findUserByID(user._id);
+    const diaries = await mongooseServices.findDiariesByUser(user._id);
+    expect(diaries).toContainEqual(expect.objectContaining(newDiary._doc));
     expect(updatedUser.diariesID).toContainEqual(newDiary._id);
 });
 
