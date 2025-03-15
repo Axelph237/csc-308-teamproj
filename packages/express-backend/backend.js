@@ -3,7 +3,7 @@ import cors from "cors";
 import mongooseServices from "./mongoose-services.js";
 
 const app = express();
-const port = 8000;
+const port = 8001;
 
 app.use(cors());
 app.use(express.json());
@@ -19,7 +19,6 @@ app.get("/users/:id", async (req, res) => {
         res.status(500).send("error finding user");
     }
 });
-
 
 app.get("/users/:id/diaries", async (req, res) => {
     try {
@@ -42,7 +41,6 @@ app.get("/diaries/:diaryId/pages", async (req, res) => {
         res.status(200).send(pages);
     } catch (error) {
         res.status(500).send("error fetching pages");
-
     }
 });
 
@@ -60,27 +58,28 @@ app.get("/diaries/:diaryId/pages/:pageId", async (req, res) => {
 
 app.post("/users", async (req, res) => {
     try {
-        const { username, password, email, profilePicture } = req.body;
+        const  {username, password, email, profilePicture } = req.body;
         if (!username || !password || !email) {
-            return res.status(400).send("missing required user fields");
+            return res.status(400).send("Missing required user fields");
         }
 
-
         const newUser = await mongooseServices.addUser({ username, password, email, profilePicture });
-        res.status(201).send(newUser);
+        res.status(201).send({ id: newUser._id, username: newUser.username });
     } catch (error) {
-        res.status(500).send("error adding user");
+        console.error("Error adding user:", error);
+        res.status(500).send(`Error adding user: ${error.message}`);
     }
 });
 
+
 app.post("/users/:id/diaries", async (req, res) => {
     try {
-        const { title } = req.body;
+        const  title  = req.body;
         if (!title) {
             return res.status(400).send("missing required diary title");
         }
 
-        const newDiary = await mongooseServices.addDiary({ title }, req.params.id);
+        const newDiary = await mongooseServices.addDiary( title , req.params.id);
         res.status(201).send(newDiary);
     } catch (error) {
         res.status(500).send("error adding diary");
@@ -99,11 +98,10 @@ app.post("/diaries/:diaryId/pages", async (req, res) => {
     } catch (error) {
         res.status(500).send("error adding page");
     }
-
 });
 
 app.get("/", (req, res) => {
-    res.send("localhost:8000/users");
+    res.send("localhost:8001/users");
 });
 
 app.listen(port, () => {

@@ -1,14 +1,18 @@
 // packages/express-backend/mongoose-services.js
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 mongoose.set("debug", true);
 
-mongoose
-    .connect("mongodb+srv://breakingbadder:<db_password>@breakingbadderdb.8njno.mongodb.net/?retryWrites=true&w=majority&appName=breakingBadderDB", {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
-    .catch((error) => console.log(error));
+mongoose.set("debug", true);
+mongoose.connect('mongodb://localhost:27017/users', {
+//mongoose.connect('mongodb+srv://user:weakpassword@breakbad.4hvan.mongodb.net/?retryWrites=true&w=majority&appName=breakbad', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => {
+    console.log("MongoDB connected successfully!");
+}).catch((error) => {
+    console.error("Error connecting to MongoDB:", error);
+});
 
 // Schema definitions
 // Page
@@ -45,12 +49,15 @@ const User = mongoose.model("User", UserSchema);
 
 // returns user based on ID
 function findUserByID(id) {
-    return User.findByID(id);
+    return User.findById(id);
 }
 
 // returns diaries associated with user based on userID
-function findDiariesByUser(UserID) {
-    return User.findById(UserID).populate("diariesID");
+async function findDiariesByUser(UserID) {
+    const user = await User.findById(UserID);
+    await user.populate("diariesID");
+    await user.save();
+    return user.diariesID;
 }
 
 // returns all pages associated with a Diary
@@ -157,7 +164,7 @@ async function editPage(diaryID, pageID, pageData) {
 }
 
 // exporting functions
-export default {
+module.exports = {
     findUserByID,
     findDiariesByUser,
     findPagesByDiary,
