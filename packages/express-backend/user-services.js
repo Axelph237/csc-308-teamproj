@@ -10,7 +10,7 @@ mongoose
     })
     .catch((error) => console.log(error));
 
-function getUsers(name, job) {
+export function getUsers(name, job) {
     let promise;
     if (name === undefined && job === undefined) {
         promise = userModel.find();
@@ -24,37 +24,27 @@ function getUsers(name, job) {
     return promise;
 }
 
-function findUserById(id) {
+export function findUserById(id) {
     return userModel.findById(id);
 }
 
-function addUser(user) {
+export function addUser(user) {
     const userToAdd = new userModel(user);
     const promise = userToAdd.save();
     return promise;
 }
 
-function findUserByName(name) {
+export function findUserByName(name) {
     return userModel.find({ name: name });
 }
 
-function findUserByJob(job) {
+export function findUserByJob(job) {
     return userModel.find({ job: job });
 }
-function findUserByNameAndJob(name, job) {
+export function findUserByNameAndJob(name, job) {
     return userModel.find({ name: name, job: job });
 }
 
-function deleteById(id) {
+export function deleteById(id) {
     return userModel.findByIdAndDelete(id);
 }
-
-export default {
-    addUser,
-    getUsers,
-    findUserById,
-    findUserByName,
-    findUserByJob,
-    findUserByNameAndJob,
-    deleteById
-};
