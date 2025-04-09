@@ -1,8 +1,16 @@
-import {getRandomDiaryPage} from "../../api/user";
 import Markdown from "../../components/Markdown";
 import {EyeIcon, UserCircleIcon} from "../../assets/icons";
+import {useEffect, useState} from "react";
+import {getDiaryPages} from "../../api/backend";
 
 export default function RandomPage() {
+    const [ page, setPage ] = useState<string | undefined>();
+
+
+    useEffect(() => {
+        const newPage = "Hello :3"
+        setPage(newPage);
+    }, [])
 
     return (
         <div className="flex flex-row justify-center items-center gap-10">
@@ -27,7 +35,7 @@ export default function RandomPage() {
             </div>
             {/* Diary */}
             <div className="rounded-lg border-2 border-secondary-500 p-4 flex max-w-1/2">
-                <Markdown source={getRandomDiaryPage().body}/>
+                <Markdown source={page}/>
             </div>
         </div>
     );
