@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
+    "paths": {
+      "@src/*": [
+        "./src/*"
+      ]
+    },
     "jsx": "react-jsx",
     // or "react-jsx" if using React 17 or later
     "esModuleInterop": true,
