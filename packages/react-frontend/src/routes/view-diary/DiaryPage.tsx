@@ -2,7 +2,7 @@ import {useParams, useNavigate} from 'react-router-dom';
 import Markdown from "../../components/Markdown";
 import {PenIcon} from "../../assets/icons";
 import {useEffect, useState} from "react";
-import {getDiaryPages, getUserDiaries} from "../../api/backend";
+import {DiaryEntry, getUserDiaries} from "../../api/user";
 
 function DiaryHeader() {
     const {index} = useParams();
@@ -22,6 +22,7 @@ function DiaryHeader() {
                 setDiaryTitle("Error Loading Title");
             }
         }
+
         fetchDiaryTitle();
     }, [index]); // runs whenever index changes
 

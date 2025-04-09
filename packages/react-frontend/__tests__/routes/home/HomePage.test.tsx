@@ -37,7 +37,7 @@ describe("HomePage Component", () => {
             expect(screen.getByText("Create Diary")).toBeDefined();
         });
     });
-    test('renders Diary titles in user.ts is successful', async () => {
+    it('renders Diary titles in user.ts is successful', async () => {
         render(<MemoryRouter>
             <HomePage/>
         </MemoryRouter>);

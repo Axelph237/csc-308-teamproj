@@ -9,6 +9,7 @@ describe("Write Page", () => {
         // Render the Markdown component
         const {debug} = render(<WritePage/>);
 
-        debug();
+        // debug();
+        expect(true).toBe(false);
     });
 })
