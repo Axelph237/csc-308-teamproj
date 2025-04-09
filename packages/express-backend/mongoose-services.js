@@ -69,12 +69,19 @@ export function findPagesByDiary(DiaryID) {
         })
 }
 
+
 // returns a page based on its id
 export function findPageByDiaryAndPageID(DiaryID, PageID) {
     return Diary.findById(DiaryID)
         .then((result) => {
             return result.entries.find(entry => entry._id.toString() === PageID);
         })
+}
+
+// return Diary associated with a diaryID
+export async function findDiaryById(DiaryID) {
+    const diary = await Diary.findById(DiaryID);
+    return diary;
 }
 
 // returns a random page from all diaries
