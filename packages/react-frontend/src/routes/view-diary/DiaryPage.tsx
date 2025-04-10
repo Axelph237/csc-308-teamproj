@@ -2,7 +2,7 @@ import {useParams, useNavigate} from 'react-router-dom';
 import Markdown from "../../components/Markdown";
 import {PenIcon} from "../../assets/icons";
 import {useEffect, useState} from "react";
-import {DiaryEntry, getUserDiaries} from "../../api/user";
+import {DiaryEntry, getDiaryEntries, getUserDiaries} from "../../api/user";
 
 function DiaryHeader() {
     const {index} = useParams();
@@ -48,10 +48,10 @@ function DiaryEntries() {
                     setError("Diary not found.");
                     return;
                 }
-                const data: DiaryEntry[] = await getDiaryPages(diary._id);
+                const data: DiaryEntry[] = await getDiaryEntries(diary._id);
                 setEntries(data);
             } catch (err) {
-                setError(error.message);
+                setError(err.message);
             } finally {
                 setLoading(false);
             }

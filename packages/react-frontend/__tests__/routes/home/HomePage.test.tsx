@@ -1,9 +1,23 @@
 import {render, screen, waitFor} from "@testing-library/react";
-import {MemoryRouter} from "react-router-dom";
+import {MemoryRouter, Route, Routes} from "react-router-dom";
 import HomePage from "../../../src/routes/home/HomePage";
-import {expect, describe, it} from "@jest/globals";
+import {expect, describe, it, jest, beforeEach} from "@jest/globals";
 
+// Mocking the getUserDiaries function (ensure it's correctly mocked)
+jest.mock("../../../src/api/user", () => ({
+    getUserDiaries: jest.fn(),
+}));
+
+const {getUserDiaries} = require("../../../src/api/user");
 describe("HomePage Component", () => {
+    beforeEach(() => {
+        // Set up mock for getUserDiaries
+        getUserDiaries.mockResolvedValue([
+            {title: "Diary 1", date: "12-01-2025"},
+            {title: "A Second Diary", date: "12-02-2025"}
+        ]);
+    });
+
     it("renders HomeHeader component", async () => {
         render(
             <MemoryRouter>
@@ -42,12 +56,23 @@ describe("HomePage Component", () => {
             <HomePage/>
         </MemoryRouter>);
 
-        await waitFor(() => {
-            expect(screen.findByText('Diary 1')).toBeDefined();
-            expect(screen.findByText('A Second Diary')).toBeDefined();
-        })
+        // Ensure that the diary titles are rendered after data is fetched
+        const diary1Title = await screen.findByText('Diary 1');
+        const diary2Title = await screen.findByText('A Second Diary');
+
+        expect(diary1Title).toBeDefined();
+        expect(diary2Title).toBeDefined();
+
 
         // expect(await screen.findByText('Another Entry')).toBeInTheDocument();
+    });
+    it("should fail when component does not render a specific element", async () => {
+        render(<MemoryRouter>
+            <HomePage/>
+        </MemoryRouter>);
+
+        // This assertion will fail because "Non-existent button" doesn't exist
+        await expect(screen.findByText('not exist')).rejects.toThrow();
     });
 
 });
