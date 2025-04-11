@@ -19,7 +19,7 @@ function DiaryHeader() {
                 setDiaryTitle(diary.title || "Untitled Diary");
 
             } catch (error) {
-                setDiaryTitle("Error Loading Title");
+                setDiaryTitle("404: Error Loading Title");
             }
         }
 
@@ -45,7 +45,7 @@ function DiaryEntries() {
                 const diaries = await getUserDiaries();
                 const diary = diaries[index];
                 if (!diary) {
-                    setError("Diary not found.");
+                    setError("404 Diary not found.");
                     return;
                 }
                 const data: DiaryEntry[] = await getDiaryEntries(diary._id);

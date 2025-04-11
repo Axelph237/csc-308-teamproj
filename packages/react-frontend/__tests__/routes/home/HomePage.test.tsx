@@ -2,13 +2,17 @@ import {render, screen, waitFor} from "@testing-library/react";
 import {MemoryRouter, Route, Routes} from "react-router-dom";
 import HomePage from "../../../src/routes/home/HomePage";
 import {expect, describe, it, jest, beforeEach} from "@jest/globals";
+import type * as userApi from "@src/api/user";
 
 // Mocking the getUserDiaries function (ensure it's correctly mocked)
 jest.mock("../../../src/api/user", () => ({
     getUserDiaries: jest.fn(),
 }));
 
+
 const {getUserDiaries} = require("../../../src/api/user");
+const mockedGetUserDiaries = getUserDiaries as jest.MockedFunction<typeof userApi.getUserDiaries>;
+
 describe("HomePage Component", () => {
     beforeEach(() => {
         // Set up mock for getUserDiaries
@@ -75,4 +79,14 @@ describe("HomePage Component", () => {
         await expect(screen.findByText('not exist')).rejects.toThrow();
     });
 
+    it("should throw error failed fetch", async () => {
+        mockedGetUserDiaries.mockRejectedValue(new Error("Fetch failed"));
+        render(<MemoryRouter>
+            <HomePage/>
+        </MemoryRouter>)
+
+        const errorMessage = await screen.findByText("Error: Fetch failed")
+
+        expect(errorMessage).toBeDefined();
+    });
 });

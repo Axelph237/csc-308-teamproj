@@ -38,7 +38,7 @@ describe("DiaryPage Component", () => {
                 </Routes>
             </MemoryRouter>
         );
-        
+
     }
 
     it("shows loading message initially", () => {
@@ -68,19 +68,33 @@ describe("DiaryPage Component", () => {
         renderWithRoute("99");
 
         await waitFor(() => {
-            expect(screen.getByText("Error: Diary not found.")).toBeDefined();
+            expect(screen.getByText("Error: 404 Diary not found.")).toBeDefined();
         });
     });
 
 
-    // it("shows error if getDiaryEntries throws", async () => {
+    it("shows error if diary is not found", async () => {
+        // mockedGetUserDiaries.mockResolvedValue([{title: "Diary 1", date: "12-01-2025"}]);
+        mockedGetDiaryEntries.mockRejectedValue(new Error("Error: Fetch failed"));
+
+        render(<MemoryRouter>
+            <DiaryPage/>
+        </MemoryRouter>);
+
+        const errorMessage = await screen.findByText("Error: 404 Diary not found.")
+
+        expect(errorMessage).toBeDefined();
+
+    });
+    // it("shows error if diary entry is not found", async () => {
     //     mockedGetUserDiaries.mockResolvedValue([{title: "Diary 1", date: "12-01-2025"}]);
-    //     mockedGetDiaryEntries.mockRejectedValue(new Error("Fetch failed"));
+    //     mockedGetDiaryEntries.mockRejectedValue(new Error("Error: Fetch failed"));
     //
-    //     renderWithRoute("0");
+    //     renderWithRoute("0")
     //
-    //     await waitFor(() => {
-    //         expect(screen.getByText("Error")).toBeDefined();
-    //     });
+    //     const errorMessage = await screen.findByText("404: Error Loading Title")
+    //
+    //     expect(errorMessage).toBeDefined();
+    //
     // });
 });
