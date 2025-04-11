@@ -20,6 +20,28 @@ app.get("/users/:id", async (req, res) => {
     }
 });
 
+app.get("/diaries/:diaryId", async (req, res) => {
+    try {
+        const diary = await ms.findDiaryById(req.params.diaryId);
+        if (!diary) {
+            return res.status(404).send("diary not found");
+        }
+    } catch (error) {
+        res.status(500).send("error fetching diary");
+    }
+});
+
+app.get("/randomPage", async (req, res) => {
+    try {
+        const diary = await ms.findRandomPage();
+        if (!diary) {
+            return res.status(404).send("random page not found");
+        }
+    } catch (error) {
+        res.status(500).send("error fetching random page");
+    }
+})
+
 app.get("/users/:id/diaries", async (req, res) => {
     try {
         const diaries = await ms.findDiariesByUser(req.params.id);
