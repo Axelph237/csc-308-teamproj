@@ -9,7 +9,6 @@ import WritePage from "./routes/write/WritePage.tsx";
 import AccountsPage from "./routes/account/AccountPage.tsx";
 import MyApp from "./MyApp.jsx";
 import DiaryPage from "./routes/view-diary/DiaryPage.tsx";
-import LoginPage from "./routes/login/LoginPage.tsx";
 
 const container = document.getElementById("root");
 
@@ -37,15 +36,13 @@ root.render(
         <Routes>
             {/* Define a route and any child routes */}
             {/* Primary app route */}
-            <Route path={"/"} element={<MyApp/>}>
+            <Route path={"/"} element={<MyApp />} >
                 {/* Children of that app route */}
-                <Route path={"home"} element={<HomePage/>}/>
-                <Route path={"diaries/:index"} element={<DiaryPage/>}/>
-                <Route path={"entries/write/:entryId?"} element={<WritePage/>}/>
-                <Route path={"random"} element={<RandomPage/>}/>
-                <Route path={"write"} element={<WritePage/>}/>
-                <Route path={"account"} element={<AccountsPage/>}/>
-                <Route path={"login"} element={<LoginPage/>}/>
+                <Route path={"home"} element={<HomePage />} />
+                <Route path={"diaries/:index"} element={<DiaryPage />} />
+                <Route path={"random"} element={<RandomPage />} />
+                <Route path={"write"} element={<WritePage />} />
+                <Route path={"account"} element={<AccountsPage />} />
             </Route>
         </Routes>
     </BrowserRouter>
