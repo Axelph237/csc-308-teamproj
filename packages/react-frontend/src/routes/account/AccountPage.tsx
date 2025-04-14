@@ -81,7 +81,8 @@ export default function AccountsPage() {
                 >
                     Change Profile Picture
                 </button>
-                <button onClick={() => setIsPasswordModalOpen(true)}>
+                <button onClick={() => setIsPasswordModalOpen(true)}
+                        className="mt-2 p-2 rounded-lg text-accent-200 hover:underline">
                     Reset Password
                 </button>
             </div>
@@ -102,6 +103,7 @@ export default function AccountsPage() {
                                ref={fileInputRef}
                                onChange={handleFileChange}
                                className="w-full h-full object-cover"
+                               aria-label="Upload profile picture"
                         />
                         {/* Clickable Image Preview */}
                         <div
