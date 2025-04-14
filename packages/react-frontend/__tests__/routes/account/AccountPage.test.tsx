@@ -58,10 +58,15 @@ describe("AccountPage Component", () => {
 
         expect(cancelModalBtn).toBeDefined();
         expect(uploadBtn).toBeDefined();
+        expect(uploadBtn.getAttribute("aria-disabled")).toBe("true");
 
         // Find the file input
         const fileInput = screen.getByLabelText("Upload profile picture");
+        expect(fileInput).toBeDefined();
+        expect(screen.getByText("No image selected")).toBeDefined();
         
+        // const file = new File(["hello"], "hello.png", {type: "image/png"});
+        // await user.upload(fileInput, file);
 
     });
 

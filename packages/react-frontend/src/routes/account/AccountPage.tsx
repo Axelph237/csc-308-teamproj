@@ -129,6 +129,7 @@ export default function AccountsPage() {
                             <button
                                 onClick={handleUpload}
                                 disabled={!selectedFile}
+                                aria-disabled={!selectedFile}
                                 className={`px-4 py-2 text-white rounded ${
                                     selectedFile ? "bg-accent-900 hover:bg-accent-800" : "bg-gray-400 cursor-not-allowed"}`}
                             >
