@@ -13,5 +13,10 @@
     // or another appropriate module system for your project
     "target": "es5"
     // or "es6" based on your needs
-  }
+  },
+  "references": [
+    {
+      "path": "../types"
+    }
+  ]
 }
