@@ -1,7 +1,7 @@
 import {useRef, useState, useEffect} from "react";
 import {Link} from "react-router-dom";
 import {UserCircleIcon} from "../../assets/icons";
-import {getUser, editPassword} from "../../../src/api/backend";
+import {getUser, editPassword, editUser} from "../../../src/api/backend";
 import {User} from "types/user";
 
 const dummyUser = {
@@ -86,15 +86,33 @@ export default function AccountsPage() {
         setIsPasswordModalOpen(false);
         setPassword("");
     };
-    const handleUpload = () => {
-        if (selectedFile) {
-            console.log("uploading: ", selectedFile);
-            alert("Profile picture updated!"); // replace later with actual logic
+    const handleUpload = async () => {
+        if (selectedFile && user) {
+            try{
+                const reader = new FileReader();
+                reader.onloadend = async () => {
+                    const base64 = reader.result as string;
 
-            setProfilePicture(preview);
-            setIsPicModalOpen(false);
-            setSelectedFile(null);
-            setPreview(null);
+                    const updatedUser = {
+                        username: user.username,
+                        email: user.email,
+                        profilePicture: base64,
+                    };
+                    await editUser(updatedUser, user._id);
+
+                    alert("Profile picture updated!"); // replace later with actual logic
+
+                    setProfilePicture(preview);
+                    setIsPicModalOpen(false);
+                    setSelectedFile(null);
+                    setPreview(null);
+                };
+                reader.readAsDataURL(selectedFile);
+            } catch (err) {
+                console.error("Failed to upload profile picture", err);
+                alert("Error changing password");
+            }
+
         }
     };
     const handleCancelUpload = () => {

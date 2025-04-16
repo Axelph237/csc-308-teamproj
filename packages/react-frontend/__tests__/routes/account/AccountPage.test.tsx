@@ -43,6 +43,7 @@ describe("AccountPage Component", () => {
         mockedGetUser.mockResolvedValue(dummyUser);
         mockedEditPassword.mockResolvedValue(dummyUser);
         mockedEditUser.mockResolvedValue({...dummyUser, profilePicture: dummyUser.profilePicture});
+        window.alert = jest.fn();
     });
 
     it("renders AccountPage component", async () => {
@@ -128,11 +129,12 @@ describe("AccountPage Component", () => {
         await user.click(uploadBtn);
         await waitFor(() => {
             expect(editUser).toHaveBeenCalledWith({
-                username: "testuser",
                 email: "testuser@example.com",
-                profilePicture: expect.any(String)
+                profilePicture: expect.any(String),
+                username: "testuser",
             }, "1");
         })
+        expect(window.alert).toHaveBeenCalledWith("Profile picture updated!");
 
     });
 
