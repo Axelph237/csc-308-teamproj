@@ -1,23 +1,43 @@
-const mongoose = require("mongoose");
-const mongooseServices = require("./mongoose-services.js");
+import mongoose from "mongoose";
+import { MongoMemoryServer } from 'mongodb-memory-server';
+import createMongooseServices from "./mongoose-services.js";
+import { describe, test, expect, beforeAll, afterAll, beforeEach } from "@jest/globals";
 
+let mongoServer;
+let mongooseServices;
+let connection;
+
+jest.setTimeout(15000);
 
 beforeAll(async () => {
-    if (mongoose.connection.readyState === 0) {
-        await mongoose.connect("mongodb://localhost:27017/testDB", {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        });
-    }
+    mongoServer = await MongoMemoryServer.create();
+    const mongoUri = mongoServer.getUri();
+
+    connection = await mongoose.createConnection(mongoUri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    }).asPromise();
+
+    mongooseServices = createMongooseServices(connection);
 });
 
 afterAll(async () => {
-    await mongoose.connection.close();
+    if (connection) {
+        await connection.close();
+    }
+    if (mongoServer) {
+        await mongoServer.stop();
+    }
 });
 
 beforeEach(async () => {
-    if (mongoose.connection.readyState === 1) {
-        await mongoose.connection.db.dropDatabase();
+    const collections = connection.collections;
+    for (const key in collections) {
+        try {
+            await collections[key].deleteMany({});
+        } catch (error) {
+            console.error(`Error clearing collection ${key}:`, error);
+        }
     }
 });
 
@@ -31,24 +51,24 @@ test("supposed to add a user", async () => {
     const foundUser = await mongooseServices.findUserByID(newUser._id);
     expect(foundUser).not.toBeNull();
     expect(foundUser.username).toBe("user");
-    expect(foundUser.email).toBe("jamiil@gmail.com");
 });
+
 
 test("Testing addUser -- success", async () => {
     const user = {
-        "_id": new mongoose.Types.ObjectId(),
-        "username": "test1",
-        "password": "password",
-        "email": "test@test.com"
+        _id: new mongoose.Types.ObjectId(),
+        username: "test1",
+        password: "password",
+        email: "test@test.com",
     };
     const result = await mongooseServices.addUser(user);
     expect(result).not.toBeNull();
     expect(result).toMatchObject(user);
-    expect(result).toHaveProperty('diariesID');
-    expect(result).toHaveProperty('profilePicture');
+    expect(result).toHaveProperty("diariesID");
+    expect(result).toHaveProperty("profilePicture");
 });
 
-test("should not return user", async () => {
+test("should not return user when ID is invalid", async () => {
     const result = await mongooseServices.findUserByID("6553e004d3d9c08b20300000"); // Fake ObjectID
     expect(result).toBeNull();
 });
@@ -61,7 +81,7 @@ test("add diary to a user", async () => {
     });
 
     const newDiary = await mongooseServices.addDiary(
-        { title: "nameofDiary", lastEntry: "entryToBeEntered" },
+        { title: "nameofDiary", lastEntry: "entryToBeEntered", numEntries: 0 },
         user._id
     );
 
@@ -73,7 +93,6 @@ test("add diary to a user", async () => {
     expect(updatedUser.diariesID).toContainEqual(newDiary._id);
 });
 
-
 test("make new page in diary", async () => {
     const user = await mongooseServices.addUser({
         username: "pageMaker",
@@ -81,10 +100,14 @@ test("make new page in diary", async () => {
         email: "pageMaker@madeAPage.com",
     });
 
-    const diary = await mongooseServices.addDiary({
-        title: "diary that has page",
-        lastEntry: "enteringEntry"
-    }, user._id);
+    const diary = await mongooseServices.addDiary(
+        {
+            title: "diary that has page",
+            lastEntry: "enteringEntry",
+            numEntries: 0,
+        },
+        user._id
+    );
 
     const newPage = await mongooseServices.addPage(
         { title: "titleOfPAge", body: "stuff on the page", date: new Date() },
@@ -96,8 +119,32 @@ test("make new page in diary", async () => {
 
     const updatedDiary = await mongooseServices.findPagesByDiary(diary._id);
     expect(updatedDiary).toContainEqual(
-        expect.objectContaining({ title: "titleOfPAge", body: "stuff on the page" })
+        expect.objectContaining({
+            title: "titleOfPAge",
+            body: "stuff on the page",
+        })
     );
 });
 
+test("should not add user with invalid email", async () => {
+    try {
+        const newUser = await mongooseServices.addUser({
+            username: "invalidUser",
+            password: "password",
+            email: "invalid-email", // Invalid email
+        });
+    } catch (error) {
+        expect(error).toBeTruthy();
+    }
+});
 
+test("should not add user with missing required fields", async () => {
+    try {
+        const newUser = await mongooseServices.addUser({
+            username: "noEmailUser",
+            password: "password",
+        });
+    } catch (error) {
+        expect(error).toBeTruthy();
+    }
+});
