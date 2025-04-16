@@ -169,3 +169,51 @@ export async function createPage(diaryId: ObjectId, page: Omit<Page, "_id">): Pr
 
     return body;
 }
+
+/**
+ * PUT
+ * @param userId - the user to find
+ * @param password - the password to edit/change
+ */
+export async function editPassword(userId: ObjectId, password: string): Promise<User> {
+    const url = `/users/${userId}/password`;
+    const init = {
+        method: "PUT",
+        headers: {
+            "Authorization": "Bearer BAD",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(password)
+    };
+
+    const response =  await fetch(url, init);
+    const body = await response.json();
+    if(!response.ok)
+        throw new ApiError(body.message, url, init);
+    return body;
+
+}
+
+/**
+ * PUT
+ * @param user - the user with new profile picture
+ * @param userId - the user to find
+ */
+export async function editUser(user: Omit<User, "_id" | "password" | "diariesID">, userId: ObjectId): Promise<User> {
+    const url = `/users/${userId}`;
+    const init = {
+        method: "PUT",
+        headers: {
+            "Authorization": "Bearer BAD",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(user)
+    };
+
+    const response =  await fetch(url, init);
+    const body = await response.json();
+    if(!response.ok)
+        throw new ApiError(body.message, url, init);
+    return body;
+
+}
