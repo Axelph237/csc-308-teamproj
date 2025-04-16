@@ -6,7 +6,6 @@ import {getDiaryPages} from "../../api/backend";
 export default function RandomPage() {
     const [ page, setPage ] = useState<string | undefined>();
 
-
     useEffect(() => {
         const newPage = "Hello :3"
         setPage(newPage);
@@ -35,7 +34,7 @@ export default function RandomPage() {
             </div>
             {/* Diary */}
             <div className="rounded-lg border-2 border-secondary-500 p-4 flex max-w-1/2">
-                <Markdown source={page}/>
+                {page && <Markdown source={page}/>}
             </div>
         </div>
     );
