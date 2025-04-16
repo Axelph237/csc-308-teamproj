@@ -1,3 +1,8 @@
+import {User} from "types/user";
+import {Diary} from "types/diary";
+import {Page} from "types/page";
+import {ObjectId} from "types/objectId";
+
 export class ApiError extends Error {
     readonly url: string;
     readonly request: RequestInit;
@@ -11,7 +16,7 @@ export class ApiError extends Error {
 /**
  * GET /users/:id
  */
-export async function getUser(): Promise<unknown> {
+export async function getUser(): Promise<User> {
     const url = "/users"
     const init = {
         method: "GET",
@@ -32,7 +37,7 @@ export async function getUser(): Promise<unknown> {
 /**
  * GET /users/:id/diaries -> TODO update to /diaries on backend
  */
-export async function getUserDiaries(): Promise<unknown> {
+export async function getUserDiaries(): Promise<Diary[]> {
     const url = "/diaries";
     const init = {
         method: "GET",
@@ -54,7 +59,7 @@ export async function getUserDiaries(): Promise<unknown> {
  * GET /diaries/:diaryId/pages
  * @param diaryId - The id of the diary to retrieve data from.
  */
-export async function getDiaryPages(diaryId: unknown): Promise<unknown> {
+export async function getDiaryPages(diaryId: ObjectId): Promise<Page[]> {
     const url = `/diaries/${diaryId}/pages`;
     const init = {
         method: "GET",
@@ -77,7 +82,7 @@ export async function getDiaryPages(diaryId: unknown): Promise<unknown> {
  * @param diaryId - The diary the page belongs to.
  * @param pageId - The id of the page.
  */
-export async function getPage(diaryId: unknown, pageId: unknown): Promise<unknown> {
+export async function getPage(diaryId: ObjectId, pageId: ObjectId): Promise<Page> {
     const url = `/diaries/${diaryId}/pages/${pageId}`;
     const init = {
         method: "GET",
@@ -99,7 +104,7 @@ export async function getPage(diaryId: unknown, pageId: unknown): Promise<unknow
  * POST /users
  * @param user - The user to create.
  */
-export async function createUser(user: unknown): Promise<unknown> {
+export async function createUser(user: Omit<User, "_id" | "diariesID">): Promise<User> {
     const url = "/users";
     const init = {
         method: "POST",
@@ -122,7 +127,7 @@ export async function createUser(user: unknown): Promise<unknown> {
  * POST /users/:id/diaries -> TODO update url to /diaries on backend
  * @param diary - The diary to create.
  */
-export async function createDiary(diary: unknown): Promise<unknown> {
+export async function createDiary(diary: Omit<Diary, "_id">): Promise<Diary> {
     const url = "/diaries";
     const init = {
         method: "POST",
@@ -146,7 +151,7 @@ export async function createDiary(diary: unknown): Promise<unknown> {
  * @param page - The page to create.
  * @param diaryId - The id of the diary to add the page to.
  */
-export async function createPage(diaryId: unknown, page: unknown): Promise<unknown> {
+export async function createPage(diaryId: ObjectId, page: Omit<Page, "_id">): Promise<Page> {
     const url = `/diaries/${diaryId}/pages`;
     const init = {
         method: "POST",
