@@ -110,7 +110,7 @@ export default function AccountsPage() {
     };
     // const el = document.getElementById();
     return (
-        <div className="flex flex-col items-center gap-6 p-12 min-h-screen">
+        <div className="flex flex-col items-center gap-6 p-12">
             <h1 className="text-2xl font-bold ">Account Settings</h1>
 
             {/* Profile Section*/}
