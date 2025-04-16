@@ -1,6 +1,9 @@
 //src/routes/home
 import {Link} from "react-router-dom";
 import {BookIcon} from "../../assets/icons";
+import {useEffect, useState} from "react";
+import {getUserDiaries} from "../../api/backend";
+import {Diary} from "types/diary";
 
 function HomeHeader() {
     return (
@@ -12,10 +15,33 @@ function HomeHeader() {
 
 
 function HomeBody() {
-    const diaries = [
-        {title: "Diary 1", date: "2021-01-01"},
-        {title: "Diary 2", date: "2021-02-01"},
-    ]
+    // const diaries = [
+    //     {title: "Diary 1", date: "2021-01-01"},
+    //     {title: "Diary 2", date: "2021-02-01"},
+    // ]
+    const [diaries, setDiaries] = useState<Diary[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchDiaries = async () => {
+            try {
+                const data = await getUserDiaries();
+                setDiaries(data);
+            } catch (err) {
+                setError("Failed to load diaries");
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchDiaries();
+    }, []);
+    if(loading) return <div className="p-6">Loading...</div>;
+    if (error) return <div className="p-6 text-red-500">Error: {error}</div>;
+
+    //todo: put random string for user id temporarily
 
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
@@ -24,7 +50,7 @@ function HomeBody() {
                     <div
                         className="rounded-2xl p-6 shadow-lg bg-secondary-500 hover:bg-secondary-700 transition min-h-[150px]">
                         <h2 className="text-xl font-bold text-secondary-100">{diary.title}</h2>
-                        <p className="text-sm text-secondary-300">{diary.date}</p>
+                        {/*<p className="text-sm text-secondary-300">{diary.date}</p>*/}
                     </div>
                 </Link>
             ))}
