@@ -8,6 +8,7 @@ const { User, Diary, Page } = models;
 const {
     findUserByID,
     findDiariesByUser,
+    findDiaryByID,
     findPagesByDiary,
     findPageByDiaryAndPageID,
     findRandomPage,
@@ -35,9 +36,10 @@ describe('test mongoose User model', () => {
 
         mockingoose(User).toReturn(_doc, 'findOne');
 
-        return User.findById({ _id: '661bf7e21d2c3a7a4f3e6b19' }).then(doc => {
+        return findUserByID({ _id: '661bf7e21d2c3a7a4f3e6b19' }).then(doc => {
             expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_doc);
         });
+
     });
     it('testing addUser', () => {
         const _input = {
@@ -54,12 +56,9 @@ describe('test mongoose User model', () => {
 
         mockingoose(User).toReturn(_mockedSave, 'save');
 
-       /* return addUser(_input).then(result => {
-            expect(result).toHaveProperty('username', _input.username);
-            expect(result).toHaveProperty('email', _input.email);
-            expect(result).toHaveProperty('password', _input.password);
-        }); */
-
+        return addUser(_input).then(doc => {
+            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedSave);
+        });
     });
 });
 
@@ -75,24 +74,72 @@ describe('test mongoose Diary model', () => {
 
         mockingoose(Diary).toReturn(_doc, 'findOne');
 
-        return Diary.findById({ _id: '507f191e810c19729de860ea' }).then(doc => {
+        return findDiaryByID({ _id: '507f191e810c19729de860ea' }).then(doc => {
             expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_doc);
+        });
+    });
+    it('testing addDiary', () => {
+        const _input = {
+            title: "diaryTypeshii",
+            lastEntry: "nunyabiznuss",
+            numEntries: 30,
+            entries: []
+        };
+        const _mockedSave = {
+            ..._input
+        };
+
+        mockingoose(Diary).toReturn(_mockedSave, 'save');
+
+        return addDiary(_input).then(doc => {
+            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedSave);
         });
     });
 });
 
 describe('test mongoose Page model', () => {
-    it('should return the doc with findById', () => {
-        const _doc = {
-            title: "My Page Model",
-            date: "3005",
-            body: "This is a page entry. Im going to talk about my day. It was kinda bad. but also kinda good."
+    it('should return the correct page for diary and page ID', () => {
+        const mockPageId = '662e9eac6f6c4b2f9c4f9f22';
+        const _mockedDiary = {
+            _id: '662e9eac6f6c4b2f9c4f9f21',
+            title: "Test Diary",
+            lastEntry: "04/15/25",
+            numEntries: 1,
+            entries: [
+                {
+                    _id: mockPageId,
+                    title: "Test Page",
+                    date: "04/15/25",
+                    body: "This is a test page"
+                }
+            ]
         };
 
-        mockingoose(Page).toReturn(_doc, 'findOne');
+        mockingoose(Diary).toReturn(_mockedDiary, 'findOne');
 
-        return Page.findById({ _id: '507f191e810c19729de860ea' }).then(doc => {
-            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_doc);
+        return findPageByDiaryAndPageID(_mockedDiary._id, mockPageId).then(page => {
+            expect(JSON.parse(JSON.stringify(page))).toMatchObject({
+                _id: mockPageId,
+                title: "Test Page",
+                date: "04/15/25",
+                body: "This is a test page"
+            });
+        });
+    });
+    it('testing addPage', () => {
+        const _input = {
+            title: "I did summn today",
+            date: "3000 BCE",
+            body: "yabadababdeodeodaodaodaodaodoad",
+        };
+        const _mockedSave = {
+            ..._input
+        };
+
+        mockingoose(Page).toReturn(_mockedSave, 'save');
+
+        return addPage(_input).then(doc => {
+            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedSave);
         });
     });
 });
