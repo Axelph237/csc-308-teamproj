@@ -1,8 +1,23 @@
-import {useRef, useState} from "react";
+import {useRef, useState, useEffect} from "react";
 import {Link} from "react-router-dom";
 import {UserCircleIcon} from "../../assets/icons";
+import {getUser, editPassword} from "../../../src/api/backend";
+import {User} from "types/user";
+
+const dummyUser = {
+    _id: "dummy-id",
+    username: "dummyuser",
+    email: "dummy@example.com",
+    password: "dummyPass",
+    diariesID: [],
+    profilePicture: null,
+};
 
 export default function AccountsPage() {
+    const [user, setUser] = useState<User>();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
     const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
     const [password, setPassword] = useState("");
 
@@ -13,6 +28,24 @@ export default function AccountsPage() {
     const [profilePicture, setProfilePicture] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    useEffect(() => {
+        const fetchUser = async  () => {
+            try {
+                const data = await getUser();
+                setUser(data);
+                setProfilePicture(data.profilePicture ?? null);
+            } catch (err) {
+                setError("Failed to load user");
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchUser();
+    }, []);
+    if(loading) return <div className="p-6">Loading...</div>;
+    if(error) return <div className="p-6 text-red-500">Error: {error}</div>;
+
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files[0];
         if (file) {
@@ -20,20 +53,35 @@ export default function AccountsPage() {
             setPreview(URL.createObjectURL(file));
         }
     };
+
     const handlePasswordChange = (event) => {
         const newPassword = event.target.value;
         if (newPassword) {
             setPassword(newPassword);
         }
     };
-    const handleNewPassword = () => {
-        if (password) {
-            alert("Password changed successfully"); // replace later
-            setIsPasswordModalOpen(false);
-            setPassword(""); // clear
+    // const handleNewPassword = () => {
+    //     if (password) {
+    //         alert("Password changed successfully"); // replace later
+    //         setIsPasswordModalOpen(false);
+    //         setPassword(""); // clear
+    //     }
+    //
+    // }
+    const handleNewPassword = async () => {
+        if (password && user?._id) {
+            try {
+                await editPassword(user._id, password);
+                alert("Password changed successfully");
+                setIsPasswordModalOpen(false);
+                setPassword("");
+            } catch (err) {
+                console.error("Failed to change password", err);
+                alert("Error changing password");
+            }
         }
+    };
 
-    }
     const handleCancelPassword = () => {
         setIsPasswordModalOpen(false);
         setPassword("");
@@ -65,6 +113,12 @@ export default function AccountsPage() {
 
             {/* Profile Section*/}
             <div className="flex flex-col items-center p-6 rounded-lg">
+                {user && (
+                    <div className="text-center text-lg">
+                        <p className="font-semibold text-xl">Username: {user.username}</p>
+                        <p>Email: {user.email}</p>
+                    </div>
+                )}
                 {profilePicture && (
                     <div className="rounded-full w-40 h-40 overflow-hidden border border-gray-300">
                         <img
@@ -75,7 +129,7 @@ export default function AccountsPage() {
                         />
                     </div>
                 )}
-                {/*<UserCircleIcon className="icon-lg"/>*/}
+
                 <button onClick={() => setIsPicModalOpen(true)}
                         className="mt-2 p-2 rounded-lg text-accent-200 hover:underline"
                 >

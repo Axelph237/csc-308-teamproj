@@ -1,11 +1,49 @@
 import {render, screen, waitFor} from "@testing-library/react";
 import {MemoryRouter, Route, Routes} from "react-router-dom";
 import AccountPage from "../../../src/routes/account/AccountPage";
-import {expect, describe, it} from "@jest/globals";
+import {expect, describe, it, beforeEach, beforeAll} from "@jest/globals";
 import userEvent from "@testing-library/user-event";
+import type * as backendApi from "../../../src/api/backend";
+import { jest } from "@jest/globals";
+import {act} from "react";
+
+jest.mock("../../../src/api/backend", () => ({
+    getUser: jest.fn(),
+    editUser: jest.fn(),
+    editPassword: jest.fn(),
+}));
+// Dummy Data
+const dummyUser = {
+    _id: "1",
+    username: "testuser",
+    email: "testuser@example.com",
+    password: "pass",
+    diariesID: [],
+    profilePicture: null,
+};
+
+const {getUser, editPassword, editUser} = require("../../../src/api/backend");
+const mockedGetUser = getUser as jest.MockedFunction<typeof backendApi.getUser>;
+const mockedEditPassword = editPassword as jest.MockedFunction<typeof backendApi.editPassword>;
+const mockedEditUser = editUser as jest.MockedFunction<typeof backendApi.editUser>;
+
 
 describe("AccountPage Component", () => {
     const user = userEvent.setup();
+
+    async function renderWithRouter(component: React.ReactNode) {
+        await act(async () => {
+            render(<MemoryRouter>{component}</MemoryRouter>);
+        });
+    }
+    beforeAll(() => {
+        global.URL.createObjectURL = jest.fn(() => "mocked-preview-url");
+    })
+    beforeEach(() => {
+        mockedGetUser.mockResolvedValue(dummyUser);
+        mockedEditPassword.mockResolvedValue(dummyUser);
+        mockedEditUser.mockResolvedValue({...dummyUser, profilePicture: dummyUser.profilePicture});
+    });
 
     it("renders AccountPage component", async () => {
         render(
@@ -25,14 +63,19 @@ describe("AccountPage Component", () => {
 
             const logoutBtn = screen.getByRole("link", {name: "Log Out"});
             expect(logoutBtn).toBeDefined();
+
+
+            const username = screen.getByText("Username: testuser");
+            expect(username).toBeDefined();
+
+            const email = screen.getByText("Email: testuser@example.com");
+            expect(email).toBeDefined();
         });
     });
     it("opens password modal and shows modal buttons", async () => {
-        render(
-            <MemoryRouter>
-                <AccountPage/>
-            </MemoryRouter>
-        );
+        await renderWithRouter(<AccountPage/>);
+
+
         const resetBtn = screen.getByRole("button", {name: "Reset Password"});
         await user.click(resetBtn);
 
@@ -40,16 +83,25 @@ describe("AccountPage Component", () => {
         const changePwdBtn = await screen.getByRole("button", {name: "Change Password"});
         expect(cancelModalBtn).toBeDefined();
         expect(changePwdBtn).toBeTruthy();
-        await user.click(cancelModalBtn);
+
+        const newPwdInput = await screen.findByPlaceholderText("Enter new password");
+
+        await user.type(newPwdInput, "newPassword");
+
+        // click the "change password" button
+        await user.click(changePwdBtn);
+
+        await waitFor(() => {
+            expect(mockedEditPassword).toBeCalledWith("1", "newPassword");
+        })
+
+
 
     });
 
     it("opens profile picture modal and shows", async () => {
-        render(
-            <MemoryRouter>
-                <AccountPage/>
-            </MemoryRouter>
-        );
+        await renderWithRouter(<AccountPage/>);
+
         const profileBtn = screen.getByRole("button", {name: "Change Profile Picture"});
         await user.click(profileBtn);
 
@@ -65,8 +117,22 @@ describe("AccountPage Component", () => {
         expect(fileInput).toBeDefined();
         expect(screen.getByText("No image selected")).toBeDefined();
         
-        // const file = new File(["hello"], "hello.png", {type: "image/png"});
-        // await user.upload(fileInput, file);
+        const file = new File(["hello"], "hello.png", {type: "image/png"});
+        await user.upload(fileInput, file);
+
+        await waitFor(() => {
+            expect(uploadBtn.getAttribute("aria-disabled")).toBe("false");
+        })
+
+
+        await user.click(uploadBtn);
+        await waitFor(() => {
+            expect(editUser).toHaveBeenCalledWith({
+                username: "testuser",
+                email: "testuser@example.com",
+                profilePicture: expect.any(String)
+            }, "1");
+        })
 
     });
 
