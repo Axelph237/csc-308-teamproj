@@ -4,15 +4,6 @@ import {UserCircleIcon} from "../../assets/icons";
 import {getUser, editPassword, editUser} from "../../../src/api/backend";
 import {User} from "types/user";
 
-const dummyUser = {
-    _id: "dummy-id",
-    username: "dummyuser",
-    email: "dummy@example.com",
-    password: "dummyPass",
-    diariesID: [],
-    profilePicture: null,
-};
-
 export default function AccountsPage() {
     const [user, setUser] = useState<User>();
     const [loading, setLoading] = useState(true);
@@ -60,14 +51,7 @@ export default function AccountsPage() {
             setPassword(newPassword);
         }
     };
-    // const handleNewPassword = () => {
-    //     if (password) {
-    //         alert("Password changed successfully"); // replace later
-    //         setIsPasswordModalOpen(false);
-    //         setPassword(""); // clear
-    //     }
-    //
-    // }
+
     const handleNewPassword = async () => {
         if (password && user?._id) {
             try {
