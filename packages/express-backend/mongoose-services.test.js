@@ -1,12 +1,9 @@
-const mockingoose = require('mockingoose')
+import * as mockingoose from 'mockingoose';
+import mongoose from "mongoose";
+const { Types: { ObjectId } } = mongoose;
 
-//figure out how to import correctly
-import User from './mongoose-services.js/User';
-const Diary = require('./mongoose-services.js/Diary');
-const Page = require('./mongoose-services.js/Page');
-
-const {findUserByID} = require("./mongoose-services.js"); //might be messed up
-
+import createMongooseServices, { models } from "./mongoose-services.js";
+const { User, Diary, Page } = models;
 
 describe('test mongoose User model', () => {
     it('should return the doc with findById', () => {
@@ -28,7 +25,7 @@ describe('test mongoose User model', () => {
 
     it('should return the doc with update', () => {
         const _doc = {
-            _id: ObjectId('661bf7e21d2c3a7a4f3e6b19'),
+            _id: new ObjectId('661bf7e21d2c3a7a4f3e6b19'),
             username: 'willmayer77',
             password: "password",
             email: 'test@example.com',

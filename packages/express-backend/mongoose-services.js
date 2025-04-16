@@ -127,6 +127,11 @@ export default function createMongooseServices(connection) {
 }
 
 const defaultServices = createMongooseServices(mongoose);
+export const models = {
+    User: mongoose.model("User"),
+    Diary: mongoose.model("Diary"),
+    Page: mongoose.model("Page")
+};
 export const {
     findUserByID,
     findDiariesByUser,
