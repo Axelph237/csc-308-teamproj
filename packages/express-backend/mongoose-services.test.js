@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const { Types: { ObjectId } } = mongoose;
 
 import createMongooseServices, { models } from "./mongoose-services.js";
+import {expect} from "@jest/globals";
 const { User, Diary, Page } = models;
 
 const {
@@ -60,6 +61,30 @@ describe('test mongoose User model', () => {
             expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedSave);
         });
     });
+    it('testing removeUser (need to add first)', () => {
+        const _input = {
+            username: 'willmayer77',
+            email: 'test@example.com',
+            password: "password"
+        };
+        const _mockedSave = {
+            _id: '661bf7e21d2c3a7a4f3e6b19',
+            ..._input,
+            diariesID: [],
+            profilePicture: ''
+        };
+        const _mockedDelete = {}
+
+        mockingoose(User).toReturn(_mockedSave, 'save');
+        mockingoose(User).toReturn(_mockedDelete, 'findOneAndRemove');
+
+        return addUser(_input).then(doc => {
+            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedSave);
+        });
+        return removeUser( '661bf7e21d2c3a7a4f3e6b19' ).then(doc => {
+            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedDelete);
+        })
+    });
 });
 
 describe('test mongoose Diary model', () => {
@@ -94,6 +119,28 @@ describe('test mongoose Diary model', () => {
         return addDiary(_input).then(doc => {
             expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedSave);
         });
+    });
+    it('testing removeDiary (need to add first)', () => {
+        const _input = {
+            title: "diaryTypeshii",
+            lastEntry: "nunyabiznuss",
+            numEntries: 30,
+            entries: []
+        };
+        const _mockedSave = {
+            ..._input
+        };
+        const _mockedDelete = {}
+
+        mockingoose(Diary).toReturn(_mockedSave, 'save');
+        mockingoose(Diary).toReturn(_mockedDelete, 'findOneAndRemove');
+
+        return addDiary(_input).then(doc => {
+            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedSave);
+        });
+        return removeDiary( '661bf7e21d2c3a7a4f3e6b19' ).then(doc => {
+            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedDelete);
+        })
     });
 });
 
@@ -141,5 +188,26 @@ describe('test mongoose Page model', () => {
         return addPage(_input).then(doc => {
             expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedSave);
         });
+    });
+    it('testing removePage (need to add first)', () => {
+        const _input = {
+            title: "I did summn today",
+            date: "3000 BCE",
+            body: "yabadababdeodeodaodaodaodaodoad",
+        };
+        const _mockedSave = {
+            ..._input
+        };
+        const _mockedDelete = {}
+
+        mockingoose(Page).toReturn(_mockedSave, 'save');
+        mockingoose(Page).toReturn(_mockedDelete, 'findOneAndRemove');
+
+        return addPage(_input).then(doc => {
+            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedSave);
+        });
+        return removePage( '661bf7e21d2c3a7a4f3e6b19' ).then(doc => {
+            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedDelete);
+        })
     });
 });
