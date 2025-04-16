@@ -31,6 +31,8 @@ export default function createMongooseServices(connection) {
     return {
         findUserByID: (id) => User.findById(id),
 
+        findDiaryByID: (id) => Diary.findById(id),
+
         findDiariesByUser: async (userId) => {
             const user = await User.findById(userId);
             await user.populate("diariesID");
