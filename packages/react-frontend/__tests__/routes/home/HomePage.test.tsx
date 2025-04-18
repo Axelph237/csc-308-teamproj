@@ -2,23 +2,35 @@ import {render, screen, waitFor} from "@testing-library/react";
 import {MemoryRouter, Route, Routes} from "react-router-dom";
 import HomePage from "../../../src/routes/home/HomePage";
 import {expect, describe, it, jest, beforeEach} from "@jest/globals";
-import type * as userApi from "@src/api/user";
+import {getUserDiaries} from "../../../src/api/backend";
+
+import type * as backendApi from "../../../src/api/backend";
 
 // Mocking the getUserDiaries function (ensure it's correctly mocked)
-jest.mock("../../../src/api/user", () => ({
+jest.mock("../../../src/api/backend", () => ({
     getUserDiaries: jest.fn(),
 }));
 
-
-const {getUserDiaries} = require("../../../src/api/user");
-const mockedGetUserDiaries = getUserDiaries as jest.MockedFunction<typeof userApi.getUserDiaries>;
+const mockedGetUserDiaries = getUserDiaries as jest.MockedFunction<typeof backendApi.getUserDiaries>;
 
 describe("HomePage Component", () => {
     beforeEach(() => {
         // Set up mock for getUserDiaries
-        getUserDiaries.mockResolvedValue([
-            {title: "Diary 1", date: "12-01-2025"},
-            {title: "A Second Diary", date: "12-02-2025"}
+        mockedGetUserDiaries.mockResolvedValue([
+            {
+                _id: "1",
+                title: "Diary 1",
+                lastEntry: "12-02-2025",
+                numEntries: 25,
+                entries: [],
+            },
+            {
+                _id: "2",
+                title: "A Second Diary",
+                lastEntry: "12-11-2025",
+                numEntries: 1,
+                entries: [],
+            },
         ]);
     });
 
@@ -41,7 +53,7 @@ describe("HomePage Component", () => {
         );
 
         await waitFor(() => {
-            expect(screen.getByText("Loading diaries...")).toBeDefined();
+            expect(screen.getByText("Loading...")).toBeDefined();
         });
     });
 
@@ -85,7 +97,7 @@ describe("HomePage Component", () => {
             <HomePage/>
         </MemoryRouter>)
 
-        const errorMessage = await screen.findByText("Error: Fetch failed")
+        const errorMessage = await screen.findByText("Error: Failed to load diaries")
 
         expect(errorMessage).toBeDefined();
     });
