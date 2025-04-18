@@ -2,6 +2,7 @@ import {render, screen, waitFor} from "@testing-library/react";
 import {MemoryRouter, Route, Routes} from "react-router-dom";
 import HomePage from "../../../src/routes/home/HomePage";
 import {expect, describe, it, jest, beforeEach} from "@jest/globals";
+import {getUserDiaries} from "../../../src/api/backend";
 
 import type * as backendApi from "../../../src/api/backend";
 
@@ -10,8 +11,6 @@ jest.mock("../../../src/api/backend", () => ({
     getUserDiaries: jest.fn(),
 }));
 
-
-const {getUserDiaries} = require("../../../src/api/backend");
 const mockedGetUserDiaries = getUserDiaries as jest.MockedFunction<typeof backendApi.getUserDiaries>;
 
 describe("HomePage Component", () => {

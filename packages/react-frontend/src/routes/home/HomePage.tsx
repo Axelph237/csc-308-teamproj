@@ -26,8 +26,7 @@ function HomeBody() {
     useEffect(() => {
         const fetchDiaries = async () => {
             try {
-                const data = await getUserDiaries();
-                setDiaries(data);
+                setDiaries(await getUserDiaries());
             } catch (err) {
                 setError("Failed to load diaries");
                 console.error(err);
