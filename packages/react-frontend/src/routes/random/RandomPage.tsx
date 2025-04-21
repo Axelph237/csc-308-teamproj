@@ -2,7 +2,7 @@ import Markdown from "../../components/Markdown";
 import {EyeIcon, UserCircleIcon} from "../../assets/icons";
 import {useEffect, useState} from "react";
 import {Page} from "types/page";
-import {findRandomPage} from "@src/api/backend";
+import {findRandomPage} from "../../../src/api/backend";
 
 export default function RandomPage() {
     const [ page, setPage ] = useState<Page | undefined>();
