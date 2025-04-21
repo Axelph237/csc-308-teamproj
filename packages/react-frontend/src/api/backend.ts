@@ -169,3 +169,74 @@ export async function createPage(diaryId: ObjectId, page: Omit<Page, "_id">): Pr
 
     return body;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * GET random page
+ *
+ */
+export async function findRandomPage(): Promise<Page> {
+    const url = `/diaries/`;
+    const init = {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer BAD"
+        }
+    };
+
+    const response =  await fetch(url, init);
+
+    const body = await response.json();
+    if (!response.ok)
+        throw new ApiError(body.message, url, init);
+
+    return body;
+}
