@@ -49,7 +49,7 @@ export default function RandomPage() {
             </div>
             {/* Diary */}
             <div className="rounded-lg border-2 border-secondary-500 p-4 flex max-w-1/2">
-                {page.body && <Markdown source={page.body} />}
+                {page && page.body && <Markdown source={page.body} />}
             </div>
         </div>
     );
