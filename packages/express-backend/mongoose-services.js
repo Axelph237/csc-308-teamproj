@@ -66,6 +66,11 @@ export default function createMongooseServices(connection) {
             return randomDiary.entries[pageInd];
         },
 
+        findPassword: async (userID) => {
+            const user = await User.findById(userID);
+            return user.password;
+        },
+
         // Create Functions
         addUser: (user) => {
             const newUser = new User(user);
@@ -175,4 +180,5 @@ export const {
     editPage,
     upsertAuthToken,
     upsertRefreshToken,
+    findPassword
 } = defaultServices;
