@@ -20,13 +20,20 @@ const UserSchema = new mongoose.Schema({
     password: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     diariesID: [{ type: mongoose.Schema.Types.ObjectId, ref: "Diary" }],
-    profilePicture: { type: String }
+    profilePicture: { type: String },
+    securityID: { type: mongoose.Schema.Types.ObjectId, ref: "Security" },
+});
+
+const SecuritySchema = new mongoose.Schema({
+    authToken: { type: String, required: true },
+    refreshToken: { type: String, required: true }
 });
 
 export default function createMongooseServices(connection) {
     const Page = connection.model("Page", PageSchema);
     const Diary = connection.model("Diary", DiarySchema);
     const User = connection.model("User", UserSchema);
+    const Security = connection.model("Security", SecuritySchema);
 
     return {
         findUserByID: (id) => User.findById(id),
@@ -124,6 +131,23 @@ export default function createMongooseServices(connection) {
             Object.assign(page, pageData);
             await diary.save();
             return page;
+        },
+
+        // upsert functions for security
+        upsertAuthToken: async (userId, authToken) => {
+            const user = await User.findById(userId);
+            const security = await Security.findById(user.securityID);
+            security.authToken = authToken;
+            await security.save();
+            return security;
+        },
+
+        upsertRefreshToken: async (userId, refreshToken) => {
+            const user = await User.findById(userId);
+            const security = await Security.findById(user.securityID);
+            security.refreshToken = refreshToken;
+            await security.save();
+            return security;
         }
     };
 }
@@ -148,5 +172,7 @@ export const {
     removePage,
     editUser,
     editPassword,
-    editPage
+    editPage,
+    upsertAuthToken,
+    upsertRefreshToken,
 } = defaultServices;
