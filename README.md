@@ -11,3 +11,5 @@ IDE: Download [Jetbrains Webstorm](https://www.jetbrains.com/webstorm/download/#
 
 [Base Typescript Style Guide](https://google.github.io/styleguide/tsguide.html)
 
+When running test suites, npm run mock is roughly 4 times faster on average than using npm run test that runs all tests using in-memory and the mocks. This statistic also accounts for the fact npm run test also runs the mock tests and the 4 times faster is accurate. This is what we expected due to the nature of mocked data not requiring actual sending/retrieval of data.
+
