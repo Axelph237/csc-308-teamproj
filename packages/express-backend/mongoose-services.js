@@ -131,6 +131,23 @@ export default function createMongooseServices(connection) {
             Object.assign(page, pageData);
             await diary.save();
             return page;
+        },
+
+        // upsert functions for security
+        upsertAuthToken: async (userId, authToken) => {
+            const user = await User.findById(userId);
+            const security = await Security.findById(user.securityID);
+            security.authToken = authToken;
+            await security.save();
+            return security;
+        },
+
+        upsertRefreshToken: async (userId, refreshToken) => {
+            const user = await User.findById(userId);
+            const security = await Security.findById(user.securityID);
+            security.refreshToken = refreshToken;
+            await security.save();
+            return security;
         }
     };
 }
