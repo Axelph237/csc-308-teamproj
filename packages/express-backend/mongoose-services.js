@@ -172,5 +172,7 @@ export const {
     removePage,
     editUser,
     editPassword,
-    editPage
+    editPage,
+    upsertAuthToken,
+    upsertRefreshToken,
 } = defaultServices;
