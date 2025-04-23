@@ -172,7 +172,7 @@ export async function createPage(diaryId: ObjectId, page: Omit<Page, "_id">): Pr
 
 
 /**
- * GET random page
+ * GET /diaries/
  *
  */
 export async function findRandomPage(): Promise<Page> {
@@ -194,7 +194,7 @@ export async function findRandomPage(): Promise<Page> {
 }
 
 /**
- * PUT
+ * PUT /users/:id/password
  * @param userId - the user to find
  * @param password - the password to edit/change
  */
@@ -218,7 +218,7 @@ export async function editPassword(userId: ObjectId, password: string): Promise<
 }
 
 /**
- * PUT
+ * PUT /users/:id
  * @param user - the user with new profile picture
  * @param userId - the user to find
  */
