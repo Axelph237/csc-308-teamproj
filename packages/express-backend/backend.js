@@ -4,6 +4,9 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 import { connectToDB } from "./mongoose-connection.js";
+import {isAuthenticated} from "./auth/auth-middleware.js";
+import * as cookie from "cookie";
+import {createCredentials} from "./auth/auth-services.js";
 
 
 const app = express();
@@ -11,6 +14,24 @@ const port = process.env.PORT || 52784;
 
 app.use(cors());
 app.use(express.json());
+app.use(isAuthenticated);
+
+// TODO REMOVE
+app.get("/auth", (req, res) => {
+    const testCredentials = createCredentials(
+        "fake-user-id",
+        "fake@email.com"
+    );
+
+    res.setHeader(
+        "Set-Cookie",
+        cookie.serialize(
+            "auth",
+            JSON.stringify(testCredentials)
+        ));
+
+    res.send("Authentication added.");
+})
 
 let mongooseServices;
 
