@@ -32,7 +32,7 @@ app.get("/auth", async (req, res) => {
     res.send("Authentication added.");
 })
 app.get("/test-auth", authenticatedRoute , async (req, res) => {
-    res.send(`Correctly authenticated. User: ${req.user}`)
+    res.send(`Correctly authenticated. User: ${req.user.userId} | Email: ${req.user.email}`);
 })
 
 let mongooseServices;

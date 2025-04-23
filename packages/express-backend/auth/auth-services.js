@@ -114,7 +114,7 @@ export async function validateCredentials(credentials) {
 export async function createCredentials(userId, email) {
     const accessToken = await generateJWT({
         sub: userId,
-        "email": email
+        email: email
     })
 
     const refreshToken = await generateJWT({
