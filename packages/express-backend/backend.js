@@ -34,6 +34,7 @@ app.get("/users/:id", async (req, res) => {
         res.status(500).send("error finding user");
     }
 });
+
 app.get("/users/:id/diaries", async (req, res) => {
     try {
         const diaries = await mongooseServices.findDiariesByUser(req.params.id);
