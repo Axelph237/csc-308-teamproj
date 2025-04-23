@@ -193,11 +193,14 @@ async function generateJWT(payload, exp  = '1day') {
  */
 async function verifyJWT(jwt) {
     try {
+        const encoder = new TextEncoder();
+        const secret = encoder.encode(process.env.JWT_SECRET);
+
         const {
             payload
-        } = await jose.jwtVerify(jwt, JWT_SECRET, {
-            issuer: JWT_ISSUER,
-            audience: JWT_AUDIENCE,
+        } = await jose.jwtVerify(jwt, secret, {
+            issuer: process.env.JWT_ISSUER,
+            audience: process.env.JWT_AUDIENCE,
         })
 
         return payload;
