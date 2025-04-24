@@ -59,6 +59,8 @@ app.get("/diaries/:diaryId/pages", async (req, res) => {
     }
 });
 
+
+
 app.get("/diaries/:diaryId/pages/:pageId", async (req, res) => {
     try {
         const page = await mongooseServices.findPageByDiaryAndPageID(req.params.diaryId, req.params.pageId);
