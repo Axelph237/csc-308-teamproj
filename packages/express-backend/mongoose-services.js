@@ -36,6 +36,9 @@ export default function createMongooseServices(connection) {
     const Security = connection.model("Security", SecuritySchema);
 
     return {
+
+        findUserByUser: (username) => User.findUserByUser(username),
+
         findUserByID: (id) => User.findById(id),
 
         findDiaryByID: (id) => Diary.findById(id),
