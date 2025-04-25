@@ -1,4 +1,4 @@
-import {Type} from "@sinclair/typebox";
+import {Static, Type} from "@sinclair/typebox";
 import {objectIdObj} from "./objectId";
 
 export const page = Type.Object({
@@ -7,4 +7,4 @@ export const page = Type.Object({
     date: Type.String(),
     body: Type.String(),
 })
-
+export type Page = Static<typeof page>;

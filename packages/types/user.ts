@@ -1,4 +1,4 @@
-import {Type} from "@sinclair/typebox";
+import {Static, Type} from "@sinclair/typebox";
 import {objectIdObj} from "./objectId";
 
 export const user = Type.Object({
@@ -9,3 +9,4 @@ export const user = Type.Object({
     diariesID: Type.Array(objectIdObj),
     profilePicture: Type.String({format: "uri"})
 })
+export type User = Static<typeof user>;
