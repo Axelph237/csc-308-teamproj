@@ -69,7 +69,6 @@ app.get("/diaries/:diaryId/pages/:pageId", async (req, res) => {
         res.status(500).send("error finding page");
     }
 });
-
 app.post("/users", async (req, res) => {
     try {
         const  {username, password, email, profilePicture } = req.body;
@@ -85,7 +84,18 @@ app.post("/users", async (req, res) => {
     }
 });
 
+// app.post("/users/:id/securityID"), async( req, res) => {
+//     try{
+//         const authToken = req.authToken;
+//         if (!authToken) {
+//             res.status(401).send("auth token not found");
+//         }
+//         const refreshToken = req.refreshtoken;
+//     }
+//     catch (error)
+// }
 
+app.get("/users)")
 app.post("/users/:id/diaries", async (req, res) => {
     try {
         const  title  = req.body;
