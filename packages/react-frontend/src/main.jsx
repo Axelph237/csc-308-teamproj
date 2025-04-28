@@ -9,6 +9,9 @@ import WritePage from "./routes/write/WritePage.tsx";
 import AccountsPage from "./routes/account/AccountPage.tsx";
 import MyApp from "./MyApp.jsx";
 import DiaryPage from "./routes/view-diary/DiaryPage.tsx";
+import LandingPage from "./routes/landing/LandingPage.tsx";
+import LoginPage from "./routes/login/LoginPage.tsx";
+import CreateProfilePage from "./routes/createProfile/CreateProfilePage.tsx";
 
 const container = document.getElementById("root");
 
@@ -38,6 +41,9 @@ root.render(
             {/* Primary app route */}
             <Route path={"/"} element={<MyApp />} >
                 {/* Children of that app route */}
+                <Route path={""} element={<LandingPage />} />
+                <Route path={"createProfile"} element={<CreateProfilePage />} />
+                <Route path={"login"} element={<LoginPage />} />
                 <Route path={"home"} element={<HomePage />} />
                 <Route path={"diaries/:index"} element={<DiaryPage />} />
                 <Route path={"random"} element={<RandomPage />} />
