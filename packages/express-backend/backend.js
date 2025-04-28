@@ -4,6 +4,8 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 import { connectToDB } from "./mongoose-connection.js";
+import * as cookie from "cookie";
+import {login, signup} from "./auth/auth-services.js";
 
 
 const app = express();
@@ -11,6 +13,36 @@ const port = process.env.PORT || 52784;
 
 app.use(cors());
 app.use(express.json());
+
+// TODO REMOVE
+app.get("/auth/signup", async (req, res) => {
+    const user = req.body;
+
+    const signedUp = await signup({
+        username: user.username,
+        email: user.email,
+        password: user.password
+    })
+
+    if (signedUp === true)
+        res.send("Successfully signed up.");
+    else
+        res.status(500).send("Unable to sign up.");
+})
+app.get("/auth/login", async (req, res) => {
+    const user = req.body;
+
+    const credentials = await login(user.username, user.password)
+
+    res.setHeader(
+        "Set-Cookie",
+        cookie.serialize(
+            "auth",
+            JSON.stringify(credentials)
+        ));
+
+    res.send("Successfully logged in.");
+})
 
 let mongooseServices;
 
