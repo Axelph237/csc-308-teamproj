@@ -14,7 +14,6 @@ const port = process.env.PORT || 52784;
 app.use(cors());
 app.use(express.json());
 
-// TODO REMOVE
 app.get("/auth/signup", async (req, res) => {
     const user = req.body;
 
