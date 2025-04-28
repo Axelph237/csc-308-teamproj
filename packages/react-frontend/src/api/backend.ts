@@ -170,8 +170,31 @@ export async function createPage(diaryId: ObjectId, page: Omit<Page, "_id">): Pr
     return body;
 }
 
+
 /**
- * PUT
+ * GET /diaries/
+ *
+ */
+export async function findRandomPage(): Promise<Page> {
+    const url = `/diaries/`;
+    const init = {
+        method: "GET",
+        headers: {
+            "Authorization": "Bearer BAD"
+        }
+    };
+
+    const response =  await fetch(url, init);
+
+    const body = await response.json();
+    if (!response.ok)
+        throw new ApiError(body.message, url, init);
+
+    return body;
+}
+
+/**
+ * PUT /users/:id/password
  * @param userId - the user to find
  * @param password - the password to edit/change
  */
@@ -195,7 +218,7 @@ export async function editPassword(userId: ObjectId, password: string): Promise<
 }
 
 /**
- * PUT
+ * PUT /users/:id
  * @param user - the user with new profile picture
  * @param userId - the user to find
  */
