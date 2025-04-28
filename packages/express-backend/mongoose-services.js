@@ -1,164 +1,188 @@
-// packages/express-backend/mongoose-services.js
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 mongoose.set("debug", true);
 
-mongoose.set("debug", true);
-mongoose.connect('mongodb://localhost:27017/users', {
-//mongoose.connect('mongodb+srv://user:weakpassword@breakbad.4hvan.mongodb.net/?retryWrites=true&w=majority&appName=breakbad', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => {
-    console.log("MongoDB connected successfully!");
-}).catch((error) => {
-    console.error("Error connecting to MongoDB:", error);
-});
-
-// Schema definitions
-// Page
 const PageSchema = new mongoose.Schema({
-    title: {type: String, required: true},
-    date: {type: String, required: true},
-    body: {type: String, required: true},
+    title: { type: String, required: true },
+    date: { type: String, required: true },
+    body: { type: String, required: true },
 });
 
-// Diary
 const DiarySchema = new mongoose.Schema({
-    title: {type: String, required: true},
-    lastEntry: {type: String, required: true},
-    numEntries: {type: Number, required: true, default: 0},
+    title: { type: String, required: true },
+    lastEntry: { type: String, required: true },
+    numEntries: { type: Number, required: true, default: 0 },
     entries: [PageSchema]
 });
 
-// User
 const UserSchema = new mongoose.Schema({
-    username: {type: String, required: true, unique: true},
-    password: {type: String, required: true},
-    email: {type: String, required: true, unique: true},
-    diariesID: [{type: mongoose.Schema.Types.ObjectId, ref: "Diary"}], //reference to Diary docs this might need to change
-    profilePicture: {type: String} //should be a URL
+    username: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    diariesID: [{ type: mongoose.Schema.Types.ObjectId, ref: "Diary" }],
+    profilePicture: { type: String },
+    securityID: { type: mongoose.Schema.Types.ObjectId, ref: "Security" },
 });
 
-// Create Models
-const Page = mongoose.model("Page", PageSchema);
-const Diary = mongoose.model("Diary", DiarySchema);
-const User = mongoose.model("User", UserSchema);
+const SecuritySchema = new mongoose.Schema({
+    authToken: { type: String, required: true },
+    refreshToken: { type: String, required: true }
+});
 
-// Data Functions
-// Read Functions
+export default function createMongooseServices(connection) {
+    const Page = connection.model("Page", PageSchema);
+    const Diary = connection.model("Diary", DiarySchema);
+    const User = connection.model("User", UserSchema);
+    const Security = connection.model("Security", SecuritySchema);
 
-// returns user based on ID
-export function findUserByID(id) {
-    return User.findById(id);
-}
+    return {
 
-// returns diaries associated with user based on userID
-export async function findDiariesByUser(UserID) {
-    const user = await User.findById(UserID);
-    await user.populate("diariesID");
-    await user.save();
-    return user.diariesID;
-}
+        findUserByUser: (username) => User.findUserByUser(username),
 
-// returns all pages associated with a Diary
-// change this later so that it sends data in chunks
-export function findPagesByDiary(DiaryID) {
-    return Diary.findById(DiaryID)
-        .then((result) => {
-            return result.entries;
-        })
-}
+        findUserByID: (id) => User.findById(id),
 
-// returns a page based on its id
-export function findPageByDiaryAndPageID(DiaryID, PageID) {
-    return Diary.findById(DiaryID)
-        .then((result) => {
-            return result.entries.find(entry => entry._id.toString() === PageID);
-        })
-}
+        findDiaryByID: (id) => Diary.findById(id),
 
-// returns a random page from all diaries
-export function findRandomPage() {
-    const diaryInd = Math.floor(Math.random() * Diary.countDocuments());
-    const randomDiary = Diary.findOne().skip(diaryInd);
-    const pageInd = Math.floor(Math.random() * randomDiary.countDocuments());
-    return randomDiary.entries[pageInd];
-}
+        findDiariesByUser: async (userId) => {
+            const user = await User.findById(userId);
+            await user.populate("diariesID");
+            await user.save();
+            return user.diariesID;
+        },
 
-// Create Functions
+        findPagesByDiary: (diaryId) => {
+            return Diary.findById(diaryId)
+                .then((result) => result.entries);
+        },
 
-// adds a User
-export function addUser(user) {
-    let newUser = new User(user);
-    const promise = newUser.save();
-    return promise;
-}
+        findPageByDiaryAndPageID: (diaryId, pageId) => {
+            return Diary.findById(diaryId)
+                .then((result) =>
+                    result.entries.find(entry => entry._id.toString() === pageId)
+                );
+        },
 
-// adds a Diary to the given User
-export async function addDiary(diary, userID) {
-    let newDiary = new Diary(diary);
-    const diaryID = newDiary._id;
-    await newDiary.save();
-    const user = await User.findById(userID);
-    user.diariesID.push(diaryID);
-    await user.save();
-    return newDiary;
-}
+        findRandomPage: () => {
+            const diaryInd = Math.floor(Math.random() * Diary.countDocuments());
+            const randomDiary = Diary.findOne().skip(diaryInd);
+            const pageInd = Math.floor(Math.random() * randomDiary.countDocuments());
+            return randomDiary.entries[pageInd];
+        },
 
-// adds a Page to the given Diary
-export async function addPage(page, diaryID) {
-    const diary = await Diary.findById(diaryID);
-    let newPage = new Page(page);
-    diary.entries.push(newPage);
-    diary.numEntries++;
-    await diary.save();
-    return newPage;
-}
+        findPassword: async (userID) => {
+            const user = await User.findById(userID);
+            return user.password;
+        },
 
-// Delete Functions
+        // Create Functions
+        addUser: (user) => {
+            const newUser = new User(user);
+            return newUser.save();
+        },
 
-// deletes the given user
-export function removeUser(userID) {
-    return User.findByIdAndDelete(userID);
-}
+        addDiary: async (diary, userId) => {
+            const newDiary = new Diary(diary);
+            const diaryId = newDiary._id;
+            await newDiary.save();
+            const user = await User.findById(userId);
+            user.diariesID.push(diaryId);
+            await user.save();
+            return newDiary;
+        },
 
-// delete the given Diary based on given User
-export async function removeDiary(diaryID, userID) {
-    const user = await User.findById(userID);
-    user.diariesID.pull(diaryID); // pull is how we remove an ID reference
-    await user.save();
-    const diary = await Diary.findById(diaryID);
-    await Diary.findByIdAndDelete(diaryID);
-    return diary;
-}
+        addPage: async (page, diaryId) => {
+            const diary = await Diary.findById(diaryId);
+            const newPage = new Page(page);
+            diary.entries.push(newPage);
+            diary.numEntries++;
+            await diary.save();
+            return newPage;
+        },
 
-// delete the given page based on the given diary
-export async function removePage(pageID, diaryID) {
-    const diary = await Diary.findById(diaryID);
-    const page = diary.entries.id(pageID);
-    page.deleteOne()
-    diary.numEntries--;
-    await diary.save();
-    return page;
-}
+        // Delete Functions
+        removeUser: (userId) => User.findByIdAndDelete(userId),
 
-// put the given user information into the given userID
-export async function editUser(user, userID) {
-    const allowedFields = ["username", "email", "profilePicture"];
-    const filteredUser = Object.fromEntries(Object.entries(user).filter(([key]) => allowedFields.includes(key)));
-    return await User.findByIdAndUpdate(userID, filteredUser, {new: true});
-}
+        removeDiary: async (diaryId, userId) => {
+            const user = await User.findById(userId);
+            user.diariesID.pull(diaryId);
+            await user.save();
+            const diary = await Diary.findById(diaryId);
+            await Diary.findByIdAndDelete(diaryId);
+            return diary;
+        },
 
-// updates password field only for security
-export async function editPassword(userID, password) {
-    return await User.findByIdAndUpdate(userID, password, {new: true});
-}
+        removePage: async (pageId, diaryId) => {
+            const diary = await Diary.findById(diaryId);
+            const page = diary.entries.id(pageId);
+            page.deleteOne();
+            diary.numEntries--;
+            await diary.save();
+            return page;
+        },
 
-// updates a page by given diaryID and pageID
-export async function editPage(diaryID, pageID, pageData) {
-    const diary = await Diary.findById(diaryID);
-    const page = diary.entries.id(pageID);
-    Object.assign(page, pageData);
-    await diary.save();
-    return page;
-}
+        // Update Functions
+        editUser: async (user, userId) => {
+            const allowedFields = ["username", "email", "profilePicture"];
+            const filteredUser = Object.fromEntries(
+                Object.entries(user).filter(([key]) => allowedFields.includes(key))
+            );
+            return await User.findByIdAndUpdate(userId, filteredUser, { new: true });
+        },
+
+        editPassword: (userId, password) => {
+            return User.findByIdAndUpdate(userId, { password }, { new: true });
+        },
+
+        editPage: async (diaryId, pageId, pageData) => {
+            const diary = await Diary.findById(diaryId);
+            const page = diary.entries.id(pageId);
+            Object.assign(page, pageData);
+            await diary.save();
+            return page;
+        },
+
+        // upsert functions for security
+        upsertAuthToken: async (userId, authToken) => {
+            const user = await User.findById(userId);
+            const security = await Security.findById(user.securityID);
+            security.authToken = authToken;
+            await security.save();
+            return security;
+        },
+
+        upsertRefreshToken: async (userId, refreshToken) => {
+            const user = await User.findById(userId);
+            const security = await Security.findById(user.securityID);
+            security.refreshToken = refreshToken;
+            await security.save();
+            return security;
+        }
+    };
+
+
+const defaultServices = createMongooseServices(mongoose);
+export const models = {
+    User: mongoose.model("User"),
+    Diary: mongoose.model("Diary"),
+    Page: mongoose.model("Page")
+};
+export const {
+    findUserByID,
+    findUserByUser,
+    findDiariesByUser,
+    findPagesByDiary,
+    findPageByDiaryAndPageID,
+    findRandomPage,
+    addUser,
+    addDiary,
+    addPage,
+    removeUser,
+    removeDiary,
+    removePage,
+    editUser,
+    editPassword,
+    editPage,
+    upsertAuthToken,
+    upsertRefreshToken,
+    findPassword
+} = defaultServices;

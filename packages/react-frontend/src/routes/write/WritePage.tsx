@@ -5,12 +5,19 @@ import Markdown from "../../components/Markdown";
 import "./WritePage.css";
 
 
+enum Status {
+    saved = "Saved!",
+    changed = "Unsaved"
+}
+
 export default function WritePage() {
     const [text, setText] = useState("");
+    const [status, setStatus] = useState("");
     const editorRef = useRef(null);
 
     const editorHandler = useEditable(editorRef, (text) => {
         setText(text);
+        setStatus(Status.changed);
     })
 
     const handleKeyPress = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -32,9 +39,8 @@ export default function WritePage() {
     }
 
     const handleSubmit = () => {
-        const { text } = editorHandler.getState();
-
-        uploadEntry(text);
+        const {text} = editorHandler.getState();
+        setStatus(Status.saved);
     }
 
     return (
@@ -44,6 +50,11 @@ export default function WritePage() {
                 <div className="flex justify-center items-center flex-1">
                     <h1>Write your Entry!</h1>
                 </div>
+
+                <div className="flex justify-center items-center flex-1">
+                    <p>{status}</p>
+                </div>
+
                 <div className="flex justify-center items-center flex-1">
                     <button
                         className="btn"
@@ -58,6 +69,7 @@ export default function WritePage() {
                 {/* Input */}
                 <div
                     id="md-editor"
+                    data-testid="md-editor"
                     ref={editorRef}
                     // onInput={handleInput}
                     onKeyDown={handleKeyPress}
@@ -87,8 +99,4 @@ export default function WritePage() {
             </div>
         </div>
     );
-}
-
-function uploadEntry(entry: string) {
-    console.log(entry);
 }

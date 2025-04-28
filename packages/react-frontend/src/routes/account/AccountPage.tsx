@@ -1,8 +1,14 @@
-import {useRef, useState} from "react";
+import {useRef, useState, useEffect} from "react";
 import {Link} from "react-router-dom";
 import {UserCircleIcon} from "../../assets/icons";
+import {getUser, editPassword, editUser} from "../../../src/api/backend";
+import {User} from "types/user";
 
 export default function AccountsPage() {
+    const [user, setUser] = useState<User>();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
     const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
     const [password, setPassword] = useState("");
 
@@ -13,6 +19,24 @@ export default function AccountsPage() {
     const [profilePicture, setProfilePicture] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
+    useEffect(() => {
+        const fetchUser = async  () => {
+            try {
+                const data = await getUser();
+                setUser(data);
+                setProfilePicture(data.profilePicture ?? null);
+            } catch (err) {
+                setError("Failed to load user");
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchUser();
+    }, []);
+    if(loading) return <div className="p-6">Loading...</div>;
+    if(error) return <div className="p-6 text-red-500">Error: {error}</div>;
+
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files[0];
         if (file) {
@@ -20,33 +44,59 @@ export default function AccountsPage() {
             setPreview(URL.createObjectURL(file));
         }
     };
+
     const handlePasswordChange = (event) => {
         const newPassword = event.target.value;
         if (newPassword) {
             setPassword(newPassword);
         }
     };
-    const handleNewPassword = () => {
-        if (password) {
-            alert("Password changed successfully"); // replace later
-            setIsPasswordModalOpen(false);
-            setPassword(""); // clear
-        }
 
-    }
+    const handleNewPassword = async () => {
+        if (password && user?._id) {
+            try {
+                await editPassword(user._id, password);
+                alert("Password changed successfully");
+                setIsPasswordModalOpen(false);
+                setPassword("");
+            } catch (err) {
+                console.error("Failed to change password", err);
+                alert("Error changing password");
+            }
+        }
+    };
+
     const handleCancelPassword = () => {
         setIsPasswordModalOpen(false);
         setPassword("");
     };
-    const handleUpload = () => {
-        if (selectedFile) {
-            console.log("uploading: ", selectedFile);
-            alert("Profile picture updated!"); // replace later with actual logic
+    const handleUpload = async () => {
+        if (selectedFile && user) {
+            try{
+                const reader = new FileReader();
+                reader.onloadend = async () => {
+                    const base64 = reader.result as string;
 
-            setProfilePicture(preview);
-            setIsPicModalOpen(false);
-            setSelectedFile(null);
-            setPreview(null);
+                    const updatedUser = {
+                        username: user.username,
+                        email: user.email,
+                        profilePicture: base64,
+                    };
+                    await editUser(updatedUser, user._id);
+
+                    alert("Profile picture updated!"); // replace later with actual logic
+
+                    setProfilePicture(preview);
+                    setIsPicModalOpen(false);
+                    setSelectedFile(null);
+                    setPreview(null);
+                };
+                reader.readAsDataURL(selectedFile);
+            } catch (err) {
+                console.error("Failed to upload profile picture", err);
+                alert("Error changing password");
+            }
+
         }
     };
     const handleCancelUpload = () => {
@@ -60,11 +110,17 @@ export default function AccountsPage() {
     };
     // const el = document.getElementById();
     return (
-        <div className="flex flex-col items-center gap-6 p-12 min-h-screen">
+        <div className="flex flex-col items-center gap-6 p-12">
             <h1 className="text-2xl font-bold ">Account Settings</h1>
 
             {/* Profile Section*/}
             <div className="flex flex-col items-center p-6 rounded-lg">
+                {user && (
+                    <div className="text-center text-lg">
+                        <p className="font-semibold text-xl">Username: {user.username}</p>
+                        <p>Email: {user.email}</p>
+                    </div>
+                )}
                 {profilePicture && (
                     <div className="rounded-full w-40 h-40 overflow-hidden border border-gray-300">
                         <img
@@ -75,13 +131,14 @@ export default function AccountsPage() {
                         />
                     </div>
                 )}
-                {/*<UserCircleIcon className="icon-lg"/>*/}
+
                 <button onClick={() => setIsPicModalOpen(true)}
                         className="mt-2 p-2 rounded-lg text-accent-200 hover:underline"
                 >
                     Change Profile Picture
                 </button>
-                <button onClick={() => setIsPasswordModalOpen(true)}>
+                <button onClick={() => setIsPasswordModalOpen(true)}
+                        className="mt-2 p-2 rounded-lg text-accent-200 hover:underline">
                     Reset Password
                 </button>
             </div>
@@ -102,6 +159,7 @@ export default function AccountsPage() {
                                ref={fileInputRef}
                                onChange={handleFileChange}
                                className="w-full h-full object-cover"
+                               aria-label="Upload profile picture"
                         />
                         {/* Clickable Image Preview */}
                         <div
@@ -127,6 +185,7 @@ export default function AccountsPage() {
                             <button
                                 onClick={handleUpload}
                                 disabled={!selectedFile}
+                                aria-disabled={!selectedFile}
                                 className={`px-4 py-2 text-white rounded ${
                                     selectedFile ? "bg-accent-900 hover:bg-accent-800" : "bg-gray-400 cursor-not-allowed"}`}
                             >
