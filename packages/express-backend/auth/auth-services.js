@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import * as jose from "jose";
-import { addUser } from "../mongoose-services"
+import { addUser, findUserByUser } from "../mongoose-services"
 
 //
 // FUNCTIONS FOR SIGNING UP, LOGGING IN, AND LOGGING OUT
@@ -34,7 +34,7 @@ export async function signup({ username, email, password }) {
  * @return {Promise<{
  *  accessToken,
  *  refreshToken,
- *  } | string>} - An object containing `accessToken` and `refreshToken` fields. Or returns a string with an error message.
+ *  }>} - An object containing `accessToken` and `refreshToken` fields.
  */
 export function login(username, password) {
     // BCrypt uses a callback for its compare() function
@@ -43,26 +43,29 @@ export function login(username, password) {
     return new Promise((resolve, reject) => {
 
         // TODO get user's hashed password from mongo
-        const hashedPassword = "";
+        const user = findUserByUser(username);
+        if (!user)
+            reject("USER_NOT_FOUND");
 
-        bcrypt.compare(password, hashedPassword, (err, isMatch) => {
+        const hashedPassword = user.password;
+
+        // Compare given password to hashedPassword
+        bcrypt.compare(password, hashedPassword, async (err, isMatch) => {
             // If error is thrown
             if (err)
                 reject(err);
 
-            // TODO generate credentials for user on login
-
             // Check if password matched
-            if (isMatch)
-                resolve({
-                    accessToken: "",
-                    refreshToken: ""
-                });
-            else
-                reject("INVALID PASSWORD")
-        })
+            if (isMatch) {
+                const credentials = await createCredentials(user._id, user.email);
 
-    })
+                resolve(credentials);
+            }
+            else
+                reject("INVALID_PASSWORD")
+        });
+
+    });
 }
 
 //
