@@ -12,7 +12,7 @@ import { addUser, findUserByUser } from "../mongoose-services"
  * @param username - The user's display name.
  * @param email - The user's unique email.
  * @param password - The password in plaintext to be hashed and saved to the db.
- * @return {Promise<string>} - The access token of type `bearer` for the user.
+ * @return {Promise<true>} - True when finishing successfully.
  */
 export async function signup({ username, email, password }) {
     await bcrypt.hash(password, 12, (err, hash) => {
@@ -24,6 +24,8 @@ export async function signup({ username, email, password }) {
             password: hash,
         });
     });
+
+    return true;
 }
 
 /**

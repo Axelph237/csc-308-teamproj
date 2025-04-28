@@ -4,9 +4,8 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 import { connectToDB } from "./mongoose-connection.js";
-import {authenticatedRoute} from "./auth/auth-middleware.js";
 import * as cookie from "cookie";
-import {createCredentials} from "./auth/auth-services.js";
+import {login, signup} from "./auth/auth-services.js";
 
 
 const app = express();
@@ -16,23 +15,33 @@ app.use(cors());
 app.use(express.json());
 
 // TODO REMOVE
-app.get("/auth", async (req, res) => {
-    const testCredentials = await createCredentials(
-        "fake-user-id",
-        "fake@email.com"
-    );
+app.get("/auth/signup", async (req, res) => {
+    const user = req.body;
+
+    const signedUp = await signup({
+        username: user.username,
+        email: user.email,
+        password: user.password
+    })
+
+    if (signedUp === true)
+        res.send("Successfully signed up.");
+    else
+        res.status(500).send("Unable to sign up.");
+})
+app.get("/auth/login", async (req, res) => {
+    const user = req.body;
+
+    const credentials = await login(user.username, user.password)
 
     res.setHeader(
         "Set-Cookie",
         cookie.serialize(
             "auth",
-            JSON.stringify(testCredentials)
+            JSON.stringify(credentials)
         ));
 
-    res.send("Authentication added.");
-})
-app.get("/test-auth", authenticatedRoute , async (req, res) => {
-    res.send(`Correctly authenticated. User: ${req.user.userId} | Email: ${req.user.email}`);
+    res.send("Successfully logged in.");
 })
 
 let mongooseServices;
