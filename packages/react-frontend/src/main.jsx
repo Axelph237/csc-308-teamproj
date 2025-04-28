@@ -38,18 +38,19 @@ root.render(
         {/* All sub-elements are considered routes */}
         <Routes>
             {/* Define a route and any child routes */}
+            <Route path={"/"} element={<LandingPage />} />
+            <Route path={"createProfile"} element={<CreateProfilePage />} />
+            <Route path={"login"} element={<LoginPage />} />
             {/* Primary app route */}
             <Route path={"/"} element={<MyApp />} >
                 {/* Children of that app route */}
-                <Route path={""} element={<LandingPage />} />
-                <Route path={"createProfile"} element={<CreateProfilePage />} />
-                <Route path={"login"} element={<LoginPage />} />
                 <Route path={"home"} element={<HomePage />} />
                 <Route path={"diaries/:index"} element={<DiaryPage />} />
                 <Route path={"random"} element={<RandomPage />} />
                 <Route path={"write"} element={<WritePage />} />
                 <Route path={"account"} element={<AccountsPage />} />
             </Route>
+
         </Routes>
     </BrowserRouter>
 );
