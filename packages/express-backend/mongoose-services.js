@@ -168,6 +168,7 @@ export const models = {
 };
 export const {
     findUserByID,
+    findUserByUser,
     findDiariesByUser,
     findPagesByDiary,
     findPageByDiaryAndPageID,
