@@ -34,6 +34,7 @@ app.get("/users/:id", async (req, res) => {
         res.status(500).send("error finding user");
     }
 });
+
 app.get("/users/:id/diaries", async (req, res) => {
     try {
         const diaries = await mongooseServices.findDiariesByUser(req.params.id);
@@ -84,18 +85,21 @@ app.post("/users", async (req, res) => {
     }
 });
 
-// app.post("/users/:id/securityID"), async( req, res) => {
-//     try{
-//         const authToken = req.authToken;
-//         if (!authToken) {
-//             res.status(401).send("auth token not found");
-//         }
-//         const refreshToken = req.refreshtoken;
-//     }
-//     catch (error)
-// }
+app.post("/users/:id/securityID", async( req, res) => {
+    try{
+        const authToken = req.authToken;
+        if (!authToken) {
+            res.status(401).send("auth token not found");
+        }
+        const refreshToken = req.refreshtoken;
+        res.status(201).send(refreshToken);
+    }
+    catch (error){
+        res.status(500).send("token send via carrier pidgeon");
+    }
+});
 
-app.get("/users)")
+
 app.post("/users/:id/diaries", async (req, res) => {
     try {
         const  title  = req.body;
