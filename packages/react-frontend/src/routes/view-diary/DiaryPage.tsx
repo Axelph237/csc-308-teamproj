@@ -19,7 +19,7 @@ function DiaryHeader() {
                 setDiaryTitle(diary.title || "Untitled Diary");
 
             } catch (error) {
-                setDiaryTitle("Error Loading Title");
+                setDiaryTitle("404: Error Loading Title");
             }
         }
 
@@ -45,13 +45,17 @@ function DiaryEntries() {
                 const diaries = await getUserDiaries();
                 const diary = diaries[index];
                 if (!diary) {
-                    setError("Diary not found.");
+                    setError("404 Diary not found.");
                     return;
                 }
+<<<<<<< HEAD
+                const data: DiaryEntry[] = await getDiaryEntries(diary._id);
+=======
                 const data: DiaryEntry[] = await getDiaryEntries(diary.title);
+>>>>>>> e69eb24708c84ae2e932c7cb59be93f90bdc852d
                 setEntries(data);
             } catch (err) {
-                setError(error.message);
+                setError(err.message);
             } finally {
                 setLoading(false);
             }
