@@ -3,7 +3,9 @@ import mongoose from "mongoose";
 const { Types: { ObjectId } } = mongoose;
 
 import createMongooseServices, { models } from "./mongoose-services.js";
-import {expect} from "@jest/globals";
+
+import {describe, expect, it} from "@jest/globals";
+
 const { User, Diary, Page } = models;
 
 const {
@@ -61,6 +63,7 @@ describe('test mongoose User model', () => {
             expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedSave);
         });
     });
+
     it('testing removeUser (need to add first)', () => {
         const _input = {
             username: 'willmayer77',
@@ -85,6 +88,7 @@ describe('test mongoose User model', () => {
             expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedDelete);
         })
     });
+
     it('should edit allowed fields of a user', async () => {
         const userId = '661bf7e21d2c3a7a4f3e6b19';
         const updatedFields = {
@@ -231,6 +235,7 @@ describe('test mongoose Page model', () => {
             expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedSave);
         });
     });
+
     it('testing removePage (need to add first)', () => {
         const _input = {
             title: "I did summn today",
@@ -252,6 +257,7 @@ describe('test mongoose Page model', () => {
             expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedDelete);
         })
     });
+
     it('should edit a page within a diary', async () => {
         const diaryId = '662e9eac6f6c4b2f9c4f9f21';
         const pageId = '662e9eac6f6c4b2f9c4f9f22';
