@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import * as jose from "jose";
+import { addUser } from "../mongoose-services"
 
 //
 // FUNCTIONS FOR SIGNING UP, LOGGING IN, AND LOGGING OUT
@@ -18,7 +19,10 @@ export async function signup({ username, email, password }) {
         if (err)
             return console.error(err);
 
-        // TODO create user document and upload hashed password
+        addUser({
+            username, email,
+            password: hash,
+        });
     });
 }
 
