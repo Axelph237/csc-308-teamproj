@@ -45,7 +45,7 @@ root.render(
             {/* This first "Route" is a layout that verifies user authenticity before allowing access */}
             <Route element={<ProtectedRoutes />} >
                 {/* Primary app route */}
-                <Route path={"/app"} element={<MyApp />} >
+                <Route path={"app"} element={<MyApp />} >
                     {/* Children of that app route */}
                     <Route path={"home"} element={<HomePage />} />
                     <Route path={"diaries/:index"} element={<DiaryPage />} />
