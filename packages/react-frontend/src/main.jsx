@@ -12,6 +12,7 @@ import DiaryPage from "./routes/view-diary/DiaryPage.tsx";
 import LandingPage from "./routes/landing/LandingPage.tsx";
 import LoginPage from "./routes/login/LoginPage.tsx";
 import CreateProfilePage from "./routes/createProfile/CreateProfilePage.tsx";
+import ProtectedRoutes from "./components/ProtectedRoutes.tsx";
 
 const container = document.getElementById("root");
 
@@ -41,14 +42,17 @@ root.render(
             <Route path={"/"} element={<LandingPage />} />
             <Route path={"createProfile"} element={<CreateProfilePage />} />
             <Route path={"login"} element={<LoginPage />} />
-            {/* Primary app route */}
-            <Route path={"/"} element={<MyApp />} >
-                {/* Children of that app route */}
-                <Route path={"home"} element={<HomePage />} />
-                <Route path={"diaries/:index"} element={<DiaryPage />} />
-                <Route path={"random"} element={<RandomPage />} />
-                <Route path={"write"} element={<WritePage />} />
-                <Route path={"account"} element={<AccountsPage />} />
+            {/* This first "Route" is a layout that verifies user authenticity before allowing access */}
+            <Route element={<ProtectedRoutes />} >
+                {/* Primary app route */}
+                <Route path={"/app"} element={<MyApp />} >
+                    {/* Children of that app route */}
+                    <Route path={"home"} element={<HomePage />} />
+                    <Route path={"diaries/:index"} element={<DiaryPage />} />
+                    <Route path={"random"} element={<RandomPage />} />
+                    <Route path={"write"} element={<WritePage />} />
+                    <Route path={"account"} element={<AccountsPage />} />
+                </Route>
             </Route>
 
         </Routes>
