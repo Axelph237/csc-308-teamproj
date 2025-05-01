@@ -13,10 +13,14 @@ export class ApiError extends Error {
     }
 }
 
+// IF GETTING 404 ERRORS MAKE SURE THIS IS CORRECT
+const BACKEND_DOMAIN = "http://localhost:8001";
+
 /**
  * GET /users/:id
  */
 export async function getUser(): Promise<User> {
+    console.log("Fetching user...")
     const url = "/users"
     const init = {
         method: "GET",
@@ -25,13 +29,12 @@ export async function getUser(): Promise<User> {
         }
     };
 
-    const response =  await fetch(url, init);
+    const response =  await fetch(BACKEND_DOMAIN + url, init);
 
-    const body = await response.json();
     if (!response.ok)
-        throw new ApiError(body.message, url, init);
+        throw new ApiError(await response.text(), url, init);
 
-    return body;
+    return await response.json();
 }
 
 /**
