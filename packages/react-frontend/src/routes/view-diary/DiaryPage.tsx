@@ -48,11 +48,9 @@ function DiaryEntries() {
                     setError("404 Diary not found.");
                     return;
                 }
-<<<<<<< HEAD
+
                 const data: DiaryEntry[] = await getDiaryEntries(diary._id);
-=======
-                const data: DiaryEntry[] = await getDiaryEntries(diary.title);
->>>>>>> e69eb24708c84ae2e932c7cb59be93f90bdc852d
+
                 setEntries(data);
             } catch (err) {
                 setError(err.message);

@@ -197,7 +197,7 @@ export default function createMongooseServices(connection) {
             return security;
         }
     };
-}
+
 
 const defaultServices = createMongooseServices(mongoose);
 export const models = {
@@ -207,6 +207,7 @@ export const models = {
 };
 export const {
     findUserByID,
+    findUserByUser,
     findDiariesByUser,
     findPagesByDiary,
     findPageByDiaryAndPageID,

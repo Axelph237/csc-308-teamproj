@@ -9,6 +9,9 @@ import WritePage from "./routes/write/WritePage.tsx";
 import AccountsPage from "./routes/account/AccountPage.tsx";
 import MyApp from "./MyApp.jsx";
 import DiaryPage from "./routes/view-diary/DiaryPage.tsx";
+import LandingPage from "./routes/landing/LandingPage.tsx";
+import LoginPage from "./routes/login/LoginPage.tsx";
+import CreateProfilePage from "./routes/createProfile/CreateProfilePage.tsx";
 
 const container = document.getElementById("root");
 
@@ -35,6 +38,9 @@ root.render(
         {/* All sub-elements are considered routes */}
         <Routes>
             {/* Define a route and any child routes */}
+            <Route path={"/"} element={<LandingPage />} />
+            <Route path={"createProfile"} element={<CreateProfilePage />} />
+            <Route path={"login"} element={<LoginPage />} />
             {/* Primary app route */}
             <Route path={"/"} element={<MyApp />} >
                 {/* Children of that app route */}
@@ -44,6 +50,7 @@ root.render(
                 <Route path={"write"} element={<WritePage />} />
                 <Route path={"account"} element={<AccountsPage />} />
             </Route>
+
         </Routes>
     </BrowserRouter>
 );
