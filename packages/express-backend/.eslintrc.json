@@ -9,4 +9,3 @@
   },
   "extends": ["eslint:recommended"]
 }
-

@@ -1,16 +1,30 @@
 import Markdown from "../../components/Markdown";
 import {EyeIcon, UserCircleIcon} from "../../assets/icons";
 import {useEffect, useState} from "react";
-import {getDiaryPages} from "../../api/backend";
+import {Page} from "types/page";
+import {findRandomPage} from "../../../src/api/backend";
 
 export default function RandomPage() {
-    const [ page, setPage ] = useState<string | undefined>();
-
+    const [ page, setPage ] = useState<Page | undefined>();
+    const [loading, setLoading ] = useState(true);
+    const [error, setError ] = useState<string | null>(null);
 
     useEffect(() => {
-        const newPage = "Hello :3"
-        setPage(newPage);
-    }, [])
+        const fetchRandomPage = async () => {
+            try{
+                setPage(await findRandomPage());
+            } catch(err) {
+                setError("Failed to load page");
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchRandomPage();
+    }, []);
+    if(loading) return <div className="p-6">Loading...</div>;
+    if(error) return <div className="p-6 text-red-500">Error: {error}</div>;
+
 
     return (
         <div className="flex flex-row justify-center items-center gap-10">
@@ -35,7 +49,7 @@ export default function RandomPage() {
             </div>
             {/* Diary */}
             <div className="rounded-lg border-2 border-secondary-500 p-4 flex max-w-1/2">
-                <Markdown source={page}/>
+                {page && page.body && <Markdown source={page.body} />}
             </div>
         </div>
     );

@@ -4,6 +4,8 @@ dotenv.config();
 import express from "express";
 import cors from "cors";
 import { connectToDB } from "./mongoose-connection.js";
+import * as cookie from "cookie";
+import {login, signup} from "./auth/auth-services.js";
 
 
 const app = express();
@@ -11,6 +13,35 @@ const port = process.env.PORT || 52784;
 
 app.use(cors());
 app.use(express.json());
+
+app.get("/auth/signup", async (req, res) => {
+    const user = req.body;
+
+    const signedUp = await signup({
+        username: user.username,
+        email: user.email,
+        password: user.password
+    })
+
+    if (signedUp === true)
+        res.send("Successfully signed up.");
+    else
+        res.status(500).send("Unable to sign up.");
+})
+app.get("/auth/login", async (req, res) => {
+    const user = req.body;
+
+    const credentials = await login(user.username, user.password)
+
+    res.setHeader(
+        "Set-Cookie",
+        cookie.serialize(
+            "auth",
+            JSON.stringify(credentials)
+        ));
+
+    res.send("Successfully logged in.");
+})
 
 let mongooseServices;
 
@@ -69,7 +100,6 @@ app.get("/diaries/:diaryId/pages/:pageId", async (req, res) => {
         res.status(500).send("error finding page");
     }
 });
-
 app.post("/users", async (req, res) => {
     try {
         const  {username, password, email, profilePicture } = req.body;
@@ -85,7 +115,18 @@ app.post("/users", async (req, res) => {
     }
 });
 
+// app.post("/users/:id/securityID"), async( req, res) => {
+//     try{
+//         const authToken = req.authToken;
+//         if (!authToken) {
+//             res.status(401).send("auth token not found");
+//         }
+//         const refreshToken = req.refreshtoken;
+//     }
+//     catch (error)
+// }
 
+app.get("/users)")
 app.post("/users/:id/diaries", async (req, res) => {
     try {
         const  title  = req.body;

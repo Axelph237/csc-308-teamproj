@@ -2,6 +2,7 @@
   "name": "csc-308-app",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npm run dev -w ./packages/react-frontend",
@@ -32,6 +33,9 @@
   },
   "dependencies": {
     "@sinclair/typebox": "^0.34.33",
+    "bcrypt": "^5.1.1",
+    "cookie": "^1.0.2",
+    "jose": "^6.0.10",
     "mongoose": "^8.9.5",
     "react-router-dom": "^6.29.0"
   }

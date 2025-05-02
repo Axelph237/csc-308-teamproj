@@ -48,7 +48,9 @@ function DiaryEntries() {
                     setError("404 Diary not found.");
                     return;
                 }
+
                 const data: DiaryEntry[] = await getDiaryEntries(diary._id);
+
                 setEntries(data);
             } catch (err) {
                 setError(err.message);
@@ -105,11 +107,6 @@ function DiaryEntries() {
 
 function DiaryPage() {
     let {index} = useParams();
-
-    useEffect(() => {
-
-    }, [])
-
     return (
         <div>
             <DiaryHeader/>

@@ -8,19 +8,25 @@ export default function LoginPage() {
                     Login to your diaries
                 </h1>
                 <div className="flex justify-left items-center p-6">
-                    <label className="grid grid-cols-2"> Username:</label>
+
+                    <label className="grid grid-cols-2"> Username:
+
                     <input type="text" placeholder="username"/>
+                    </label>
                 </div>
                 <div className="flex justify-left items-center p-6">
-                    <label className="grid grid-cols-2"> Password:</label>
+
+                    <label className="grid grid-cols-2"> Password:
+
                     <input type="text" placeholder="password"/>
+                    </label>
                 </div>
 
-                <Link to={'/home'} className="pl-6">
+                <div><Link to={'/home'} className="pl-6">
 
                     <button className="flex p-4 rounded-2xl bg-accent-500 cursor-pointer hover:bg-accent-800">Login
                     </button>
-                </Link>
+                </Link></div>
             </div>
 
         </div>
