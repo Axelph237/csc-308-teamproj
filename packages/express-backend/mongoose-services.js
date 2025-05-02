@@ -6,7 +6,6 @@ const PageSchema = new mongoose.Schema({
     title: { type: String, required: true },
     date: { type: String, required: true },
     body: { type: String, required: true },
-    tags: { type: [String], required: true },
 });
 
 const DiarySchema = new mongoose.Schema({
@@ -56,8 +55,6 @@ export default function createMongooseServices(connection) {
                 .then((result) => result.entries);
         },
 
-
-
         findPageByDiaryAndPageID: (diaryId, pageId) => {
             return Diary.findById(diaryId)
                 .then((result) =>
@@ -75,24 +72,6 @@ export default function createMongooseServices(connection) {
         findPassword: async (userID) => {
             const user = await User.findById(userID);
             return user.password;
-        },
-
-        // i really hope this works
-        findPagesByTag: async (diaryID, tag) => {
-            // make tag normalized
-            const normalizedTag = tag.trim().toLowerCase();
-            // cool pipeline complicated stuff bout to happen
-            const result = await Diary.aggregate([
-                // matches the diary were looking for
-                { $match: { _id: diaryID } },
-                // creates seperate pipelines for each page in diary
-                { $unwind: '$pages' },
-                // matches to pages that contain the given tag
-                { $match: { 'pages.tags': normalizedTag } },
-                // this will create an array of all such pages
-                { $replaceRoot: { newRoot: '$pages' } }
-            ]);
-            return result;
         },
 
         // Create Functions
@@ -118,24 +97,6 @@ export default function createMongooseServices(connection) {
             diary.numEntries++;
             await diary.save();
             return newPage;
-        },
-
-        // cool thing is this can accept both a single tag or an array of tags
-        addTagsToPage: async (diaryID, pageID, newTags) => {
-            // array wrap if only single tag while normalizing each one
-            const tagArray = (Array.isArray(newTags) ? newTags : [newTags])
-                .map(t => t.trim().toLowerCase())
-                .filter(Boolean);
-            // this will catch if newTags is empty
-            if (!tagArray.length) return false;
-            // do the actual tag insertion
-            const res = await Diary.updateOne(
-                { _id: diaryID, 'pages._id': pageID },  // match the diary & page
-                {
-                    $addToSet: {                           // avoid duplicates
-                        'pages.$.tags': { $each: tagArray }
-                    }});
-            return res;
         },
 
         // Delete Functions
@@ -199,31 +160,29 @@ export default function createMongooseServices(connection) {
     };
 
 
-const defaultServices = createMongooseServices(mongoose);
-export const models = {
-    User: mongoose.model("User"),
-    Diary: mongoose.model("Diary"),
-    Page: mongoose.model("Page")
-};
-export const {
-    findUserByID,
-    findUserByUser,
-    findDiariesByUser,
-    findPagesByDiary,
-    findPageByDiaryAndPageID,
-    findRandomPage,
-    addUser,
-    addDiary,
-    addPage,
-    removeUser,
-    removeDiary,
-    removePage,
-    editUser,
-    editPassword,
-    editPage,
-    upsertAuthToken,
-    upsertRefreshToken,
-    findPassword,
-    findPagesByTag,
-    addTagsToPage
-} = defaultServices;
+    const defaultServices = createMongooseServices(mongoose);
+    export const models = {
+        User: mongoose.model("User"),
+        Diary: mongoose.model("Diary"),
+        Page: mongoose.model("Page")
+    };
+    export const {
+        findUserByID,
+        findUserByUser,
+        findDiariesByUser,
+        findPagesByDiary,
+        findPageByDiaryAndPageID,
+        findRandomPage,
+        addUser,
+        addDiary,
+        addPage,
+        removeUser,
+        removeDiary,
+        removePage,
+        editUser,
+        editPassword,
+        editPage,
+        upsertAuthToken,
+        upsertRefreshToken,
+        findPassword
+    } = defaultServices;
