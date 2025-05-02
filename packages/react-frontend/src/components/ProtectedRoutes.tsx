@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 
 export default function ProtectedRoutes() {
     let navigate = useNavigate();
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(undefined);
 
     // On component mount check auth
     useEffect(() => {
@@ -28,13 +28,13 @@ export default function ProtectedRoutes() {
 
     // On auth update determine if navigate is necessary
     useEffect(() => {
-        if (!isAuthenticated)
+        if (isAuthenticated === false)
             navigate("/login");
     }, [isAuthenticated]);
 
     return ( isAuthenticated
             ? <Outlet />
-            : <div className="w-screen h-screen flex justify-center items-center">
+            : <div className="w-screen h-screen flex items-center justify-center">
                 <h1>Who invited this guy? 🫵😭</h1>
             </div>
     )
