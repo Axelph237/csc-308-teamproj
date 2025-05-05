@@ -38,16 +38,6 @@ describe("DiaryPage Component", () => {
     });
 
     async function renderWithRoute(index = "0") {
-        mockedGetUserDiaries.mockResolvedValue([mockDiaries[index]]);
-        mockedGetDiaryEntries.mockResolvedValue([
-            {
-                _id: "13",
-                title: "Morning",
-                date: "03-10-25",
-                body: "Hello world!"
-            },
-        ]);
-
         render(
             <MemoryRouter initialEntries={[`/diary/${index}`]}>
                 <Routes>
@@ -59,7 +49,9 @@ describe("DiaryPage Component", () => {
     }
 
     it("shows loading message initially", async () => {
-        renderWithRoute();
+        mockedGetUserDiaries.mockResolvedValue([mockDiaries[0]]);
+        mockedGetDiaryEntries.mockResolvedValue([]);
+        renderWithRoute("0");
 
         await waitFor(() => {
             expect(screen.getByText("Loading entries...")).toBeDefined();
@@ -67,6 +59,15 @@ describe("DiaryPage Component", () => {
     });
 
     it("renders entries for valid diary index", async () => {
+        mockedGetUserDiaries.mockResolvedValue([mockDiaries[0]]);
+        mockedGetDiaryEntries.mockResolvedValue([
+            {
+                _id: "13",
+                title: "Morning",
+                date: "03-10-25",
+                body: "Hello world!"
+            },
+        ]);
         renderWithRoute("0");
 
         await waitFor(() => {
@@ -77,6 +78,15 @@ describe("DiaryPage Component", () => {
         });
     });
     it("renders pen icon", async () => {
+        mockedGetUserDiaries.mockResolvedValue([mockDiaries[0]]);
+        mockedGetDiaryEntries.mockResolvedValue([
+            {
+                _id: "13",
+                title: "Morning",
+                date: "03-10-25",
+                body: "Hello world!"
+            },
+        ]);
         renderWithRoute("0");
         await waitFor(() => {
             expect(screen.getByTestId("icon")).toBeDefined();
@@ -94,15 +104,12 @@ describe("DiaryPage Component", () => {
 
 
     it("shows error if diary is not found", async () => {
-        // mockedGetUserDiaries.mockResolvedValue([{title: "Diary 1", date: "12-01-2025"}]);
-        mockedGetDiaryEntries.mockRejectedValue(new Error("Error: Fetch failed"));
+        mockedGetDiaryEntries.mockRejectedValue(new Error("Fetch failed"));
+        renderWithRoute("0");
 
-        render(<MemoryRouter>
-            <DiaryPage/>
-        </MemoryRouter>);
-
-        const errorMessage = await screen.findByText("Error: Failed to load diary.")
-
+        const errorMessage = await screen.findByText((content) =>
+            content.includes("Error: Failed to load diary.")
+        );
         expect(errorMessage).toBeDefined();
 
     });
