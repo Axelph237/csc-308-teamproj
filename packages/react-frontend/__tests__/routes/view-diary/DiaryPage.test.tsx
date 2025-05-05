@@ -120,7 +120,7 @@ describe("DiaryPage Component", () => {
         render(
             <MemoryRouter initialEntries={["/diary/0"]}>
                 <Routes>
-                    <Route path="/diary/:index" element={<DiaryPage />} />
+                    <Route path="/diary/:index" element={<DiaryPage/>}/>
                 </Routes>
             </MemoryRouter>
         );

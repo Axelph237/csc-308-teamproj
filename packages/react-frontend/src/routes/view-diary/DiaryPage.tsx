@@ -6,7 +6,7 @@ import {getUserDiaries, getDiaryPages} from "../../api/backend";
 import {Page} from "types/page";
 import {Diary} from "types/diary";
 
-function DiaryHeader({diary} : {diary: Diary}) {
+function DiaryHeader({diary}: { diary: Diary }) {
 
     return (
         <div className="p-5">
@@ -15,7 +15,7 @@ function DiaryHeader({diary} : {diary: Diary}) {
     );
 }
 
-function DiaryEntries({diary}: {diary: Diary}  ) {
+function DiaryEntries({diary}: { diary: Diary }) {
     const [pages, setPages] = useState<Page[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -105,8 +105,8 @@ function DiaryPage() {
 
     return (
         <div>
-            <DiaryHeader diary={diary} />
-            <DiaryEntries diary={diary} />
+            <DiaryHeader diary={diary}/>
+            <DiaryEntries diary={diary}/>
         </div>
     );
 }
