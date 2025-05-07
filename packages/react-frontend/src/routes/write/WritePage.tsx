@@ -72,7 +72,7 @@ export default function WritePage() {
                     <input
                         type="text"
                         placeholder="Untitled Page"
-                        className="2-full text-4xl font-bold bg-transparent text-secondary-300 placeholder-primary-300 focus:outline-none text-center"
+                        className="w-full text-4xl font-bold bg-transparent text-secondary-300 placeholder-primary-300 border-b border-secondary-400 focus:border-accent-500 focus:outline-none cursor-text text-center transition-colors"
                         value={title}
                         onChange={(e) => setTitle(e.target.value)}
                     />
