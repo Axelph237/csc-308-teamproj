@@ -29,7 +29,7 @@ app.post("/auth/signup", async (req, res) => {
     else
         res.status(500).send("Unable to sign up.");
 })
-app.get("/auth/login", async (req, res) => {
+app.post("/auth/login", async (req, res) => {
     const user = req.body;
 
     const credentials = await login(user.username, user.password)
