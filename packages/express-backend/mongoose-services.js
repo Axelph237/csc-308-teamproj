@@ -154,12 +154,12 @@ export default function createMongooseServices(connection) {
             const filteredUser = Object.fromEntries(
                 Object.entries(user).filter(([key]) => allowedFields.includes(key))
             );
-            return await User.findByIdAndUpdate(userId, filteredUser, { new: true });
+            return await User.findByIdAndUpdate(userId, filteredUser, {new: true});
         },
 
         // updates the password for a User, needs User ID
         editPassword: (userId, password) => {
-            return User.findByIdAndUpdate(userId, { password }, { new: true });
+            return User.findByIdAndUpdate(userId, {password}, {new: true});
         },
 
         // updates page contents, needs Diary ID and Page ID
@@ -190,6 +190,8 @@ export default function createMongooseServices(connection) {
             return security;
         }
     };
+}
+
 
 // creates the mongoose connect (redundent?)
 const defaultServices = createMongooseServices(mongoose);
