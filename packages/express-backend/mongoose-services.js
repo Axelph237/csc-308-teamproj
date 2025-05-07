@@ -49,7 +49,7 @@ export default function createMongooseServices(connection) {
     return {
         // All Read Functions
         // get User object by the users name
-        findUserByUser: (username) => User.findUserByUser(username),
+        findUserByUser: (username) => User.findOne({ username }),
 
         // get User object by the User ID
         findUserByID: (id) => User.findById(id),
