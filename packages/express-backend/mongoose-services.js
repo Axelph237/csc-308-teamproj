@@ -160,29 +160,29 @@ export default function createMongooseServices(connection) {
     };
 
 
-const defaultServices = createMongooseServices(mongoose);
-export const models = {
-    User: mongoose.model("User"),
-    Diary: mongoose.model("Diary"),
-    Page: mongoose.model("Page")
-};
-export const {
-    findUserByID,
-    findUserByUser,
-    findDiariesByUser,
-    findPagesByDiary,
-    findPageByDiaryAndPageID,
-    findRandomPage,
-    addUser,
-    addDiary,
-    addPage,
-    removeUser,
-    removeDiary,
-    removePage,
-    editUser,
-    editPassword,
-    editPage,
-    upsertAuthToken,
-    upsertRefreshToken,
-    findPassword
-} = defaultServices;
+    const defaultServices = createMongooseServices(mongoose);
+    export const models = {
+        User: mongoose.model("User"),
+        Diary: mongoose.model("Diary"),
+        Page: mongoose.model("Page")
+    };
+    export const {
+        findUserByID,
+        findUserByUser,
+        findDiariesByUser,
+        findPagesByDiary,
+        findPageByDiaryAndPageID,
+        findRandomPage,
+        addUser,
+        addDiary,
+        addPage,
+        removeUser,
+        removeDiary,
+        removePage,
+        editUser,
+        editPassword,
+        editPage,
+        upsertAuthToken,
+        upsertRefreshToken,
+        findPassword
+    } = defaultServices;
