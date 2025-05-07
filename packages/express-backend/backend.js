@@ -55,9 +55,9 @@ connectToDB().then(services => {
     console.error("Failed to connect to DB:", err);
 });
 
-app.get("/users/:id", authenticatedRoute,async (req, res) => {
+app.get("/users/account", authenticatedRoute,async (req, res) => {
     try {
-        const user = await mongooseServices.findUserByID(req.params.id);
+        const user = await mongooseServices.findUserByID(req.user.userId);
         if (!user) {
             return res.status(404).send("user not found");
         }
@@ -66,9 +66,10 @@ app.get("/users/:id", authenticatedRoute,async (req, res) => {
         res.status(500).send("error finding user");
     }
 });
-app.get("/users/:id/diaries", authenticatedRoute,async (req, res) => {
+
+app.get("/users/account/diaries", authenticatedRoute,async (req, res) => {
     try {
-        const diaries = await mongooseServices.findDiariesByUser(req.params.id);
+        const diaries = await mongooseServices.findDiariesByUser(req.user.userId);
         if (!diaries) {
             return res.status(404).send("user or diaries not found");
         }
@@ -127,14 +128,14 @@ app.post("/users", authenticatedRoute,async (req, res) => {
 //     catch (error)
 // }
 
-app.post("/users/:id/diaries", authenticatedRoute,async (req, res) => {
+app.post("/users/account/diaries", authenticatedRoute,async (req, res) => {
     try {
         const  title  = req.body;
         if (!title) {
             return res.status(400).send("missing required diary title");
         }
 
-        const newDiary = await mongooseServices.addDiary( title , req.params.id);
+        const newDiary = await mongooseServices.addDiary( title , req.user.userId);
         res.status(201).send(newDiary);
     } catch (error) {
         res.status(500).send("error adding diary");
