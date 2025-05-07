@@ -14,10 +14,10 @@ enum Status {
 
 export default function WritePage() {
     const [text, setText] = useState("");
-    const [title, setTitle] = useState("Untitled Page");
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
     const [status, setStatus] = useState("");
     const editorRef = useRef(null);
+    const titleRef = useRef(null);
     const {diaryId} = useParams();
     const navigate = useNavigate();
 
@@ -45,9 +45,11 @@ export default function WritePage() {
     }
 
     const handleSubmit = async () => {
+        const title = titleRef.current.value;
         const {text} = editorHandler.getState();
+
         const page = {
-            title: "Untitled Page",
+            title: title,
             date: date,
             body: text,
         };
@@ -70,13 +72,14 @@ export default function WritePage() {
 
                 <div className="text-center">
                     <input
+                        ref={titleRef}
+                        id="title-input"
                         type="text"
                         placeholder="Untitled Page"
-                        className="w-full text-4xl font-bold bg-transparent text-secondary-300 placeholder-primary-300 border-b border-secondary-400 focus:border-accent-500 focus:outline-none cursor-text text-center transition-colors"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
+                        className="w-full text-4xl font-bold text-secondary-300 placeholder-primary-300 border-b border-secondary-400 focus:border-accent-500 focus:outline-none cursor-text text-center transition-colors"
                     />
                 </div>
+
                 <div className="flex justify-between items-center text-xl">
                     <div className="text-accent-200">
                         {date}
