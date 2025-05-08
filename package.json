@@ -8,7 +8,8 @@
     "dev": "npm run dev -w ./packages/react-frontend",
     "backend": "npm run dev -w ./packages/express-backend",
     "format": "npx prettier . --write",
-    "lint": "npx eslint . && npx prettier --check ."
+    "lint": "npx eslint . && npx prettier --check .",
+    "start": "node backend.js"
   },
   "author": "",
   "license": "ISC",
