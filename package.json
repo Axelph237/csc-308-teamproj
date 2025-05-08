@@ -4,11 +4,12 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "npm run dev -w ./packages/react-frontend",
+    "test": "npx jest", 
+    "dev": "nodemon backend.js",
     "backend": "npm run dev -w ./packages/express-backend",
     "format": "npx prettier . --write",
-    "lint": "npx eslint ."
+    "lint": "npx eslint . && npx prettier --check .",
+    "start": "node backend.js"
   },
   "author": "",
   "license": "ISC",
