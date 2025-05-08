@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "npx jest", 
-    "dev": "nodemon ./packages/react-frontend",
+    "dev": "npm run dev -w ./packages/react-frontend",
     "backend": "npm run dev -w ./packages/express-backend",
     "format": "npx prettier . --write",
     "lint": "npx eslint . && npx prettier --check .",
