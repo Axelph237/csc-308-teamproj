@@ -23,6 +23,7 @@ export default function LoginPage() {
             })
             .catch((err) => {
                 console.log(err);
+                alert(err);
             })
             .finally(() => {
                 setLoading(false);
