@@ -16,4 +16,4 @@ jobs:
           npm ci
           npm run lint || true
           npm run -w react-frontend build
-          npm test || true
+          npm test

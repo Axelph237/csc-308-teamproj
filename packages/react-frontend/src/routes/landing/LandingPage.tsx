@@ -6,7 +6,7 @@ export default function LandingPage() {
             <h1 className="text-2xl font-bold ">Welcome to Diary</h1>
             <h2>In Diary you can store and create diary entries, just like any great diary!</h2>
 
-            <div><Link to={'/home'} className="pl-6">
+            <div><Link to={'/login'} className="pl-6">
 
                 <button className="flex p-4 rounded-2xl bg-accent-500 cursor-pointer hover:bg-accent-800">Login
                 </button>
