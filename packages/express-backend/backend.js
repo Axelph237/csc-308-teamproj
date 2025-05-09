@@ -12,7 +12,10 @@ import {authenticatedRoute} from "./auth/auth-middleware.js";
 const app = express();
 const port = process.env.PORT || 52784;
 
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}));
 app.use(express.json());
 
 app.post("/auth/signup", async (req, res) => {
@@ -31,17 +34,23 @@ app.post("/auth/signup", async (req, res) => {
 })
 app.post("/auth/login", async (req, res) => {
     const user = req.body;
+    console.log(user);
 
     const credentials = await login(user.username, user.password)
 
-    res.setHeader(
-        "Set-Cookie",
-        cookie.serialize(
-            "auth",
-            JSON.stringify(credentials)
-        ));
+    if (credentials) {
+        res.setHeader(
+            "Set-Cookie",
+            cookie.serialize(
+                "auth",
+                JSON.stringify(credentials)
+            ));
 
-    res.send("Successfully logged in.");
+        res.send("Successfully logged in.");
+    }
+    else
+        res.status(500).send("Unable to login.");
+
 })
 
 let mongooseServices;
