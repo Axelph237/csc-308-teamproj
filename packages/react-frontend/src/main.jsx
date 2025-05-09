@@ -2,9 +2,7 @@
 import ReactDOMClient from "react-dom/client";
 
 import "./main.css";
-import BrowserRouter from "react-router-dom";
-import Route from "react-router-dom";
-import Routes from "react-router-dom";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
 import HomePage from "./routes/home/HomePage.tsx";
 import RandomPage from "./routes/random/RandomPage.tsx";
 import WritePage from "./routes/write/WritePage.tsx";
