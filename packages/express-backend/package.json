@@ -13,11 +13,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^4.21.2",
-    "mockingoose": "^2.16.2"
+    "mockingoose": "^2.16.2",
+    "mongodb-memory-server": "^10.1.4"
   },
   "devDependencies": {
     "@babel/core": "^7.26.10",
