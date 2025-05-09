@@ -13,11 +13,15 @@ export class ApiError extends Error {
     }
 }
 
+// IF GETTING 404 ERRORS MAKE SURE THIS IS CORRECT
+const BACKEND_DOMAIN = "http://localhost:8001";
+
 /**
  * GET /users/:id
  */
 export async function getUser(): Promise<User> {
-    const url = "/users"
+    console.log("Fetching user...")
+    const url = BACKEND_DOMAIN + "/users"
     const init = {
         method: "GET",
         headers: {
@@ -27,18 +31,17 @@ export async function getUser(): Promise<User> {
 
     const response =  await fetch(url, init);
 
-    const body = await response.json();
     if (!response.ok)
-        throw new ApiError(body.message, url, init);
+        throw new ApiError(await response.text(), url, init);
 
-    return body;
+    return await response.json();
 }
 
 /**
  * GET /users/:id/diaries -> TODO update to /diaries on backend
  */
 export async function getUserDiaries(): Promise<Diary[]> {
-    const url = "/diaries";
+    const url = BACKEND_DOMAIN + "/diaries";
     const init = {
         method: "GET",
         headers: {
@@ -60,7 +63,7 @@ export async function getUserDiaries(): Promise<Diary[]> {
  * @param diaryId - The id of the diary to retrieve data from.
  */
 export async function getDiaryPages(diaryId: ObjectId): Promise<Page[]> {
-    const url = `/diaries/${diaryId}/pages`;
+    const url = BACKEND_DOMAIN + `/diaries/${diaryId}/pages`;
     const init = {
         method: "GET",
         headers: {
@@ -83,7 +86,7 @@ export async function getDiaryPages(diaryId: ObjectId): Promise<Page[]> {
  * @param pageId - The id of the page.
  */
 export async function getPage(diaryId: ObjectId, pageId: ObjectId): Promise<Page> {
-    const url = `/diaries/${diaryId}/pages/${pageId}`;
+    const url = BACKEND_DOMAIN + `/diaries/${diaryId}/pages/${pageId}`;
     const init = {
         method: "GET",
         headers: {
@@ -105,7 +108,7 @@ export async function getPage(diaryId: ObjectId, pageId: ObjectId): Promise<Page
  * @param user - The user to create.
  */
 export async function createUser(user: Omit<User, "_id" | "diariesID">): Promise<User> {
-    const url = "/users";
+    const url = BACKEND_DOMAIN + "/users";
     const init = {
         method: "POST",
         headers: {
@@ -128,7 +131,7 @@ export async function createUser(user: Omit<User, "_id" | "diariesID">): Promise
  * @param diary - The diary to create.
  */
 export async function createDiary(diary: Omit<Diary, "_id">): Promise<Diary> {
-    const url = "/diaries";
+    const url = BACKEND_DOMAIN + "/diaries";
     const init = {
         method: "POST",
         headers: {
@@ -152,7 +155,7 @@ export async function createDiary(diary: Omit<Diary, "_id">): Promise<Diary> {
  * @param diaryId - The id of the diary to add the page to.
  */
 export async function createPage(diaryId: ObjectId, page: Omit<Page, "_id">): Promise<Page> {
-    const url = `/diaries/${diaryId}/pages`;
+    const url = BACKEND_DOMAIN + `/diaries/${diaryId}/pages`;
     const init = {
         method: "POST",
         headers: {
@@ -176,7 +179,7 @@ export async function createPage(diaryId: ObjectId, page: Omit<Page, "_id">): Pr
  *
  */
 export async function findRandomPage(): Promise<Page> {
-    const url = `/diaries/`;
+    const url = BACKEND_DOMAIN + `/diaries/`;
     const init = {
         method: "GET",
         headers: {
@@ -199,7 +202,7 @@ export async function findRandomPage(): Promise<Page> {
  * @param password - the password to edit/change
  */
 export async function editPassword(userId: ObjectId, password: string): Promise<User> {
-    const url = `/users/${userId}/password`;
+    const url = BACKEND_DOMAIN + `/users/${userId}/password`;
     const init = {
         method: "PUT",
         headers: {
@@ -223,7 +226,7 @@ export async function editPassword(userId: ObjectId, password: string): Promise<
  * @param userId - the user to find
  */
 export async function editUser(user: Omit<User, "_id" | "password" | "diariesID">, userId: ObjectId): Promise<User> {
-    const url = `/users/${userId}`;
+    const url = BACKEND_DOMAIN + `/users/${userId}`;
     const init = {
         method: "PUT",
         headers: {

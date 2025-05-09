@@ -209,7 +209,8 @@ const config: Config = {
     //     "^.+\\.tsx?$": ["ts-jest", {useESM: true}],
     // },
     moduleNameMapper: {
-        '^.+\\.(css|less)$': '<rootDir>/jest/config/css_stub.ts'
+        '^.+\\.(css|less)$': '<rootDir>/jest/config/css_stub.ts',
+        '^@src/(.*)$': '<rootDir>/src/$1'
     }
 };
 
