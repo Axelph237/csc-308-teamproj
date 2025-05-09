@@ -18,11 +18,9 @@ export class ApiError extends Error {
  */
 export async function getUser(): Promise<User> {
     const url = "/users"
-    const init = {
+    const init: RequestInit = {
         method: "GET",
-        headers: {
-            "Authorization": "Bearer BAD"
-        }
+        credentials: "include"
     };
 
     const response =  await fetch(url, init);
@@ -39,11 +37,9 @@ export async function getUser(): Promise<User> {
  */
 export async function getUserDiaries(): Promise<Diary[]> {
     const url = "/diaries";
-    const init = {
+    const init: RequestInit = {
         method: "GET",
-        headers: {
-            "Authorization": "Bearer BAD"
-        }
+        credentials: "include"
     };
 
     const response =  await fetch(url, init);
@@ -61,11 +57,9 @@ export async function getUserDiaries(): Promise<Diary[]> {
  */
 export async function getDiaryPages(diaryId: ObjectId): Promise<Page[]> {
     const url = `/diaries/${diaryId}/pages`;
-    const init = {
+    const init: RequestInit = {
         method: "GET",
-        headers: {
-            "Authorization": "Bearer BAD"
-        }
+        credentials: "include"
     };
 
     const response =  await fetch(url, init);
@@ -84,11 +78,9 @@ export async function getDiaryPages(diaryId: ObjectId): Promise<Page[]> {
  */
 export async function getPage(diaryId: ObjectId, pageId: ObjectId): Promise<Page> {
     const url = `/diaries/${diaryId}/pages/${pageId}`;
-    const init = {
+    const init: RequestInit = {
         method: "GET",
-        headers: {
-            "Authorization": "Bearer BAD"
-        }
+        credentials: "include"
     };
 
     const response =  await fetch(url, init);
@@ -106,10 +98,11 @@ export async function getPage(diaryId: ObjectId, pageId: ObjectId): Promise<Page
  */
 export async function createUser(user: Omit<User, "_id" | "diariesID">): Promise<User> {
     const url = "/users";
-    const init = {
+    const init: RequestInit = {
         method: "POST",
+        credentials: "include",
         headers: {
-            "Authorization": "Bearer BAD"
+            "Content-Type": "application/json"
         },
         body: JSON.stringify(user)
     };
@@ -129,10 +122,11 @@ export async function createUser(user: Omit<User, "_id" | "diariesID">): Promise
  */
 export async function createDiary(diary: Omit<Diary, "_id">): Promise<Diary> {
     const url = "/diaries";
-    const init = {
+    const init: RequestInit = {
         method: "POST",
+        credentials: "include",
         headers: {
-            "Authorization": "Bearer BAD"
+            "Content-Type": "application/json"
         },
         body: JSON.stringify(diary)
     };
@@ -153,10 +147,11 @@ export async function createDiary(diary: Omit<Diary, "_id">): Promise<Diary> {
  */
 export async function createPage(diaryId: ObjectId, page: Omit<Page, "_id">): Promise<Page> {
     const url = `/diaries/${diaryId}/pages`;
-    const init = {
+    const init: RequestInit = {
         method: "POST",
+        credentials: "include",
         headers: {
-            "Authorization": "Bearer BAD"
+            "Content-Type": "application/json"
         },
         body: JSON.stringify(page)
     };
@@ -177,11 +172,9 @@ export async function createPage(diaryId: ObjectId, page: Omit<Page, "_id">): Pr
  */
 export async function findRandomPage(): Promise<Page> {
     const url = `/diaries/`;
-    const init = {
+    const init: RequestInit = {
         method: "GET",
-        headers: {
-            "Authorization": "Bearer BAD"
-        }
+        credentials: "include"
     };
 
     const response =  await fetch(url, init);
@@ -200,12 +193,12 @@ export async function findRandomPage(): Promise<Page> {
  */
 export async function editPassword(userId: ObjectId, password: string): Promise<User> {
     const url = `/users/${userId}/password`;
-    const init = {
+    const init: RequestInit = {
         method: "PUT",
         headers: {
-            "Authorization": "Bearer BAD",
             "Content-Type": "application/json"
         },
+        credentials: "include",
         body: JSON.stringify(password)
     };
 
@@ -224,10 +217,10 @@ export async function editPassword(userId: ObjectId, password: string): Promise<
  */
 export async function editUser(user: Omit<User, "_id" | "password" | "diariesID">, userId: ObjectId): Promise<User> {
     const url = `/users/${userId}`;
-    const init = {
+    const init: RequestInit = {
         method: "PUT",
+        credentials: "include",
         headers: {
-            "Authorization": "Bearer BAD",
             "Content-Type": "application/json"
         },
         body: JSON.stringify(user)
