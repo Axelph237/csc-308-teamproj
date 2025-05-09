@@ -2,46 +2,75 @@ import {useParams, useNavigate} from 'react-router-dom';
 import Markdown from "../../components/Markdown";
 import {PenIcon} from "../../assets/icons";
 import {useEffect, useState} from "react";
-import {getUserDiaries, getDiaryPages} from "../../api/backend";
-import {Page} from "types/page";
-import {Diary} from "types/diary";
+import {DiaryEntry, getDiaryEntries, getUserDiaries} from "../../api/user";
 
-function DiaryHeader({diary}: { diary: Diary }) {
+function DiaryHeader() {
+    const {index} = useParams();
+    const [diaryTitle, setDiaryTitle] = useState("Loading....");
+    useEffect(() => {
+        async function fetchDiaryTitle() {
+            try {
+                const diaries = await getUserDiaries();
+                const diary = diaries[index];
+                if (!diary) {
+                    setDiaryTitle("Diary not found.");
+                    return;
+                }
+                setDiaryTitle(diary.title || "Untitled Diary");
+
+            } catch (error) {
+                setDiaryTitle("404: Error Loading Title");
+            }
+        }
+
+        fetchDiaryTitle();
+    }, [index]); // runs whenever index changes
 
     return (
         <div className="p-5">
-            <h1>{diary.title || "Untitled Diary"} </h1>
+            <h1>{diaryTitle} </h1>
         </div>
     );
 }
 
-function DiaryEntries({diary}: { diary: Diary }) {
-    const [pages, setPages] = useState<Page[]>([]);
+function DiaryEntries() {
+    const {index} = useParams();
+    const [entries, setEntries] = useState<DiaryEntry[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const navigate = useNavigate();
 
     useEffect(() => {
-        async function fetchPages() {
+        async function fetchEntries() {
             try {
-                const fetched = await getDiaryPages(diary._id);
-                setPages(fetched);
+                const diaries = await getUserDiaries();
+                const diary = diaries[index];
+                if (!diary) {
+                    setError("404 Diary not found.");
+                    return;
+                }
+
+                const data: DiaryEntry[] = await getDiaryEntries(diary._id);
+
+                setEntries(data);
             } catch (err) {
-                setError("Failed to load pages.");
+                setError(err.message);
             } finally {
                 setLoading(false);
             }
         }
 
-        fetchPages();
-    }, [diary._id]);
+        fetchEntries();
+    }, [index]);
+
+    const navigate = useNavigate();
 
     if (loading) return <div>Loading entries...</div>;
     if (error) return <div className="text-red-500">Error: {error}</div>;
 
+
     return (
         <div className="grid grid-cols-2 gap-6 p-6 ">
-            {pages.map((page, index) =>
+            {entries.map((entry, index) =>
                 <div key={index}
                      className="flex flex-col border-2 border-secondary-500 rounded-2xl shadow-lg bg-secondary-500 overflow-hidden max-h-96"
                      style={{minHeight: "150px"}}
@@ -50,9 +79,9 @@ function DiaryEntries({diary}: { diary: Diary }) {
                     <div className="flex flex-row p-4 justify-between items-center">
                         {/* Diary title */}
                         <div className="flex flex-col">
-                            <h2 className="text-3xl font-bold text-secondary-100">{page.title}</h2>
+                            <h2 className="text-3xl font-bold text-secondary-100">{entry.title}</h2>
 
-                            <p className="text-sm text-secondary-100 opacity-75">{page.date}</p>
+                            <p className="text-sm text-secondary-100 opacity-75">{entry.date}</p>
                         </div>
                         <button
                             className="text-primary-700 opacity-50 hover:opacity-75 transition-all cursor-pointer"
@@ -60,53 +89,28 @@ function DiaryEntries({diary}: { diary: Diary }) {
                         >
                             <PenIcon className="icon-sm"/>
                         </button>
+                        {/* Date */}
                     </div>
 
+
+                    {/* Markdown parser */}
                     <div
                         className="flex bg-primary-600 overflow-y-scroll pl-4 pr-4">
-                        <Markdown source={page.body}/>
+                        <Markdown source={entry.body}/>
                     </div>
                 </div>
             )}
         </div>
     );
+    // return (<p> da</p>);
 }
 
 function DiaryPage() {
     let {index} = useParams();
-    const [diary, setDiary] = useState<Diary | null>(null);
-    const [error, setError] = useState<string | null>(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        async function fetchDiary() {
-            try {
-                const diaries = await getUserDiaries();
-                const diary = diaries[parseInt(index!)];
-                if (!diary) {
-                    setError("Diary not found.");
-                    return;
-                }
-                setDiary(diary);
-
-            } catch (error) {
-                setError("Failed to load diary.");
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        fetchDiary();
-    }, [index]); // runs whenever index changes
-
-    if (loading) return <div>Loading diary...</div>;
-    if (error || !diary) return <div className="text-red-500">Error: {error}</div>;
-
-
     return (
         <div>
-            <DiaryHeader diary={diary}/>
-            <DiaryEntries diary={diary}/>
+            <DiaryHeader/>
+            <DiaryEntries/>
         </div>
     );
 }

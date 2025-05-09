@@ -1,6 +1,10 @@
 import bcrypt from "bcrypt";
 import * as jose from "jose";
-import { addUser, findUserByUser } from "../mongoose-services.js"
+import mongoose from "mongoose";
+import createMongooseServices from "../mongoose-services.js";
+
+const mongooseServices = createMongooseServices(mongoose);
+const { addUser, findUserByUser } = mongooseServices;
 
 //
 // FUNCTIONS FOR SIGNING UP, LOGGING IN, AND LOGGING OUT
@@ -15,10 +19,6 @@ import { addUser, findUserByUser } from "../mongoose-services.js"
  * @return {Promise<true>} - True when finishing successfully.
  */
 export async function signup({ username, email, password }) {
-    if (!username || !email || !password) {
-        return null;
-    }
-
     await bcrypt.hash(password, 12, (err, hash) => {
         if (err)
             return console.error(err);
@@ -43,42 +43,34 @@ export async function signup({ username, email, password }) {
  *  }>} - An object containing `accessToken` and `refreshToken` fields.
  */
 export function login(username, password) {
-    if (!username || !password) {
-        return null;
-    }
-
     // BCrypt uses a callback for its compare() function
     // Using an explicit Promise allows us to resolve/reject the Promise
     // inside this callback.
-    return new Promise( (resolve, reject) => {
+    return new Promise((resolve, reject) => {
 
         // TODO get user's hashed password from mongo
-        findUserByUser(username)
-            .then(user => {
-                if (!user)
-                    reject("USER_NOT_FOUND");
+        const user = findUserByUser(username);
+        if (!user)
+            reject("USER_NOT_FOUND");
 
-                const hashedPassword = user.password;
+        const hashedPassword = user.password;
 
-                // Compare given password to hashedPassword
-                bcrypt.compare(password, hashedPassword, async (err, isMatch) => {
-                    // If error is thrown
-                    if (err)
-                        reject(err);
-
-                    // Check if password matched
-                    if (isMatch) {
-                        const credentials = await createCredentials(user._id, user.email);
-
-                        resolve(credentials);
-                    }
-                    else
-                        reject("INVALID_PASSWORD")
-                });
-            })
-            .catch(err => {
+        // Compare given password to hashedPassword
+        bcrypt.compare(password, hashedPassword, async (err, isMatch) => {
+            // If error is thrown
+            if (err)
                 reject(err);
-            });
+
+            // Check if password matched
+            if (isMatch) {
+                const credentials = await createCredentials(user._id, user.email);
+
+                resolve(credentials);
+            }
+            else
+                reject("INVALID_PASSWORD")
+        });
+
     });
 }
 
