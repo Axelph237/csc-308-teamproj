@@ -16,9 +16,12 @@ const { addUser, findUserByUser } = mongooseServices;
  * @param username - The user's display name.
  * @param email - The user's unique email.
  * @param password - The password in plaintext to be hashed and saved to the db.
- * @return {Promise<true>} - True when finishing successfully.
+ * @return {Promise<boolean>} - True when finishing successfully.
  */
 export async function signup({ username, email, password }) {
+    if (!username || !email || !password)
+        return false;
+
     await bcrypt.hash(password, 12, (err, hash) => {
         if (err)
             return console.error(err);
@@ -47,29 +50,34 @@ export function login(username, password) {
     // Using an explicit Promise allows us to resolve/reject the Promise
     // inside this callback.
     return new Promise((resolve, reject) => {
+        if (!username || !password)
+            reject("INVALID_USER");
 
         // TODO get user's hashed password from mongo
-        const user = findUserByUser(username);
-        if (!user)
-            reject("USER_NOT_FOUND");
+        findUserByUser(username)
+            .then(user => {
+                if (!user)
+                    reject("USER_NOT_FOUND");
 
-        const hashedPassword = user.password;
+                const hashedPassword = user.password;
 
-        // Compare given password to hashedPassword
-        bcrypt.compare(password, hashedPassword, async (err, isMatch) => {
-            // If error is thrown
-            if (err)
-                reject(err);
+                // Compare given password to hashedPassword
+                bcrypt.compare(password, hashedPassword, async (err, isMatch) => {
+                    // If error is thrown
+                    if (err)
+                        reject(err);
 
-            // Check if password matched
-            if (isMatch) {
-                const credentials = await createCredentials(user._id, user.email);
+                    // Check if password matched
+                    if (isMatch) {
+                        const credentials = await createCredentials(user._id, user.email);
 
-                resolve(credentials);
-            }
-            else
-                reject("INVALID_PASSWORD")
-        });
+                        resolve(credentials);
+                    }
+                    else
+                        reject("INVALID_PASSWORD")
+                });
+            })
+            .catch(err => reject(err));
 
     });
 }

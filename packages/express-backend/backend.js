@@ -18,6 +18,17 @@ app.use(cors({
 }));
 app.use(express.json());
 
+let mongooseServices;
+
+connectToDB().then(services => {
+    mongooseServices = services;
+    app.listen(port, () => {
+        console.log(`Listening on http://localhost:${port}`);
+    });
+}).catch(err => {
+    console.error("Failed to connect to DB:", err);
+});
+
 app.post("/auth/signup", async (req, res) => {
     const user = req.body;
 
@@ -36,9 +47,9 @@ app.post("/auth/login", async (req, res) => {
     const user = req.body;
     console.log(user);
 
-    const credentials = await login(user.username, user.password)
+    try {
+        const credentials = await login(user.username, user.password)
 
-    if (credentials) {
         res.setHeader(
             "Set-Cookie",
             cookie.serialize(
@@ -48,21 +59,12 @@ app.post("/auth/login", async (req, res) => {
 
         res.send("Successfully logged in.");
     }
-    else
+    catch (e) {
+        console.log(e);
         res.status(500).send("Unable to login.");
+    }
 
 })
-
-let mongooseServices;
-
-connectToDB().then(services => {
-    mongooseServices = services;
-    app.listen(port, () => {
-        console.log(`Listening on http://localhost:${port}`);
-    });
-}).catch(err => {
-    console.error("Failed to connect to DB:", err);
-});
 
 app.get("/users/account", authenticatedRoute,async (req, res) => {
     try {
