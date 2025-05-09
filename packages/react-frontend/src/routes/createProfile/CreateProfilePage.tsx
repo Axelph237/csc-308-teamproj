@@ -1,6 +1,7 @@
 import {Link, useNavigate} from "react-router-dom";
 import {FormEvent, useRef, useState} from "react";
 import {signup} from "@src/api/auth";
+import FormInput from "@src/components/FormInput";
 
 export default function CreateProfilePage() {
     const [loading, setLoading] = useState(false);
@@ -38,34 +39,16 @@ export default function CreateProfilePage() {
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-primary-700 bg-opacity-10">
-            <form ref={formRef} className="grid grid-cols-1 justify-center gap-3 p-8 rounded-2xl border-1">
-                <h1 className="text-2xl font-bold text-white pl-5">
+            <form ref={formRef} className="w-1/2 flex flex-col justify-center gap-6 p-8 rounded-2xl border-2 border-secondary-300">
+                <h1 className="text-2xl font-bold text-secondary-300">
                     Create Profile
                 </h1>
 
-                <div className="p-6">
-                    <label className="grid grid-cols-2"> Email:
-                    <input type="email" id="email" name="email" placeholder="email"/>
-                    </label>
-                </div>
 
-                <div className="p-6">
-                    <label className="grid grid-cols-2"> Username:
-                    <input type="text" id="username" name="username" placeholder="username"/>
-                    </label>
-                </div>
-
-                <div className="p-6">
-                    <label className="grid grid-cols-2"> Password:
-                    <input type="password" id="password" name="password" placeholder="password"/>
-                    </label>
-                </div>
-
-                <div className="p-6">
-                    <label className="grid grid-cols-2"> Confirm Password:
-                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="retype password"/>
-                    </label>
-                </div>
+                <FormInput label="Username" name="username" type="text" placeholder="your username" />
+                <FormInput label="Email" name="email" type="email" placeholder="your email" />
+                <FormInput label="Password" name="password" type="password" placeholder="your password" />
+                <FormInput label="Confirm Password" name="confirmPassword" type="password" placeholder="retype password" />
 
                 <div className={`${loading && "hidden"}`}>
                     <button
