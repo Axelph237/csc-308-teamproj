@@ -210,14 +210,7 @@ const config: Config = {
     // },
     moduleNameMapper: {
         '^.+\\.(css|less)$': '<rootDir>/jest/config/css_stub.ts'
-    },
-
-    
-    //added to handel errors in using JSX format
-    transform: {
-    '^.+\\.tsx?$': 'ts-jest',
-    },
-    moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+    }
 };
 
 export default config;
