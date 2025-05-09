@@ -7,7 +7,7 @@
   "scripts": {
     "mock": "jest mongoose-services.test.js",
     "start": "node backend.js",
-    "test": "NODE_ENV=test jest --detectOpenHandles",
+    "test": "cross-env NODE_ENV=test jest --detectOpenHandles",
     "dev": "npx nodemon backend.js"
   },
   "author": "",
@@ -23,6 +23,7 @@
     "@babel/core": "^7.26.10",
     "@babel/preset-env": "^7.26.9",
     "babel-jest": "^29.7.0",
+    "cross-env": "^7.0.3",
     "eslint-plugin-jest": "^28.11.0",
     "jest": "^29.7.0"
   }
