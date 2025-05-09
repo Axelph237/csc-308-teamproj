@@ -7,6 +7,9 @@ export async function signup(email: string, username: string, password: string):
     const url = BACKEND_DOMAIN + "/auth/signup"
     const init = {
         method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
         body: JSON.stringify({
             email,
             username,

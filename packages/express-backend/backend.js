@@ -31,17 +31,21 @@ connectToDB().then(services => {
 
 app.post("/auth/signup", async (req, res) => {
     const user = req.body;
+    console.log("Signing up:", user);
 
-    const signedUp = await signup({
-        username: user.username,
-        email: user.email,
-        password: user.password
-    })
+    try {
+        await signup({
+            username: user.username,
+            email: user.email,
+            password: user.password
+        });
 
-    if (signedUp === true)
         res.send("Successfully signed up.");
-    else
+    }
+    catch (e) {
+        console.log(e);
         res.status(500).send("Unable to sign up.");
+    }
 })
 app.post("/auth/login", async (req, res) => {
     const user = req.body;

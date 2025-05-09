@@ -78,9 +78,10 @@ export default function createMongooseServices(connection) {
         },
 
         // Create Functions
-        addUser: (user) => {
+        addUser: async (user) => {
             const newUser = new User(user);
-            return newUser.save();
+            await newUser.save();
+            return newUser;
         },
 
         addDiary: async (diary, userId) => {

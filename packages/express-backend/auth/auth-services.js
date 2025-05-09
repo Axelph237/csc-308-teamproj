@@ -16,23 +16,33 @@ const { addUser, findUserByUser } = mongooseServices;
  * @param username - The user's display name.
  * @param email - The user's unique email.
  * @param password - The password in plaintext to be hashed and saved to the db.
- * @return {Promise<boolean>} - True when finishing successfully.
+ * @return {Promise<any>} - True when finishing successfully.
  */
-export async function signup({ username, email, password }) {
-    if (!username || !email || !password)
-        return false;
+export function signup({ username, email, password }) {
+    return new Promise((resolve, reject) => {
+        if (!username || !email || !password)
+            reject("INVALID_DETAILS");
 
-    await bcrypt.hash(password, 12, (err, hash) => {
-        if (err)
-            return console.error(err);
+        try {
+            const hash = bcrypt.hashSync(password, 10);
 
-        addUser({
-            username, email,
-            password: hash,
-        });
+            addUser({
+                username, email,
+                password: hash,
+            })
+                .then((res) => {
+                    console.log("Created user");
+                    resolve(res)
+                })
+                .catch(err => {
+                    console.log("Failed to create user");
+                    reject(err);
+                });
+        }
+        catch (e) {
+            reject(e);
+        }
     });
-
-    return true;
 }
 
 /**

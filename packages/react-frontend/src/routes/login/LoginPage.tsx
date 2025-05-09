@@ -9,6 +9,7 @@ export default function LoginPage() {
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
+
         setLoading(true);
         console.log("Logging in...");
 
@@ -45,7 +46,7 @@ export default function LoginPage() {
                 <div className="flex justify-left items-center p-6">
                     <label className="grid grid-cols-2">
                         Password:
-                        <input type="text" name="password" placeholder="password"/>
+                        <input type="password" name="password" placeholder="password"/>
                     </label>
                 </div>
 
