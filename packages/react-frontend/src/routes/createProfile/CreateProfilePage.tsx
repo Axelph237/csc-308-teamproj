@@ -32,20 +32,11 @@ export default function CreateProfilePage() {
                     </label>
                 </div>
 
-                <button
-                    className="justify-center flex p-4 rounded-2xl bg-accent-500 cursor-pointer hover:bg-accent-800"
-                    onClick={() => {
-                        const password = (document.getElementById('password') as HTMLInputElement).value;
-                        const confirmPassword = (document.getElementById('confirmPassword') as HTMLInputElement).value;
+                <div><Link to={'/home'} className="pl-6">
 
-                        if (password === confirmPassword && password !== "") {
-                            window.location.href = 'http://localhost:5173/home';
-                        } else {
-                            alert('Passwords do not match or are empty. Please reenter passwords.');
-                        }
-                    }}>
-                    Create Profile
-                </button>
+                    <button className="flex p-4 rounded-2xl bg-accent-500 cursor-pointer hover:bg-accent-800">Create Profile
+                    </button>
+                </Link></div>
             </div>
 
         </div>
