@@ -40,8 +40,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: release.zip
-          working-directory: packages/express-backend
+          path: packages/express-backend/release.zip
 
   deploy:
     runs-on: ubuntu-latest
