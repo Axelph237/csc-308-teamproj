@@ -12,13 +12,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 22.14.0
-      - name: npm install, build, and test
-        run: | 
-              npm ci --workspaces=false
-              npm run lint || true
-              npm run -w express-backend build
-              npm run -w express-backend test || true
-        working-directory: packages/express-backend
-      - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
-        working-directory: packages/express-backend
+      - run: | 
+          npm ci --workspaces=false
+          npm run lint || true
+          npm run -w react-frontend build
+          npm test || true
