@@ -6,7 +6,10 @@ const PageSchema = new mongoose.Schema({
     title: { type: String, required: true },
     date: { type: String, required: true },
     body: { type: String, required: true },
+    likeCounter: {type: Number, default: 0},
+    comments: [{type: String}]
 });
+
 
 const DiarySchema = new mongoose.Schema({
     title: { type: String, required: true },
@@ -126,11 +129,11 @@ export default function createMongooseServices(connection) {
             const filteredUser = Object.fromEntries(
                 Object.entries(user).filter(([key]) => allowedFields.includes(key))
             );
-            return await User.findByIdAndUpdate(userId, filteredUser, { new: true });
+            return await User.findByIdAndUpdate(userId, filteredUser, {new: true});
         },
 
         editPassword: (userId, password) => {
-            return User.findByIdAndUpdate(userId, { password }, { new: true });
+            return User.findByIdAndUpdate(userId, {password}, {new: true});
         },
 
         editPage: async (diaryId, pageId, pageData) => {
@@ -140,7 +143,38 @@ export default function createMongooseServices(connection) {
             await diary.save();
             return page;
         },
+        // add one like to a pages like counter, needs diaryId and PageId
+        addLike: async (diaryId, pageId) => {
+            const page = Diary.findById(diaryId)
+                .then((result) =>
+                    result.entries.find(entry => entry._id.toString() === pageId)
+                );
+            page.likeCounter++;
+            await page.save();
+            return page;
+        },
 
+        // remove one like from a pages like counter, needs diaryId and PageId
+        removeLike: async (diaryId, pageId) => {
+            const page = Diary.findById(diaryId)
+                .then((result) =>
+                    result.entries.find(entry => entry._id.toString() === pageId)
+                );
+            page.likeCounter--;
+            await page.save();
+            return page;
+        },
+
+        //
+        addComment: async (diaryId, pageId, comment) => {
+            const page = Diary.findById(diaryId)
+                .then((result) =>
+                    result.entries.find(entry => entry._id.toString() === pageId)
+                );
+            page.comments.push(comment);
+            await page.save();
+            return page;
+        },
         // upsert functions for security
         upsertAuthToken: async (userId, authToken) => {
             const user = await User.findById(userId);
@@ -160,29 +194,4 @@ export default function createMongooseServices(connection) {
     };
 
 
-const defaultServices = createMongooseServices(mongoose);
-export const models = {
-    User: mongoose.model("User"),
-    Diary: mongoose.model("Diary"),
-    Page: mongoose.model("Page")
-};
-export const {
-    findUserByID,
-    findUserByUser,
-    findDiariesByUser,
-    findPagesByDiary,
-    findPageByDiaryAndPageID,
-    findRandomPage,
-    addUser,
-    addDiary,
-    addPage,
-    removeUser,
-    removeDiary,
-    removePage,
-    editUser,
-    editPassword,
-    editPage,
-    upsertAuthToken,
-    upsertRefreshToken,
-    findPassword
-} = defaultServices;
+}
