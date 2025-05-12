@@ -1,10 +1,7 @@
 import {ApiError} from "@src/api/backend";
 
-// IF GETTING 404 ERRORS MAKE SURE THIS IS CORRECT
-const BACKEND_DOMAIN = "http://localhost:8001";
-
 export async function signup(email: string, username: string, password: string): Promise<string> {
-    const url = BACKEND_DOMAIN + "/auth/signup"
+    const url = "/api/auth/signup"
     const init = {
         method: "POST",
         headers: {

@@ -3,7 +3,6 @@ import {Diary} from "types/diary";
 import {Page} from "types/page";
 import {ObjectId} from "types/objectId";
 
-const BACKEND_DOMAIN = "http://localhost:8001";
 
 export class ApiError extends Error {
     readonly url: string;
@@ -19,7 +18,7 @@ export class ApiError extends Error {
  * GET /users/:id
  */
 export async function getUser(): Promise<User> {
-    const url = "/users"
+    const url = "/api/users"
     const init: RequestInit = {
         method: "GET",
         credentials: "include"
@@ -57,7 +56,7 @@ export async function getUserDiaries(): Promise<Diary[]> {
  * @param diaryId - The id of the diary to retrieve data from.
  */
 export async function getDiaryPages(diaryId: ObjectId): Promise<Page[]> {
-    const url = `/diaries/${diaryId}/pages`;
+    const url = `/api/diaries/${diaryId}/pages`;
     const init: RequestInit = {
         method: "GET",
         credentials: "include"
@@ -78,7 +77,7 @@ export async function getDiaryPages(diaryId: ObjectId): Promise<Page[]> {
  * @param pageId - The id of the page.
  */
 export async function getPage(diaryId: ObjectId, pageId: ObjectId): Promise<Page> {
-    const url = `/diaries/${diaryId}/pages/${pageId}`;
+    const url = `/api/diaries/${diaryId}/pages/${pageId}`;
     const init: RequestInit = {
         method: "GET",
         credentials: "include"
@@ -98,7 +97,7 @@ export async function getPage(diaryId: ObjectId, pageId: ObjectId): Promise<Page
  * @param user - The user to create.
  */
 export async function createUser(user: Omit<User, "_id" | "diariesID">): Promise<User> {
-    const url = "/users";
+    const url = "/api/users";
     const init: RequestInit = {
         method: "POST",
         credentials: "include",
@@ -122,7 +121,7 @@ export async function createUser(user: Omit<User, "_id" | "diariesID">): Promise
  * @param diary - The diary to create.
  */
 export async function createDiary(diary: Omit<Diary, "_id">): Promise<Diary> {
-    const url = "/diaries";
+    const url = "/api/diaries";
     const init: RequestInit = {
         method: "POST",
         credentials: "include",
@@ -147,7 +146,7 @@ export async function createDiary(diary: Omit<Diary, "_id">): Promise<Diary> {
  * @param diaryId - The id of the diary to add the page to.
  */
 export async function createPage(diaryId: ObjectId, page: Omit<Page, "_id">): Promise<Page> {
-    const url = `/diaries/${diaryId}/pages`;
+    const url = `/api/diaries/${diaryId}/pages`;
     const init: RequestInit = {
         method: "POST",
         credentials: "include",
@@ -172,7 +171,7 @@ export async function createPage(diaryId: ObjectId, page: Omit<Page, "_id">): Pr
  *
  */
 export async function findRandomPage(): Promise<Page> {
-    const url = `/diaries/`;
+    const url = `/api/diaries/`;
     const init: RequestInit = {
         method: "GET",
         credentials: "include"
@@ -193,7 +192,7 @@ export async function findRandomPage(): Promise<Page> {
  * @param password - the password to edit/change
  */
 export async function editPassword(userId: ObjectId, password: string): Promise<User> {
-    const url = `/users/${userId}/password`;
+    const url = `/api/users/${userId}/password`;
     const init: RequestInit = {
         method: "PUT",
         headers: {
@@ -217,7 +216,7 @@ export async function editPassword(userId: ObjectId, password: string): Promise<
  * @param userId - the user to find
  */
 export async function editUser(user: Omit<User, "_id" | "password" | "diariesID">, userId: ObjectId): Promise<User> {
-    const url = `/users/${userId}`;
+    const url = `/api/users/${userId}`;
     const init: RequestInit = {
         method: "PUT",
         credentials: "include",
