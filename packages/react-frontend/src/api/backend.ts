@@ -120,7 +120,7 @@ export async function createUser(user: Omit<User, "_id" | "diariesID">): Promise
  * @param diary - The diary to create.
  */
 export async function createDiary(diary: Omit<Diary, "_id">): Promise<Diary> {
-    const url = "/api/diaries";
+    const url = "/api/users/account/diaries";
     const init: RequestInit = {
         method: "POST",
         credentials: "include",
@@ -132,11 +132,10 @@ export async function createDiary(diary: Omit<Diary, "_id">): Promise<Diary> {
 
     const response =  await fetch(url, init);
 
-    const body = await response.json();
     if (!response.ok)
-        throw new ApiError(body.message, url, init);
+        throw new ApiError(await response.text(), url, init);
 
-    return body;
+    return await response.json();
 }
 
 /**
