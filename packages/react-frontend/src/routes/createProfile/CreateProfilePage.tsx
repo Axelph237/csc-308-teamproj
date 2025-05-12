@@ -1,4 +1,3 @@
-import {Link} from "react-router-dom";
 
 export default function CreateProfilePage() {
     return (
@@ -39,7 +38,7 @@ export default function CreateProfilePage() {
                         const confirmPassword = (document.getElementById('confirmPassword') as HTMLInputElement).value;
 
                         if (password === confirmPassword && password !== "") {
-                            window.location.href = 'http://localhost:5173/home';
+                            window.location.href = '/home';
                         } else {
                             alert('Passwords do not match or are empty. Please reenter passwords.');
                         }

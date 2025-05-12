@@ -38,7 +38,10 @@ export default function WritePage() {
 
     }
 
-    const handleSubmit = () => {
+
+    const handleSubmit = async () => {
+        const title = titleRef.current.value || "Untitled Page";
+
         const {text} = editorHandler.getState();
         setStatus(Status.saved);
     }

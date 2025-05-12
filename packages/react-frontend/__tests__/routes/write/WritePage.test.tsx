@@ -3,6 +3,16 @@ import {render, screen} from '@testing-library/react';
 import WritePage from "../../../src/routes/write/WritePage";
 import {userEvent} from "@testing-library/user-event";
 
+import {createPage} from "../../../src/api/backend";
+import type * as backendApi from "../../../src/api/backend";
+import {MemoryRouter, Route, Routes} from "react-router-dom";
+
+jest.mock("../../../src/api/backend", () => ({
+    createPage: jest.fn(),
+}));
+const mockedCreatePage = createPage as jest.MockedFunction<typeof backendApi.createPage>;
+
+
 const testSource = "# Heading\n## Subheading";
 
 describe("Write Page", () => {
@@ -24,10 +34,27 @@ describe("Write Page", () => {
 
     it("Test upload & status", async () => {
         const user = userEvent.setup();
-        const {debug} = render(<WritePage/>);
+
+        mockedCreatePage.mockResolvedValueOnce({
+            _id: "44",
+            title: "New Day",
+            date: "2025-05-06",
+            body: testSource,
+        });
+
+        const {debug} = render(
+            <MemoryRouter initialEntries={[`/diary/123`]}>
+                <Routes>
+                    <Route path="/diary/:diaryId" element={<WritePage/>}/>
+                </Routes>
+            </MemoryRouter>);
+
         const editor = screen.getByTestId("md-editor");
 
         // Test type status change
+        const titleInput = screen.getByPlaceholderText("Untitled Page");
+        await user.type(titleInput, "New Day");
+        
         await user.type(editor, testSource);
         const status = screen.getByText("Unsaved");
         expect(status.textContent).toBe("Unsaved");
@@ -35,6 +62,15 @@ describe("Write Page", () => {
         // Test submit
         const submitBtn = screen.getByText("Submit");
         await user.click(submitBtn);
-        expect(status.textContent).toBe("Saved!");
+
+        await waitFor(() => {
+            expect(mockedCreatePage).toHaveBeenCalledWith("123", {
+                title: "New Day",
+                date: expect.any(String),
+                body: testSource + "\n",
+            });
+            expect(status.textContent).toBe("Saved!");
+        })
+
     })
 })

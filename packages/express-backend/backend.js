@@ -6,6 +6,7 @@ import cors from "cors";
 import { connectToDB } from "./mongoose-connection.js";
 import * as cookie from "cookie";
 import {login, signup} from "./auth/auth-services.js";
+import {authenticatedRoute} from "./auth/auth-middleware.js";
 
 
 const app = express();
@@ -14,7 +15,7 @@ const port = process.env.PORT || 52784;
 app.use(cors());
 app.use(express.json());
 
-app.get("/auth/signup", async (req, res) => {
+app.post("/auth/signup", async (req, res) => {
     const user = req.body;
 
     const signedUp = await signup({
@@ -54,9 +55,9 @@ connectToDB().then(services => {
     console.error("Failed to connect to DB:", err);
 });
 
-app.get("/users/:id", async (req, res) => {
+app.get("/users/account", authenticatedRoute,async (req, res) => {
     try {
-        const user = await mongooseServices.findUserByID(req.params.id);
+        const user = await mongooseServices.findUserByID(req.user.userId);
         if (!user) {
             return res.status(404).send("user not found");
         }
@@ -65,9 +66,10 @@ app.get("/users/:id", async (req, res) => {
         res.status(500).send("error finding user");
     }
 });
-app.get("/users/:id/diaries", async (req, res) => {
+
+app.get("/users/account/diaries", authenticatedRoute,async (req, res) => {
     try {
-        const diaries = await mongooseServices.findDiariesByUser(req.params.id);
+        const diaries = await mongooseServices.findDiariesByUser(req.user.userId);
         if (!diaries) {
             return res.status(404).send("user or diaries not found");
         }
@@ -77,7 +79,7 @@ app.get("/users/:id/diaries", async (req, res) => {
     }
 });
 
-app.get("/diaries/:diaryId/pages", async (req, res) => {
+app.get("/diaries/:diaryId/pages", authenticatedRoute,async (req, res) => {
     try {
         const pages = await mongooseServices.findPagesByDiary(req.params.diaryId);
         if (!pages) {
@@ -89,7 +91,7 @@ app.get("/diaries/:diaryId/pages", async (req, res) => {
     }
 });
 
-app.get("/diaries/:diaryId/pages/:pageId", async (req, res) => {
+app.get("/diaries/:diaryId/pages/:pageId", authenticatedRoute,async (req, res) => {
     try {
         const page = await mongooseServices.findPageByDiaryAndPageID(req.params.diaryId, req.params.pageId);
         if (!page) {
@@ -100,7 +102,7 @@ app.get("/diaries/:diaryId/pages/:pageId", async (req, res) => {
         res.status(500).send("error finding page");
     }
 });
-app.post("/users", async (req, res) => {
+app.post("/users", authenticatedRoute,async (req, res) => {
     try {
         const  {username, password, email, profilePicture } = req.body;
         if (!username || !password || !email) {
@@ -126,22 +128,21 @@ app.post("/users", async (req, res) => {
 //     catch (error)
 // }
 
-app.get("/users)")
-app.post("/users/:id/diaries", async (req, res) => {
+app.post("/users/account/diaries", authenticatedRoute,async (req, res) => {
     try {
         const  title  = req.body;
         if (!title) {
             return res.status(400).send("missing required diary title");
         }
 
-        const newDiary = await mongooseServices.addDiary( title , req.params.id);
+        const newDiary = await mongooseServices.addDiary( title , req.user.userId);
         res.status(201).send(newDiary);
     } catch (error) {
         res.status(500).send("error adding diary");
     }
 });
 
-app.post("/diaries/:diaryId/pages", async (req, res) => {
+app.post("/diaries/:diaryId/pages", authenticatedRoute,async (req, res) => {
     try {
         const { title, body } = req.body;
         if (!title || !body) {
