@@ -26,17 +26,16 @@ export async function getUser(): Promise<User> {
 
     const response =  await fetch(url, init);
 
-    const body = await response.json();
     if (!response.ok)
-        throw new ApiError(body.message, url, init);
+        throw new ApiError(await response.text(), url, init);
 
-    return body;
+    return await response.json();
 }
 
 /**
  * GET /users/:id/diaries -> TODO update to /diaries on backend
  */
-export async function getUserDiaries(): Promise<Diary[]> {
+export async function getUserDiaries(): Promise<Diary[]> 
     const url = "/api/users/account/diaries";
     const init: RequestInit = {
         method: "GET",

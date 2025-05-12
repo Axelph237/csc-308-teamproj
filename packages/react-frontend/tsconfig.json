@@ -11,8 +11,9 @@
     // Enable esModuleInterop for easier import handling
     "module": "commonjs",
     // or another appropriate module system for your project
-    "target": "es5"
+    "target": "es5",
     // or "es6" based on your needs
+    "types": [ "jest" ]
   },
   "references": [
     {
