@@ -18,7 +18,7 @@ export class ApiError extends Error {
  * GET /users/:id
  */
 export async function getUser(): Promise<User> {
-    const url = "/api/users"
+    const url = "/api/users/account"
     const init: RequestInit = {
         method: "GET",
         credentials: "include"

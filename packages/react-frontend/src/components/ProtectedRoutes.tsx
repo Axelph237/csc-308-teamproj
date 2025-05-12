@@ -13,7 +13,6 @@ export default function ProtectedRoutes() {
                 // Get truthy value of user type
                 // NOTE: This could be edited to instead set the user of the app.
                 const user = await getUser();
-                console.log(user);
                 setIsAuthenticated(!!user);
 
             }
