@@ -13,7 +13,7 @@ const PageSchema = new mongoose.Schema({
 
 const DiarySchema = new mongoose.Schema({
     title: { type: String, required: true },
-    lastEntry: { type: String, required: true },
+    lastEntry: { type: String, required: false },
     numEntries: { type: Number, required: true, default: 0 },
     entries: [PageSchema]
 });
