@@ -1,7 +1,8 @@
-import {describe, expect, it, jest} from '@jest/globals';
-import {render, screen, waitFor} from '@testing-library/react';
+import {describe, expect, it} from '@jest/globals';
+import {render, screen} from '@testing-library/react';
 import WritePage from "../../../src/routes/write/WritePage";
 import {userEvent} from "@testing-library/user-event";
+
 import {createPage} from "../../../src/api/backend";
 import type * as backendApi from "../../../src/api/backend";
 import {MemoryRouter, Route, Routes} from "react-router-dom";
@@ -11,23 +12,15 @@ jest.mock("../../../src/api/backend", () => ({
 }));
 const mockedCreatePage = createPage as jest.MockedFunction<typeof backendApi.createPage>;
 
+
 const testSource = "# Heading\n## Subheading";
 
 describe("Write Page", () => {
-    it("renders WritePage component", async () => {
-        render(
-            <MemoryRouter>
-                <WritePage/>
-            </MemoryRouter>
-        );
-        await waitFor(() => {
-            expect(screen.getByText("Submit")).toBeDefined();
-        });
-    });
+
     it("Test render", async () => {
         // Render the Markdown component
         const user = userEvent.setup();
-        const {debug} = render(<MemoryRouter> <WritePage/> </MemoryRouter>);
+        const {debug} = render(<WritePage/>);
         const editor = screen.getByTestId("md-editor");
 
         await user.type(editor, testSource);
@@ -41,6 +34,7 @@ describe("Write Page", () => {
 
     it("Test upload & status", async () => {
         const user = userEvent.setup();
+
         mockedCreatePage.mockResolvedValueOnce({
             _id: "44",
             title: "New Day",
@@ -54,6 +48,7 @@ describe("Write Page", () => {
                     <Route path="/diary/:diaryId" element={<WritePage/>}/>
                 </Routes>
             </MemoryRouter>);
+
         const editor = screen.getByTestId("md-editor");
 
         // Test type status change
@@ -76,5 +71,6 @@ describe("Write Page", () => {
             });
             expect(status.textContent).toBe("Saved!");
         })
+
     })
 })

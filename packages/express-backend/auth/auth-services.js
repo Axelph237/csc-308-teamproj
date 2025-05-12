@@ -1,6 +1,10 @@
 import bcrypt from "bcrypt";
 import * as jose from "jose";
-import { addUser, findUserByUser } from "../mongoose-services"
+import mongoose from "mongoose";
+import createMongooseServices from "../mongoose-services.js";
+
+const mongooseServices = createMongooseServices(mongoose);
+const { addUser, findUserByUser } = mongooseServices;
 
 //
 // FUNCTIONS FOR SIGNING UP, LOGGING IN, AND LOGGING OUT
