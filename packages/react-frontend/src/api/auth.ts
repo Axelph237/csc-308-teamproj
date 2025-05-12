@@ -27,7 +27,7 @@ export async function signup(email: string, username: string, password: string):
 }
 
 export async function login(username: string, password: string): Promise<string> {
-    const url = BACKEND_DOMAIN + "/auth/login"
+    const url = "/api/auth/login"
     const init = {
         method: "POST",
         headers: {

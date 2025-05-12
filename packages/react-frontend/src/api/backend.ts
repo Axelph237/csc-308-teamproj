@@ -3,6 +3,8 @@ import {Diary} from "types/diary";
 import {Page} from "types/page";
 import {ObjectId} from "types/objectId";
 
+const BACKEND_DOMAIN = "http://localhost:8001";
+
 export class ApiError extends Error {
     readonly url: string;
     readonly request: RequestInit;
@@ -36,7 +38,7 @@ export async function getUser(): Promise<User> {
  * GET /users/:id/diaries -> TODO update to /diaries on backend
  */
 export async function getUserDiaries(): Promise<Diary[]> {
-    const url = "/diaries";
+    const url = "/api/users/account/diaries";
     const init: RequestInit = {
         method: "GET",
         credentials: "include"
@@ -44,11 +46,10 @@ export async function getUserDiaries(): Promise<Diary[]> {
 
     const response =  await fetch(url, init);
 
-    const body = await response.json();
     if (!response.ok)
-        throw new ApiError(body.message, url, init);
+        throw new ApiError(await response.text(), url, init);
 
-    return body;
+    return await response.json();
 }
 
 /**

@@ -52,13 +52,22 @@ app.post("/auth/login", async (req, res) => {
     console.log(user);
 
     try {
-        const credentials = await login(user.username, user.password)
+        const credentials = await login(user.username, user.password);
+
+        console.log("Credentials created:", credentials);
 
         res.setHeader(
             "Set-Cookie",
             cookie.serialize(
                 "auth",
-                JSON.stringify(credentials)
+                JSON.stringify(credentials),
+                {
+                    httpOnly: true,
+                    path: "/",
+                    sameSite: "lax",  // or "strict"
+                    secure: process.env.NODE_ENV === "production", // important for HTTPS
+                    maxAge: 60 * 60 * 24 * 7 // 1 week
+                }
             ));
 
         res.send("Successfully logged in.");

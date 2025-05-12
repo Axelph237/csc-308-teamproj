@@ -114,6 +114,7 @@ export async function validateCredentials(credentials) {
 
     // Verify payload
     const payload = await verifyJWT(credentials.accessToken);
+    console.log("JWT verified w/ payload:", payload);
     if (!payload)
         return { errorMessage: "ACCESS_TOKEN_INVALID" }
 
@@ -140,7 +141,7 @@ export async function validateCredentials(credentials) {
  */
 export async function createCredentials(userId, email) {
     const accessToken = await generateJWT({
-        sub: userId,
+        sub: userId.toString(),
         email: email
     })
 
