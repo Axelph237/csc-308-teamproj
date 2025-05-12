@@ -97,7 +97,7 @@ app.get("/users/account/diaries", authenticatedRoute,async (req, res) => {
         if (!diaries) {
             return res.status(404).send("user or diaries not found");
         }
-        res.status(200).send(diaries.diaryIds || []);
+        res.status(200).send(diaries ?? []);
     } catch (error) {
         res.status(500).send("error fetching diaries");
     }
