@@ -12,37 +12,11 @@ import {authenticatedRoute} from "./auth/auth-middleware.js";
 const app = express();
 const port = process.env.PORT || 52784;
 
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true
+}));
 app.use(express.json());
-
-app.post("/auth/signup", async (req, res) => {
-    const user = req.body;
-
-    const signedUp = await signup({
-        username: user.username,
-        email: user.email,
-        password: user.password
-    })
-
-    if (signedUp === true)
-        res.send("Successfully signed up.");
-    else
-        res.status(500).send("Unable to sign up.");
-})
-app.get("/auth/login", async (req, res) => {
-    const user = req.body;
-
-    const credentials = await login(user.username, user.password)
-
-    res.setHeader(
-        "Set-Cookie",
-        cookie.serialize(
-            "auth",
-            JSON.stringify(credentials)
-        ));
-
-    res.send("Successfully logged in.");
-})
 
 let mongooseServices;
 
@@ -54,6 +28,56 @@ connectToDB().then(services => {
 }).catch(err => {
     console.error("Failed to connect to DB:", err);
 });
+
+app.post("/auth/signup", async (req, res) => {
+    const user = req.body;
+    console.log("Signing up:", user);
+
+    try {
+        await signup({
+            username: user.username,
+            email: user.email,
+            password: user.password
+        });
+
+        res.send("Successfully signed up.");
+    }
+    catch (e) {
+        console.log(e);
+        res.status(500).send("Unable to sign up.");
+    }
+})
+app.post("/auth/login", async (req, res) => {
+    const user = req.body;
+    console.log(user);
+
+    try {
+        const credentials = await login(user.username, user.password);
+
+        console.log("Credentials created:", credentials);
+
+        res.setHeader(
+            "Set-Cookie",
+            cookie.serialize(
+                "auth",
+                JSON.stringify(credentials),
+                {
+                    httpOnly: true,
+                    path: "/",
+                    sameSite: "lax",  // or "strict"
+                    secure: process.env.NODE_ENV === "production", // important for HTTPS
+                    maxAge: 60 * 60 * 24 * 7 // 1 week
+                }
+            ));
+
+        res.send("Successfully logged in.");
+    }
+    catch (e) {
+        console.log(e);
+        res.status(500).send("Unable to login.");
+    }
+
+})
 
 app.get("/users/account", authenticatedRoute,async (req, res) => {
     try {
@@ -73,7 +97,7 @@ app.get("/users/account/diaries", authenticatedRoute,async (req, res) => {
         if (!diaries) {
             return res.status(404).send("user or diaries not found");
         }
-        res.status(200).send(diaries.diaryIds);
+        res.status(200).send(diaries.diaryIds || []);
     } catch (error) {
         res.status(500).send("error fetching diaries");
     }

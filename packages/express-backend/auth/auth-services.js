@@ -1,10 +1,6 @@
 import bcrypt from "bcrypt";
 import * as jose from "jose";
-import mongoose from "mongoose";
-import createMongooseServices from "../mongoose-services.js";
-
-const mongooseServices = createMongooseServices(mongoose);
-const { addUser, findUserByUser } = mongooseServices;
+import {mongooseServices} from "../mongoose-connection.js";
 
 //
 // FUNCTIONS FOR SIGNING UP, LOGGING IN, AND LOGGING OUT
@@ -16,20 +12,33 @@ const { addUser, findUserByUser } = mongooseServices;
  * @param username - The user's display name.
  * @param email - The user's unique email.
  * @param password - The password in plaintext to be hashed and saved to the db.
- * @return {Promise<true>} - True when finishing successfully.
+ * @return {Promise<any>} - True when finishing successfully.
  */
-export async function signup({ username, email, password }) {
-    await bcrypt.hash(password, 12, (err, hash) => {
-        if (err)
-            return console.error(err);
+export function signup({ username, email, password }) {
+    return new Promise((resolve, reject) => {
+        if (!username || !email || !password)
+            reject("INVALID_DETAILS");
 
-        addUser({
-            username, email,
-            password: hash,
-        });
+        try {
+            const hash = bcrypt.hashSync(password, 10);
+
+            mongooseServices.addUser({
+                username, email,
+                password: hash,
+            })
+                .then((res) => {
+                    console.log("Created user");
+                    resolve(res)
+                })
+                .catch(err => {
+                    console.log("Failed to create user");
+                    reject(err);
+                });
+        }
+        catch (e) {
+            reject(e);
+        }
     });
-
-    return true;
 }
 
 /**
@@ -47,29 +56,34 @@ export function login(username, password) {
     // Using an explicit Promise allows us to resolve/reject the Promise
     // inside this callback.
     return new Promise((resolve, reject) => {
+        if (!username || !password)
+            reject("INVALID_USER");
 
         // TODO get user's hashed password from mongo
-        const user = findUserByUser(username);
-        if (!user)
-            reject("USER_NOT_FOUND");
+        mongooseServices.findUserByUser(username)
+            .then(user => {
+                if (!user)
+                    reject("USER_NOT_FOUND");
 
-        const hashedPassword = user.password;
+                const hashedPassword = user.password;
 
-        // Compare given password to hashedPassword
-        bcrypt.compare(password, hashedPassword, async (err, isMatch) => {
-            // If error is thrown
-            if (err)
-                reject(err);
+                // Compare given password to hashedPassword
+                bcrypt.compare(password, hashedPassword, async (err, isMatch) => {
+                    // If error is thrown
+                    if (err)
+                        reject(err);
 
-            // Check if password matched
-            if (isMatch) {
-                const credentials = await createCredentials(user._id, user.email);
+                    // Check if password matched
+                    if (isMatch) {
+                        const credentials = await createCredentials(user._id, user.email);
 
-                resolve(credentials);
-            }
-            else
-                reject("INVALID_PASSWORD")
-        });
+                        resolve(credentials);
+                    }
+                    else
+                        reject("INVALID_PASSWORD")
+                });
+            })
+            .catch(err => reject(err));
 
     });
 }
@@ -100,6 +114,7 @@ export async function validateCredentials(credentials) {
 
     // Verify payload
     const payload = await verifyJWT(credentials.accessToken);
+    console.log("JWT verified w/ payload:", payload);
     if (!payload)
         return { errorMessage: "ACCESS_TOKEN_INVALID" }
 
@@ -126,7 +141,7 @@ export async function validateCredentials(credentials) {
  */
 export async function createCredentials(userId, email) {
     const accessToken = await generateJWT({
-        sub: userId,
+        sub: userId.toString(),
         email: email
     })
 

@@ -40,11 +40,7 @@ export default function createMongooseServices(connection) {
 
     return {
 
-        models: {
-            Page, Diary, User, Security
-        },
-
-        findUserByUser: (username) => User.findUserByUser(username),
+        findUserByUser: (username) => User.findOne({ username }),
 
         findUserByID: (id) => User.findById(id),
 
@@ -82,9 +78,10 @@ export default function createMongooseServices(connection) {
         },
 
         // Create Functions
-        addUser: (user) => {
+        addUser: async (user) => {
             const newUser = new User(user);
-            return newUser.save();
+            await newUser.save();
+            return newUser;
         },
 
         addDiary: async (diary, userId) => {
