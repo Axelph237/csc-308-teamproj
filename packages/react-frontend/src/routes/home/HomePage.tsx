@@ -75,7 +75,7 @@ function HomeBody() {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
             {diaries.map((diary, index) => (
-                <Link key={index} to={`/diaries/${index + 1}`}>
+                <Link key={index} to={`/diaries/${diary._id}`}>
                     <div
                         className="rounded-2xl p-6 shadow-lg bg-secondary-500 hover:bg-secondary-700 transition min-h-[150px] flex items-center justify-center">
                         <h2 className="text-xl font-bold text-secondary-100">{diary.title}</h2>
