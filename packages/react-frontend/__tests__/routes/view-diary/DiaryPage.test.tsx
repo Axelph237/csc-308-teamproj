@@ -91,6 +91,7 @@ describe("DiaryPage Component", () => {
 
 
     it("shows error if diary is not found", async () => {
+        mockedGetUserDiaries.mockRejectedValue(new Error("Fetch failed"));
         mockedGetDiaryEntries.mockRejectedValue(new Error("Fetch failed"));
         renderWithRoute("0");
 
