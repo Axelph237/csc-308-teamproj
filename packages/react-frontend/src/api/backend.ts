@@ -35,7 +35,7 @@ export async function getUser(): Promise<User> {
 /**
  * GET /users/:id/diaries -> TODO update to /diaries on backend
  */
-export async function getUserDiaries(): Promise<Diary[]> 
+export async function getUserDiaries(): Promise<Diary[]> {
     const url = "/api/users/account/diaries";
     const init: RequestInit = {
         method: "GET",
