@@ -1,10 +1,6 @@
 import bcrypt from "bcrypt";
 import * as jose from "jose";
-import mongoose from "mongoose";
-import createMongooseServices from "../mongoose-services.js";
-
-const mongooseServices = createMongooseServices(mongoose);
-const { addUser, findUserByUser } = mongooseServices;
+import {mongooseServices} from "../mongoose-connection.js";
 
 //
 // FUNCTIONS FOR SIGNING UP, LOGGING IN, AND LOGGING OUT
@@ -26,7 +22,7 @@ export function signup({ username, email, password }) {
         try {
             const hash = bcrypt.hashSync(password, 10);
 
-            addUser({
+            mongooseServices.addUser({
                 username, email,
                 password: hash,
             })
@@ -64,7 +60,7 @@ export function login(username, password) {
             reject("INVALID_USER");
 
         // TODO get user's hashed password from mongo
-        findUserByUser(username)
+        mongooseServices.findUserByUser(username)
             .then(user => {
                 if (!user)
                     reject("USER_NOT_FOUND");

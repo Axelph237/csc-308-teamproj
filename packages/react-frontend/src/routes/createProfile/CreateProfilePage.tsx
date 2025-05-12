@@ -24,7 +24,7 @@ export default function CreateProfilePage() {
         setLoading(true);
         console.log("Signing up...");
 
-        signup(username, email, password)
+        signup(email, username, password)
             .then(() => {
                 navigate("/home");
             })
