@@ -1,9 +1,8 @@
-import {describe, expect, it} from '@jest/globals';
-import {render, screen} from '@testing-library/react';
+import {describe, expect, it, jest} from '@jest/globals';
+import {render, screen, waitFor} from '@testing-library/react';
 import WritePage from "../../../src/routes/write/WritePage";
 import {userEvent} from "@testing-library/user-event";
-
-import {createPage} from "../../../src/api/backend";
+import {createPage, getUserDiaries} from "../../../src/api/backend";
 import type * as backendApi from "../../../src/api/backend";
 import {MemoryRouter, Route, Routes} from "react-router-dom";
 
@@ -12,15 +11,23 @@ jest.mock("../../../src/api/backend", () => ({
 }));
 const mockedCreatePage = createPage as jest.MockedFunction<typeof backendApi.createPage>;
 
-
 const testSource = "# Heading\n## Subheading";
 
 describe("Write Page", () => {
-
+    it("renders WritePage component", async () => {
+        render(
+            <MemoryRouter>
+                <WritePage/>
+            </MemoryRouter>
+        );
+        await waitFor(() => {
+            expect(screen.getByText("Submit")).toBeDefined();
+        });
+    });
     it("Test render", async () => {
         // Render the Markdown component
         const user = userEvent.setup();
-        const {debug} = render(<WritePage/>);
+        const {debug} = render(<MemoryRouter> <WritePage/> </MemoryRouter>);
         const editor = screen.getByTestId("md-editor");
 
         await user.type(editor, testSource);
@@ -34,27 +41,21 @@ describe("Write Page", () => {
 
     it("Test upload & status", async () => {
         const user = userEvent.setup();
-
         mockedCreatePage.mockResolvedValueOnce({
             _id: "44",
-            title: "New Day",
+            title: "Untitled Page",
             date: "2025-05-06",
             body: testSource,
         });
-
         const {debug} = render(
             <MemoryRouter initialEntries={[`/diary/123`]}>
                 <Routes>
                     <Route path="/diary/:diaryId" element={<WritePage/>}/>
                 </Routes>
             </MemoryRouter>);
-
         const editor = screen.getByTestId("md-editor");
 
         // Test type status change
-        const titleInput = screen.getByPlaceholderText("Untitled Page");
-        await user.type(titleInput, "New Day");
-        
         await user.type(editor, testSource);
         const status = screen.getByText("Unsaved");
         expect(status.textContent).toBe("Unsaved");
@@ -65,7 +66,7 @@ describe("Write Page", () => {
 
         await waitFor(() => {
             expect(mockedCreatePage).toHaveBeenCalledWith("123", {
-                title: "New Day",
+                title: "Untitled Page",
                 date: expect.any(String),
                 body: testSource + "\n",
             });
