@@ -77,6 +77,7 @@ describe("DiaryPage Component", () => {
 
         });
     });
+
     it("renders pen icon", async () => {
         mockedGetUserDiaries.mockResolvedValue([mockDiaries[0]]);
         mockedGetDiaryEntries.mockResolvedValue([
@@ -102,7 +103,6 @@ describe("DiaryPage Component", () => {
         });
     });
 
-
     it("shows error if diary is not found", async () => {
         mockedGetDiaryEntries.mockRejectedValue(new Error("Fetch failed"));
         renderWithRoute("0");
@@ -113,6 +113,7 @@ describe("DiaryPage Component", () => {
         expect(errorMessage).toBeDefined();
 
     });
+
     it("shows error if diary pages fail to load", async () => {
         mockedGetUserDiaries.mockResolvedValue([mockDiaries[0]]);
         mockedGetDiaryEntries.mockRejectedValue(new Error("fail"));
