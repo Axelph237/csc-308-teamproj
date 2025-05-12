@@ -4,13 +4,14 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "npx jest", 
+    "test": "npx jest",
     "dev": "npm run dev -w ./packages/react-frontend",
     "backend": "npm run dev -w ./packages/express-backend",
     "format": "npx prettier . --write",
     "lint": "npx eslint . && npx prettier --check .",
     "start": "node backend.js"
   },
+
   "author": "",
   "license": "ISC",
   "description": "",

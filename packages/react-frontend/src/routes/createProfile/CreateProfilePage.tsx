@@ -58,8 +58,6 @@ export default function CreateProfilePage() {
                         Create Profile
                     </button>
                 </div>
-            </form>
-
         </div>
     );
 }
