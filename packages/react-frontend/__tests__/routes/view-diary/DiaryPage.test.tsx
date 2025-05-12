@@ -103,17 +103,6 @@ describe("DiaryPage Component", () => {
         });
     });
 
-    it("shows error if diary is not found", async () => {
-        mockedGetDiaryEntries.mockRejectedValue(new Error("Fetch failed"));
-        renderWithRoute("0");
-
-        const errorMessage = await screen.findByText((content) =>
-            content.includes("Error: Failed to load diary.")
-        );
-        expect(errorMessage).toBeDefined();
-
-    });
-
     it("shows error if diary pages fail to load", async () => {
         mockedGetUserDiaries.mockResolvedValue([mockDiaries[0]]);
         mockedGetDiaryEntries.mockRejectedValue(new Error("fail"));
@@ -127,5 +116,16 @@ describe("DiaryPage Component", () => {
         );
 
         expect(await screen.findByText("Error: Failed to load pages.")).toBeDefined();
+    });
+
+    it("shows error if diary is not found", async () => {
+        mockedGetDiaryEntries.mockRejectedValue(new Error("Fetch failed"));
+        renderWithRoute("0");
+
+        const errorMessage = await screen.findByText((content) =>
+            content.includes("Error: Failed to load diary.")
+        );
+        expect(errorMessage).toBeDefined();
+
     });
 });
