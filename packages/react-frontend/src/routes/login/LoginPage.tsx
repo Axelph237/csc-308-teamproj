@@ -21,7 +21,7 @@ export default function LoginPage() {
 
         login(username, password)
             .then(() => {
-                navigate("/home");
+                navigate("/app/home");
             })
             .catch((err) => {
                 console.log(err);

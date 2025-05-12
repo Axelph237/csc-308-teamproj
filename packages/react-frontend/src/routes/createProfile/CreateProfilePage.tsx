@@ -26,7 +26,7 @@ export default function CreateProfilePage() {
 
         signup(email, username, password)
             .then(() => {
-                navigate("/home");
+                navigate("/app/home");
             })
             .catch((err) => {
                 console.log(err);
