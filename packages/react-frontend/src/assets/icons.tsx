@@ -125,3 +125,27 @@ export function LockIcon(props: SVGProps<SVGSVGElement>) {
         </svg>
     )
 }
+
+export function CaretDownIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            {...props}>
+            <g id="Arrow / Caret_Down_SM">
+                <path id="Vector" d="M15 11L12 14L9 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                      strokeLinejoin="round"/>
+            </g>
+        </svg>
+    )
+}
+
+export function CaretUpIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            {...props}>
+            <g id="Arrow / Caret_Up_SM">
+                <path id="Vector" d="M9 13L12 10L15 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                      strokeLinejoin="round"/>
+            </g>
+        </svg>
+    )
+}
