@@ -13,12 +13,16 @@ enum Status {
 }
 
 export default function WritePage() {
+    // States
     const [text, setText] = useState("");
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
     const [status, setStatus] = useState("");
+    // Refs
     const editorRef = useRef(null);
     const titleRef = useRef(null);
+    // Params
     const {diaryId} = useParams();
+    // Hooks
     const navigate = useNavigate();
 
     const editorHandler = useEditable(editorRef, (text) => {
