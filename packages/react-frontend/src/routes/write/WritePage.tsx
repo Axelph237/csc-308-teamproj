@@ -4,7 +4,7 @@ import {SaveIcon} from "../../assets/icons";
 import Markdown from "../../components/Markdown";
 import "./WritePage.css";
 import {Page} from "types/page";
-import {createPage, getPage} from "../../api/backend";
+import {createPage, getPage, getUserDiaries} from "../../api/backend";
 import {useParams, useNavigate} from "react-router-dom";
 import useQuery from "@src/lib/hooks/useQuery";
 
@@ -18,6 +18,7 @@ export default function WritePage() {
     const [text, setText] = useState("");
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
     const [status, setStatus] = useState("");
+    const [userDiaries, setUserDiaries] = useState<string[]>([]);
     // Refs
     const editorRef = useRef(null);
     const titleRef = useRef(null);
@@ -75,7 +76,22 @@ export default function WritePage() {
 
     // Lifecycle methods
     useEffect(() => {
-        // Once on page load, load in page details
+        // Once on component mount
+
+        // Load in user diaries
+        const loadDiaries = async () => {
+            const diaries = await getUserDiaries();
+
+            if (diaries && diaries.length > 0) {
+                const diaryIds = diaries.map((d) => d._id);
+                setUserDiaries(diaryIds);
+            }
+        }
+        loadDiaries()
+            .then(() => console.log("Diaries loaded"))
+            .catch((err) => console.error(err));
+
+        // Load in page details
         const diaryId = query.get("diary");
         const pageId = query.get("page");
 
@@ -83,27 +99,25 @@ export default function WritePage() {
         console.log("pageId:", pageId);
 
         const loadPage = async () => {
-            try {
-                const page = await getPage(diaryId, pageId);
+            const page = await getPage(diaryId, pageId);
 
-                console.log(page);
-                // Set editor body
-                editorHandler.update(page.body);
-                // Set title
-                titleRef.current.value = page.title;
-                // Set date
-                setDate(page.date);
-            }
-            catch (e) {
-                if (e instanceof Error && e.message === "page not found") {
-                    // Page not found
-                }
-            }
+            console.log(page);
+            // Set editor body
+            editorHandler.update(page.body);
+            // Set title
+            titleRef.current.value = page.title;
+            // Set date
+            setDate(page.date);
         }
 
         if (diaryId && pageId)
-            loadPage();
-
+            loadPage()
+                .then(() => console.log("Page loaded"))
+                .catch((err) => {
+                    if (err instanceof Error && err.message === "page not found") {
+                        // Page not found
+                    }
+                });
     }, []);
 
     return (
