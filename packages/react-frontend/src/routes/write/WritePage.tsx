@@ -1,10 +1,10 @@
-import {Fragment, KeyboardEvent, ClipboardEvent, useRef, useState} from "react";
+import {Fragment, KeyboardEvent, ClipboardEvent, useRef, useState, useEffect} from "react";
 import {useEditable} from "use-editable";
 import {SaveIcon} from "../../assets/icons";
 import Markdown from "../../components/Markdown";
 import "./WritePage.css";
 import {Page} from "types/page";
-import {createPage} from "../../api/backend";
+import {createPage, getPage} from "../../api/backend";
 import {useParams, useNavigate} from "react-router-dom";
 import useQuery from "@src/lib/hooks/useQuery";
 
@@ -26,7 +26,6 @@ export default function WritePage() {
     const query = useQuery();
     // Hooks
     const navigate = useNavigate();
-
 
     // Handlers
     const editorHandler = useEditable(editorRef, (text) => {
@@ -72,6 +71,40 @@ export default function WritePage() {
         }
 
     }
+
+
+    // Lifecycle methods
+    useEffect(() => {
+        // Once on page load, load in page details
+        const diaryId = query.get("diary");
+        const pageId = query.get("page");
+
+        console.log("diaryId:", diaryId);
+        console.log("pageId:", pageId);
+
+        const loadPage = async () => {
+            try {
+                const page = await getPage(diaryId, pageId);
+
+                console.log(page);
+                // Set editor body
+                editorHandler.update(page.body);
+                // Set title
+                titleRef.current.value = page.title;
+                // Set date
+                setDate(page.date);
+            }
+            catch (e) {
+                if (e instanceof Error && e.message === "page not found") {
+                    // Page not found
+                }
+            }
+        }
+
+        if (diaryId && pageId)
+            loadPage();
+
+    }, []);
 
     return (
         <div className="p-6 gap-6 flex flex-col bg-primary-600 h-full w-full">
