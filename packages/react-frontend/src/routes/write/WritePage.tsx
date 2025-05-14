@@ -6,6 +6,7 @@ import "./WritePage.css";
 import {Page} from "types/page";
 import {createPage} from "../../api/backend";
 import {useParams, useNavigate} from "react-router-dom";
+import useQuery from "@src/lib/hooks/useQuery";
 
 enum Status {
     saved = "Saved!",
@@ -22,9 +23,12 @@ export default function WritePage() {
     const titleRef = useRef(null);
     // Params
     const {diaryId} = useParams();
+    const query = useQuery();
     // Hooks
     const navigate = useNavigate();
 
+
+    // Handlers
     const editorHandler = useEditable(editorRef, (text) => {
         setText(text);
         setStatus(Status.changed);
