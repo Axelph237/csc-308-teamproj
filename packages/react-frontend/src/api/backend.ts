@@ -84,11 +84,10 @@ export async function getPage(diaryId: ObjectId, pageId: ObjectId): Promise<Page
 
     const response =  await fetch(url, init);
 
-    const body = await response.json();
     if (!response.ok)
-        throw new ApiError(body.message, url, init);
+        throw new ApiError(await response.text(), url, init);
 
-    return body;
+    return response.json();
 }
 
 /**
