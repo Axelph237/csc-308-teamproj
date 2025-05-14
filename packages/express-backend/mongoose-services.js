@@ -40,6 +40,8 @@ export default function createMongooseServices(connection) {
 
     return {
 
+        models: {Page, Diary, User, Security},
+
         findUserByUser: (username) => User.findOne({ username }),
 
         findUserByID: (id) => User.findById(id),
