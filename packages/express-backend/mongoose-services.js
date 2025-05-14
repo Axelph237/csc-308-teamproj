@@ -57,11 +57,16 @@ export default function createMongooseServices(connection) {
             return await Diary.findById(diaryId).entries;
         },
 
-        findPageByDiaryAndPageID: (diaryId, pageId) => {
-            return Diary.findById(diaryId)
-                .then((result) =>
-                    result.entries.find(entry => entry._id.toString() === pageId)
-                );
+        findPageByDiaryAndPageID: async (diaryId, pageId) => {
+            const diary = await Diary.findById(diaryId);
+            if (!diary)
+                return null;
+
+            const page = diary.entries.find(entry => entry._id.toString() === pageId);
+            if (!page)
+                return null;
+
+            return page;
         },
 
         findRandomPage: () => {
