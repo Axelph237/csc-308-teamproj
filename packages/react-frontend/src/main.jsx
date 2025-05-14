@@ -48,7 +48,7 @@ root.render(
                 <Route path={"app"} element={<MyApp />} >
                     {/* Children of that app route */}
                     <Route path={"home"} element={<HomePage />} />
-                    <Route path={"diaries/:index"} element={<DiaryPage />} />
+                    <Route path={"diaries/:diaryId"} element={<DiaryPage />} />
                     <Route path={"random"} element={<RandomPage />} />
                     <Route path={"write"} element={<WritePage />} />
                     <Route path={"account"} element={<AccountsPage />} />

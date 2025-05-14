@@ -73,7 +73,7 @@ function DiaryEntries({diary}: { diary: Diary }) {
 }
 
 function DiaryPage() {
-    let {index} = useParams();
+    let {diaryId} = useParams();
     const [diary, setDiary] = useState<Diary | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
@@ -81,12 +81,13 @@ function DiaryPage() {
     useEffect(() => {
         async function fetchDiary() {
             try {
-                const diaries = await getUserDiaries();
-                const diary = diaries[parseInt(index!)];
-                if (!diary) {
+                if (!diaryId) {
                     setError("Diary not found.");
                     return;
                 }
+
+                const userDiaries = await getDiaryPages(diaryId);
+
                 setDiary(diary);
 
             } catch (error) {
