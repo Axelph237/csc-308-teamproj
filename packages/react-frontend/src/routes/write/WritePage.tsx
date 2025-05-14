@@ -1,12 +1,12 @@
 import {Fragment, KeyboardEvent, ClipboardEvent, useRef, useState, useEffect} from "react";
 import {useEditable} from "use-editable";
-import {SaveIcon} from "../../assets/icons";
+import {CaretDownIcon, CaretUpIcon, SaveIcon} from "../../assets/icons";
 import Markdown from "../../components/Markdown";
 import "./WritePage.css";
 import {Page} from "types/page";
 import {createPage, getPage, getUserDiaries} from "../../api/backend";
-import {useParams, useNavigate} from "react-router-dom";
-import useQuery from "@src/lib/hooks/useQuery";
+import {useParams, useNavigate, useSearchParams} from "react-router-dom";
+import {diary, Diary} from "types/diary";
 
 enum Status {
     saved = "Saved!",
@@ -18,13 +18,15 @@ export default function WritePage() {
     const [text, setText] = useState("");
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
     const [status, setStatus] = useState("");
-    const [userDiaries, setUserDiaries] = useState<string[]>([]);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [userDiaries, setUserDiaries] = useState<{ id: string, title: string }[]>(undefined);
+    const [selectedDiary, setSelectedDiary] = useState<number>(null);
     // Refs
     const editorRef = useRef(null);
     const titleRef = useRef(null);
     // Params
-    const {diaryId} = useParams();
-    const query = useQuery();
+    // const {diaryId} = useParams();
+    const [searchParams, setSearchParams] = useSearchParams();
     // Hooks
     const navigate = useNavigate();
 
@@ -62,10 +64,14 @@ export default function WritePage() {
             body: text,
         };
         try {
-            if (!diaryId) throw new Error("No diary ID selected");
-            await createPage(diaryId, page);
+            const diary = userDiaries ? userDiaries[selectedDiary] : null;
+            if (!diary) {
+                // Probably create new diary for page to go in.
+                throw new Error("No diary ID selected");
+            }
+            await createPage(diary.id, page);
             setStatus(Status.saved);
-            navigate(`/diary/${diaryId}`);
+            // navigate(`/diary/${diaryId}`);
         } catch (err) {
             setStatus("Failed to save");
             console.error(err);
@@ -73,30 +79,43 @@ export default function WritePage() {
 
     }
 
+    const handleDiarySelect = (index: number) => {
+        if (!userDiaries)
+            return;
+
+        setSelectedDiary(index);
+    }
+
 
     // Lifecycle methods
     useEffect(() => {
         // Once on component mount
+
+        // Load in page details
+        const diaryId = searchParams.get("diary");
+        const pageId = searchParams.get("page");
+
+        console.log("diaryId:", diaryId);
+        console.log("pageId:", pageId);
 
         // Load in user diaries
         const loadDiaries = async () => {
             const diaries = await getUserDiaries();
 
             if (diaries && diaries.length > 0) {
-                const diaryIds = diaries.map((d) => d._id);
-                setUserDiaries(diaryIds);
+                const diaryObjs = diaries.map((d) => ({
+                    id: d._id,
+                    title: d.title
+                }));
+                setUserDiaries(diaryObjs);
+
+                const selectedIndex = diaryObjs.findIndex((d) => d.id === diaryId);
+                setSelectedDiary(selectedIndex);
             }
         }
         loadDiaries()
             .then(() => console.log("Diaries loaded"))
             .catch((err) => console.error(err));
-
-        // Load in page details
-        const diaryId = query.get("diary");
-        const pageId = query.get("page");
-
-        console.log("diaryId:", diaryId);
-        console.log("pageId:", pageId);
 
         const loadPage = async () => {
             const page = await getPage(diaryId, pageId);
@@ -136,10 +155,37 @@ export default function WritePage() {
                 </div>
 
                 <div className="flex justify-between items-center text-xl">
-                    <div className="text-accent-200">
-                        {date}
+                    {/* Left buttons */}
+                    <div className="flex flex-row gap-6 items-center">
+
+                        <button
+                            className="relative text-secondary-300 select-none cursor-pointer"
+                            onClick={() => setDropdownOpen(!dropdownOpen)}
+                        >
+                            {/* Closed */}
+                            <div className="flex flex-row items-center p-2 border-2 border-secondary-300 rounded-lg">
+                                { (selectedDiary && userDiaries[selectedDiary].title) || "Choose diary" }
+                                {dropdownOpen ? <CaretDownIcon className="icon-sm"/> : <CaretUpIcon className="icon-sm"/>}
+                            </div>
+
+                            {/* Opened */}
+                            <ul className={`${!dropdownOpen && "hidden"} absolute top-0 left-0 bg-primary-600 flex flex-col items-center justify-center border-2 border-secondary-300 rounded-lg overflow-hidden`}>
+                                { userDiaries?.map((diary, i) =>
+                                <Fragment key={i}>
+                                    <li className={`${selectedDiary === i && "bg-primary-800"} hover:bg-primary-800 p-2 w-full text-nowrap`}
+                                    onClick={() => handleDiarySelect(i)}>
+                                        {diary.title}
+                                    </li>
+                                </Fragment>)}
+                            </ul>
+                        </button>
+
+                        <div className="text-secondary-300">
+                            {date}
+                        </div>
                     </div>
-                    <div className="flex justify-end gap-6">
+                    {/* Right buttons */}
+                    <div className="flex justify-end items-center gap-6">
                         <div className="text-accent-500">
                             <p>{status}</p>
                         </div>
@@ -148,7 +194,7 @@ export default function WritePage() {
                             onClick={handleSubmit}
                         >
                             <SaveIcon className="icon-xs"/>
-                            Submit
+                            Save
                         </button>
                     </div>
 

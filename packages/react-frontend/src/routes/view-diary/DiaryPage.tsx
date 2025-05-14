@@ -37,7 +37,7 @@ function DiaryEntries({diary}: { diary: Diary }) {
                             </div>
                             <button
                                 className="text-primary-700 opacity-50 hover:opacity-75 transition-all cursor-pointer"
-                                onClick={() => navigate("/write")}
+                                onClick={() => navigate(`/app/write?diary=${diary._id}&page=${page._id}`)}
                             >
                                 <PenIcon className="icon-sm"/>
                             </button>
