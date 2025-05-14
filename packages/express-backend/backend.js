@@ -124,7 +124,7 @@ app.get("/diaries/:diaryId/pages/:pageId", authenticatedRoute,async (req, res) =
         }
         res.status(200).send(page);
     } catch (error) {
-        res.status(500).send("error finding page");
+        res.status(500).send("error finding page: " + error);
     }
 });
 app.post("/users", authenticatedRoute,async (req, res) => {
