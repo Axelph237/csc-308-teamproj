@@ -53,9 +53,8 @@ export default function createMongooseServices(connection) {
             return user.diariesID;
         },
 
-        findPagesByDiary: (diaryId) => {
-            return Diary.findById(diaryId)
-                .then((result) => result.entries);
+        findPagesByDiary: async (diaryId) => {
+            return await Diary.findById(diaryId).entries;
         },
 
         findPageByDiaryAndPageID: (diaryId, pageId) => {

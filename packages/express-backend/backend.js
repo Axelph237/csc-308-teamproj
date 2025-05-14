@@ -106,10 +106,11 @@ app.get("/users/account/diaries", authenticatedRoute,async (req, res) => {
 app.get("/diaries/:diaryId/pages", authenticatedRoute,async (req, res) => {
     try {
         const pages = await mongooseServices.findPagesByDiary(req.params.diaryId);
-        if (!pages) {
-            return res.status(404).send("diary not found");
-        }
-        res.status(200).send(pages);
+        // No pages should be successful
+        // if (!pages) {
+        //     return res.status(404).send("no pages found");
+        // }
+        res.status(200).send(pages || []);
     } catch (error) {
         res.status(500).send("error fetching pages");
     }
