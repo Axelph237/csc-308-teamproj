@@ -77,8 +77,9 @@ function HomeBody() {
             {diaries.map((diary, index) => (
                 <Link key={index} to={`/app/diaries/${diary._id}`}>
                     <div
-                        className="rounded-2xl p-6 shadow-lg shadow-primary-900 bg-primary-400 hover:bg-primary-300 transition min-h-[150px] flex items-center justify-center">
-                        <h2 className="text-xl font-bold text-secondary-100">{diary.title}</h2>
+                        className="flex flex-col items-start rounded-2xl p-6 shadow-lg shadow-primary-900 bg-primary-400 hover:bg-primary-300 transition min-h-[150px] flex items-center justify-center text-secondary-100">
+                        <h2 className="text-xl font-bold">{diary.title}</h2>
+                        <h3 className="text-md opacity-50">{diary.entries.length} {diary.entries.length === 1 ? "page" : "pages"}</h3>
                         {/*<p className="text-sm text-secondary-300">{diary.date}</p>*/}
                     </div>
                 </Link>
@@ -87,14 +88,14 @@ function HomeBody() {
             {/* Create Button */}
             <div
                 id="create-button-container"
-                className={`border-3 ${!creatingDiary && "border-dashed"} border-secondary-500 rounded-2xl p-6 shadow-lg cursor-pointer flex flex-row justify-center items-center gap-3 transition min-h-[150px] text-white hover:text-secondary-500`}
+                className={`border-3 ${!creatingDiary && "border-dashed text-secondary-100 hover:text-primary-100"} border-primary-300 rounded-2xl p-6 shadow-lg cursor-pointer flex flex-row justify-center items-center gap-3 transition min-h-[150px]`}
                 onClick={handleCreateClick}
             >
                 <BookIcon className={`icon-md ${creatingDiary && "hidden"}`}/>
                 <h2 className={`text-xl font-bold select-none ${creatingDiary && "hidden"}`}>Create Diary</h2>
 
                 <input id="create-diary-input" ref={inputRef} className={`${!creatingDiary && "hidden"} text-center w-full h-full outline-none text-xl font-bold text-secondary-100`} />
-                <SaveIcon className={`icon-md text-white hover:text-secondary-500 ${!creatingDiary && "hidden"}`}  onClick={handleSaveClick}/>
+                <SaveIcon className={`icon-md hover:text-primary-100 ${!creatingDiary && "hidden"}`}  onClick={handleSaveClick}/>
             </div>
         </div>
     );
