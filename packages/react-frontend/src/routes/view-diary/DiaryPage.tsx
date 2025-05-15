@@ -19,11 +19,11 @@ function DiaryEntries({diary}: { diary: Diary }) {
     const navigate = useNavigate();
 
     return (
-        <div className="grid grid-cols-2 gap-6 p-6 ">
+        <ul className="grid grid-cols-2 gap-6 p-6 ">
             {diary.entries.length > 0
                 ? diary.entries.map((page, index) =>
-                    <div key={index}
-                         className="flex flex-col border-2 border-secondary-500 rounded-2xl shadow-lg bg-secondary-500 overflow-hidden max-h-96"
+                    <li key={index}
+                         className="flex flex-col rounded-2xl shadow-lg shadow-primary-900 bg-primary-400 overflow-hidden max-h-96"
                          style={{minHeight: "150px"}}
                     >
                         {/* Entries display */}
@@ -36,7 +36,7 @@ function DiaryEntries({diary}: { diary: Diary }) {
                                 <p className="text-sm text-secondary-100 opacity-75">{page.date}</p>
                             </div>
                             <button
-                                className="text-primary-700 opacity-50 hover:opacity-75 transition-all cursor-pointer"
+                                className="text-primary-800 opacity-50 hover:opacity-90 transition-all cursor-pointer"
                                 onClick={() => navigate(`/app/write?diary=${diary._id}&page=${page._id}`)}
                             >
                                 <PenIcon className="icon-sm"/>
@@ -44,16 +44,16 @@ function DiaryEntries({diary}: { diary: Diary }) {
                         </div>
 
                         <div
-                            className="flex bg-primary-600 overflow-y-scroll pl-4 pr-4">
+                            className="flex bg-primary-600 min-h-full overflow-y-scroll pl-4 pr-4">
                             <Markdown source={page.body}/>
                         </div>
-                    </div>
+                    </li>
                 )
                 : <div>
                     {/* No entries display */}
                     No diary entries
                 </div>}
-        </div>
+        </ul>
     );
 }
 
