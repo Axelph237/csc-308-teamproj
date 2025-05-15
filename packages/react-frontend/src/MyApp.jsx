@@ -37,7 +37,7 @@ export default function MyApp() {
             </div>
 
             {/* Content on Desktop */}
-            <div className="flex flex-col md:flex-row h-full w-full">
+            <div className="flex flex-col md:flex-row h-full w-full overflow-y-hidden">
                 <NavigationBar/>
 
                 <div className="h-full w-full overflow-y-auto">
