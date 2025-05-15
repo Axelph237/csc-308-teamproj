@@ -1,23 +1,30 @@
 import {Fragment, KeyboardEvent, ClipboardEvent, useRef, useState, useEffect} from "react";
 import {useEditable} from "use-editable";
-import {CaretDownIcon, CaretUpIcon, SaveIcon} from "../../assets/icons";
+import {
+    CaretDownIcon,
+    CaretUpIcon,
+    CloudArrowUpIcon,
+    CloudCheckIcon,
+    CloudExclamationIcon,
+    SaveIcon
+} from "../../assets/icons";
 import Markdown from "../../components/Markdown";
 import "./WritePage.css";
-import {Page} from "types/page";
 import {createPage, getPage, getUserDiaries} from "../../api/backend";
 import {useParams, useNavigate, useSearchParams} from "react-router-dom";
-import {diary, Diary} from "types/diary";
 
 enum Status {
-    saved = "Saved!",
-    changed = "Unsaved"
+    SAVED,
+    CHANGED,
+    ERROR
 }
 
 export default function WritePage() {
     // States
     const [text, setText] = useState("");
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
-    const [status, setStatus] = useState("");
+    const [status, setStatus] = useState<{ id: number, msg?: string } | undefined>(undefined);
+    const [errorMsg, setErrorMsg] = useState<string | undefined>(undefined);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [userDiaries, setUserDiaries] = useState<{ id: string, title: string }[]>(undefined);
     const [selectedDiary, setSelectedDiary] = useState<number>(null);
@@ -33,7 +40,7 @@ export default function WritePage() {
     // Handlers
     const editorHandler = useEditable(editorRef, (text) => {
         setText(text);
-        setStatus(Status.changed);
+        setStatus({ id: Status.CHANGED });
     })
 
     const handleKeyPress = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -51,7 +58,6 @@ export default function WritePage() {
         if (typeof e.clipboardData === "string") {
             editorHandler.insert(e.clipboardData);
         }
-
     }
 
     const handleSubmit = async () => {
@@ -59,7 +65,7 @@ export default function WritePage() {
         const {text} = editorHandler.getState();
 
         const page = {
-            title: title,
+            title: title ?? "Untitled Page",
             date: date,
             body: text,
         };
@@ -67,14 +73,23 @@ export default function WritePage() {
             const diary = userDiaries ? userDiaries[selectedDiary] : null;
             if (!diary) {
                 // Probably create new diary for page to go in.
-                throw new Error("No diary ID selected");
+                setStatus({
+                    id: Status.ERROR,
+                    msg: "No diary selected"
+                });
+                return;
             }
             await createPage(diary.id, page);
-            setStatus(Status.saved);
-            // navigate(`/diary/${diaryId}`);
+            setStatus({
+                id: Status.SAVED,
+                msg: "Saved!"
+            });
+            setErrorMsg(undefined);
         } catch (err) {
-            setStatus("Failed to save");
-            console.error(err);
+            setStatus({
+                id: Status.ERROR,
+                msg: err
+            });
         }
 
     }
@@ -110,7 +125,8 @@ export default function WritePage() {
                 setUserDiaries(diaryObjs);
 
                 const selectedIndex = diaryObjs.findIndex((d) => d.id === diaryId);
-                setSelectedDiary(selectedIndex);
+                if (selectedIndex >= 0)
+                    setSelectedDiary(selectedIndex);
             }
         }
         loadDiaries()
@@ -160,11 +176,11 @@ export default function WritePage() {
 
                         <button
                             className="relative text-secondary-300 select-none cursor-pointer"
-                            onClick={() => setDropdownOpen(!dropdownOpen)}
+                            onClick={() => {setDropdownOpen(!dropdownOpen)}}
                         >
                             {/* Closed */}
                             <div className="flex flex-row items-center p-2 border-2 border-secondary-300 rounded-lg">
-                                { (selectedDiary && userDiaries[selectedDiary].title) || "Choose diary" }
+                                { typeof selectedDiary === "number" ? userDiaries[selectedDiary].title : "Choose diary" }
                                 {dropdownOpen ? <CaretDownIcon className="icon-sm"/> : <CaretUpIcon className="icon-sm"/>}
                             </div>
 
@@ -186,9 +202,15 @@ export default function WritePage() {
                     </div>
                     {/* Right buttons */}
                     <div className="flex justify-end items-center gap-6">
-                        <div className="text-accent-500">
-                            <p>{status}</p>
-                        </div>
+                        {/* Status */}
+                        {status &&
+                            <div className="text-accent-500 flex flex-row items-center gap-2">
+                                {status.id === Status.SAVED && <CloudCheckIcon className="icon-sm"/>}
+                                {status.id === Status.CHANGED && <CloudArrowUpIcon className="icon-sm"/>}
+                                {status.id === Status.ERROR && <CloudExclamationIcon className="icon-sm"/>}
+                                {status.msg && <p>{status.msg}</p>}
+                            </div>
+                        }
                         <button
                             className="btn flex items-center gap-2"
                             onClick={handleSubmit}
