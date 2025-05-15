@@ -136,8 +136,9 @@ export default function WritePage() {
         const loadPage = async () => {
             const page = await getPage(diaryId, pageId);
 
-            console.log(page);
+            console.log("Page retrieved:", page);
             // Set editor body
+            editorRef.current.focus();
             editorHandler.update(page.body);
             // Set title
             titleRef.current.value = page.title;
@@ -149,6 +150,7 @@ export default function WritePage() {
             loadPage()
                 .then(() => console.log("Page loaded"))
                 .catch((err) => {
+                    console.log(err);
                     if (err instanceof Error && err.message === "page not found") {
                         // Page not found
                     }
