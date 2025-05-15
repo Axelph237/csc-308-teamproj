@@ -206,7 +206,7 @@ export default function WritePage() {
                     <div className="flex justify-end items-center gap-6">
                         {/* Status */}
                         {status &&
-                            <div className="text-accent-500 flex flex-row items-center gap-2">
+                            <div className={`${status.id === Status.ERROR ? "text-red-500 opacity-65" : "text-accent-500"} flex flex-row items-center gap-2`}>
                                 {status.id === Status.SAVED && <CloudCheckIcon className="icon-sm"/>}
                                 {status.id === Status.CHANGED && <CloudArrowUpIcon className="icon-sm"/>}
                                 {status.id === Status.ERROR && <CloudExclamationIcon className="icon-sm"/>}
