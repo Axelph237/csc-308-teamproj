@@ -97,7 +97,7 @@ app.get("/users/account/diaries", authenticatedRoute,async (req, res) => {
         if (!diaries) {
             return res.status(404).send("user or diaries not found");
         }
-        res.status(200).send(diaries.diaryIds || []);
+        res.status(200).send(diaries ?? []);
     } catch (error) {
         res.status(500).send("error fetching diaries");
     }
@@ -106,10 +106,11 @@ app.get("/users/account/diaries", authenticatedRoute,async (req, res) => {
 app.get("/diaries/:diaryId/pages", authenticatedRoute,async (req, res) => {
     try {
         const pages = await mongooseServices.findPagesByDiary(req.params.diaryId);
-        if (!pages) {
-            return res.status(404).send("diary not found");
-        }
-        res.status(200).send(pages);
+        // No pages should be successful
+        // if (!pages) {
+        //     return res.status(404).send("no pages found");
+        // }
+        res.status(200).send(pages || []);
     } catch (error) {
         res.status(500).send("error fetching pages");
     }
@@ -123,7 +124,7 @@ app.get("/diaries/:diaryId/pages/:pageId", authenticatedRoute,async (req, res) =
         }
         res.status(200).send(page);
     } catch (error) {
-        res.status(500).send("error finding page");
+        res.status(500).send("error finding page: " + error);
     }
 });
 app.post("/users", authenticatedRoute,async (req, res) => {

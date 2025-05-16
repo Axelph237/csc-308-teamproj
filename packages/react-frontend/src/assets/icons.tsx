@@ -125,3 +125,74 @@ export function LockIcon(props: SVGProps<SVGSVGElement>) {
         </svg>
     )
 }
+
+export function CaretDownIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            {...props}>
+            <g id="Arrow / Caret_Down_SM">
+                <path id="Vector" d="M15 11L12 14L9 11" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                      strokeLinejoin="round"/>
+            </g>
+        </svg>
+    )
+}
+
+export function CaretUpIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+            {...props}>
+            <g id="Arrow / Caret_Up_SM">
+                <path id="Vector" d="M9 13L12 10L15 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+                      strokeLinejoin="round"/>
+            </g>
+        </svg>
+    )
+}
+
+export function CloudArrowUpIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+             {...props}>
+            <path
+                d="M12 9.5V15.5M12 9.5L10 11.5M12 9.5L14 11.5M8.4 19C5.41766 19 3 16.6044 3 13.6493C3 11.2001 4.8 8.9375 7.5 8.5C8.34694 6.48637 10.3514 5 12.6893 5C15.684 5 18.1317 7.32251 18.3 10.25C19.8893 10.9449 21 12.6503 21 14.4969C21 16.9839 18.9853 19 16.5 19L8.4 19Z"
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+    )
+}
+
+export function CloudCheckIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+             {...props}>
+            <path
+                d="M9 13.2222L10.8462 15L15 11M8.4 19C5.41766 19 3 16.6044 3 13.6493C3 11.2001 4.8 8.9375 7.5 8.5C8.34694 6.48637 10.3514 5 12.6893 5C15.684 5 18.1317 7.32251 18.3 10.25C19.8893 10.9449 21 12.6503 21 14.4969C21 16.9839 18.9853 19 16.5 19L8.4 19Z"
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+    )
+}
+
+export function CloudExclamationIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+             {...props}>
+            <path
+                d="M12 9.5V12.5M12 15.5H12.01M8.4 19C5.41766 19 3 16.6044 3 13.6493C3 11.2001 4.8 8.9375 7.5 8.5C8.34694 6.48637 10.3514 5 12.6893 5C15.684 5 18.1317 7.32251 18.3 10.25C19.8893 10.9449 21 12.6503 21 14.4969C21 16.9839 18.9853 19 16.5 19L8.4 19Z"
+                stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+    )
+}
+
+export function TrashIcon(props: SVGProps<SVGSVGElement>) {
+    return (
+        <svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+             {...props}>
+            <path
+                d="M8 1.5V2.5H3C2.44772 2.5 2 2.94772 2 3.5V4.5C2 5.05228 2.44772 5.5 3 5.5H21C21.5523 5.5 22 5.05228 22 4.5V3.5C22 2.94772 21.5523 2.5 21 2.5H16V1.5C16 0.947715 15.5523 0.5 15 0.5H9C8.44772 0.5 8 0.947715 8 1.5Z"
+                fill="currentColor"/>
+            <path
+                d="M3.9231 7.5H20.0767L19.1344 20.2216C19.0183 21.7882 17.7135 23 16.1426 23H7.85724C6.28636 23 4.98148 21.7882 4.86544 20.2216L3.9231 7.5Z"
+                fill="currentColor"/>
+        </svg>
+    )
+}
