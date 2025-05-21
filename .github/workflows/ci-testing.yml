@@ -16,4 +16,5 @@ jobs:
           npm ci
           npm run lint || true
           npm run -w react-frontend build
+          npm run dev -w express-backend
           npm test || true
