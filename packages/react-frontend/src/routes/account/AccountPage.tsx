@@ -138,7 +138,7 @@ export default function AccountsPage() {
                                placeholder="Enter image URL"
                                value={imageUrl}
                                onChange={(e) => setImageUrl(e.target.value)}
-                               className="w-full border p-2 rounded"
+                               className="w-full border p-2 rounded border-primary-100 text-gray-500"
                         />
                         {/* Live Preview */}
                         <div
@@ -175,7 +175,7 @@ export default function AccountsPage() {
             {isPasswordModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
                     <div className="flex flex-col bg-white items-center justify-center p-6 gap-5 rounded-lg w-96">
-                        {/* File input*/}
+                        {/* Password input*/}
                         <input type="text"
                                placeholder="Enter new password"
                                value={password}
