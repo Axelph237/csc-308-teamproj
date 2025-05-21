@@ -1,6 +1,5 @@
-import {useRef, useState, useEffect} from "react";
+import {useState, useEffect} from "react";
 import {Link} from "react-router-dom";
-import {UserCircleIcon} from "../../assets/icons";
 import {getUser, editPassword, editUser} from "../../../src/api/backend";
 import {User} from "types/user";
 
@@ -90,7 +89,6 @@ export default function AccountsPage() {
         setImageUrl("");
     };
 
-    // const el = document.getElementById();
     return (
         <div className="flex flex-col items-center gap-6 p-12">
             <h1 className="text-2xl font-bold ">Account Settings</h1>
