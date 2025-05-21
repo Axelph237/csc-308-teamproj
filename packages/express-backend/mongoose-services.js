@@ -44,7 +44,7 @@ export default function createMongooseServices(connection) {
             Page, Diary, User, Security
         },
 
-        findUserByUser: (username) => User.findUserByUser(username),
+        findUserByUser: (username) => User.findby,
 
         findUserByID: (id) => User.findById(id),
 
@@ -82,9 +82,10 @@ export default function createMongooseServices(connection) {
         },
 
         // Create Functions
-        addUser: (user) => {
+        addUser: async (user) => {
             const newUser = new User(user);
-            return newUser.save();
+            await newUser.save();
+            return newUser;
         },
 
         addDiary: async (diary, userId) => {
@@ -106,6 +107,11 @@ export default function createMongooseServices(connection) {
             return newPage;
         },
 
+        addSecurity: async (security) => {
+            const newSecurity = new Security(security);
+            await newSecurity.save();
+            return newSecurity;
+        },
         // Delete Functions
         removeUser: (userId) => User.findByIdAndDelete(userId),
 
@@ -125,6 +131,10 @@ export default function createMongooseServices(connection) {
             diary.numEntries--;
             await diary.save();
             return page;
+        },
+
+        removeSecurity: async (securityId) => {
+            Security.findByIdAndDelete(securityId);
         },
 
         // Update Functions
@@ -147,38 +157,60 @@ export default function createMongooseServices(connection) {
             await diary.save();
             return page;
         },
+
+        editDiary: async (diaryId, diary) => {
+            const oldDiary = await Diary.findById(diaryId);
+            Diary.assign(oldDiary, diary);
+            return await oldDiary.save();
+        },
+
+        editDiaryTitle: async (diaryId, title) => {
+            const diary = await Diary.findById(diaryId);
+            diary.title = title;
+            return await diary.save();
+        },
+
         // add one like to a pages like counter, needs diaryId and PageId
         addLike: async (diaryId, pageId) => {
-            const page = Diary.findById(diaryId)
-                .then((result) =>
-                    result.entries.find(entry => entry._id.toString() === pageId)
-                );
+            const diary = await Diary.findById(diaryId)
+            const page = diary.entries.find(entry => entry._id.toString() === pageId)
             page.likeCounter++;
             await page.save();
+            await diary.save();
             return page;
         },
 
         // remove one like from a pages like counter, needs diaryId and PageId
         removeLike: async (diaryId, pageId) => {
-            const page = Diary.findById(diaryId)
-                .then((result) =>
-                    result.entries.find(entry => entry._id.toString() === pageId)
-                );
+            const diary = await Diary.findById(diaryId)
+            const page = diary.entries.find(entry => entry._id.toString() === pageId)
             page.likeCounter--;
             await page.save();
+            await diary.save();
             return page;
         },
 
-        //
+        // add a comment to a page, needs diaryId and pageId
         addComment: async (diaryId, pageId, comment) => {
-            const page = Diary.findById(diaryId)
-                .then((result) =>
-                    result.entries.find(entry => entry._id.toString() === pageId)
-                );
+            const diary = await Diary.findById(diaryId)
+            const page = diary.entries.find(entry => entry._id.toString() === pageId)
             page.comments.push(comment);
             await page.save();
+            await diary.save();
             return page;
         },
+
+        // remove a comment from a page, needs diaryId and pageId
+        // DOES NOT WORK RIGHT NOW (need to refactor how comments are stored)
+        removeComment: async (diaryId, pageId) => {
+            const diary = await Diary.findById(diaryId)
+            const page = diary.entries.find(entry => entry._id.toString() === pageId)
+            page.comments.splice(page.comments.indexOf(page), 1)
+            await diary.save();
+            return page;
+        },
+
+
         // upsert functions for security
         upsertAuthToken: async (userId, authToken) => {
             const user = await User.findById(userId);
