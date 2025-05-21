@@ -11,10 +11,10 @@ import {
 import Markdown from "../../components/Markdown";
 import "./WritePage.css";
 import {createPage, getPage, getUserDiaries} from "../../api/backend";
-import {TextEncoder, TextDecoder} from 'util';
+import {TextEncoder} from 'util';
 
 global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder;
+
 import {useParams, useNavigate, useSearchParams} from "react-router-dom";
 
 enum Status {

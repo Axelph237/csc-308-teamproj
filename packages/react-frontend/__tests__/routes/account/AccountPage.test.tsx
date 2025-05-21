@@ -1,8 +1,7 @@
 import {render, screen, waitFor} from "@testing-library/react";
-import {TextEncoder, TextDecoder} from 'util';
+import {TextEncoder} from 'util';
 
 global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder;
 import {MemoryRouter} from "react-router-dom";
 import AccountPage from "../../../src/routes/account/AccountPage";
 import {expect, describe, it, beforeEach, beforeAll} from "@jest/globals";
