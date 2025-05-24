@@ -11,9 +11,6 @@ import {
 import Markdown from "../../components/Markdown";
 import "./WritePage.css";
 import {createPage, getPage, getUserDiaries} from "../../api/backend";
-import {TextEncoder} from 'util';
-
-global.TextEncoder = TextEncoder;
 
 import {useParams, useNavigate, useSearchParams} from "react-router-dom";
 
