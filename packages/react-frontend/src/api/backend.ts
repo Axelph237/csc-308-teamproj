@@ -7,6 +7,7 @@ import {ObjectId} from "types/objectId";
 export class ApiError extends Error {
     readonly url: string;
     readonly request: RequestInit;
+
     constructor(message: string, url?: string, request?: RequestInit) {
         super(message);
         this.url = url;
@@ -24,7 +25,7 @@ export async function getUser(): Promise<User> {
         credentials: "include"
     };
 
-    const response =  await fetch(url, init);
+    const response = await fetch(url, init);
 
     if (!response.ok)
         throw new ApiError(await response.text(), url, init);
@@ -42,7 +43,7 @@ export async function getUserDiaries(): Promise<Diary[]> {
         credentials: "include"
     };
 
-    const response =  await fetch(url, init);
+    const response = await fetch(url, init);
 
     if (!response.ok)
         throw new ApiError(await response.text(), url, init);
@@ -61,7 +62,7 @@ export async function getDiaryPages(diaryId: ObjectId): Promise<Page[]> {
         credentials: "include"
     };
 
-    const response =  await fetch(url, init);
+    const response = await fetch(url, init);
 
     const body = await response.json();
     if (!response.ok)
@@ -82,7 +83,7 @@ export async function getPage(diaryId: ObjectId, pageId: ObjectId): Promise<Page
         credentials: "include"
     };
 
-    const response =  await fetch(url, init);
+    const response = await fetch(url, init);
 
     if (!response.ok)
         throw new ApiError(await response.text(), url, init);
@@ -105,7 +106,7 @@ export async function createUser(user: Omit<User, "_id" | "diariesID">): Promise
         body: JSON.stringify(user)
     };
 
-    const response =  await fetch(url, init);
+    const response = await fetch(url, init);
 
     const body = await response.json();
     if (!response.ok)
@@ -129,7 +130,7 @@ export async function createDiary(diary: Omit<Diary, "_id">): Promise<Diary> {
         body: JSON.stringify(diary)
     };
 
-    const response =  await fetch(url, init);
+    const response = await fetch(url, init);
 
     if (!response.ok)
         throw new ApiError(await response.text(), url, init);
@@ -153,7 +154,7 @@ export async function createPage(diaryId: ObjectId, page: Omit<Page, "_id">): Pr
         body: JSON.stringify(page)
     };
 
-    const response =  await fetch(url, init);
+    const response = await fetch(url, init);
 
     const body = await response.json();
     if (!response.ok)
@@ -174,7 +175,7 @@ export async function findRandomPage(): Promise<Page> {
         credentials: "include"
     };
 
-    const response =  await fetch(url, init);
+    const response = await fetch(url, init);
 
     const body = await response.json();
     if (!response.ok)
@@ -199,9 +200,9 @@ export async function editPassword(userId: ObjectId, password: string): Promise<
         body: JSON.stringify(password)
     };
 
-    const response =  await fetch(url, init);
+    const response = await fetch(url, init);
     const body = await response.json();
-    if(!response.ok)
+    if (!response.ok)
         throw new ApiError(body.message, url, init);
     return body;
 
@@ -223,10 +224,41 @@ export async function editUser(user: Omit<User, "_id" | "password" | "diariesID"
         body: JSON.stringify(user)
     };
 
-    const response =  await fetch(url, init);
+    const response = await fetch(url, init);
     const body = await response.json();
-    if(!response.ok)
+    if (!response.ok)
         throw new ApiError(body.message, url, init);
+    return body;
+
+}
+
+/**
+ * DELETE
+ * @param pageId
+ * @param diaryId
+ */
+export async function removePage(pageId: ObjectId, diaryId: ObjectId): Promise<any> {
+    const url = `/api/diaries/${diaryId}/pages/${pageId}`;
+    const init: RequestInit = {
+        method: "DELETE",
+        credentials: "include",
+    };
+
+    const response = await fetch(url, init);
+
+    const bodyText = await response.text();
+    let body;
+    try {
+        body = JSON.parse(bodyText);
+    } catch (e) {
+        console.error("Failed to parse JSON:", bodyText);
+        throw new Error("Unexpected server response.");
+    }
+
+    if (!response.ok) {
+        throw new Error(body.message || "Failed to remove page.");
+    }
+
     return body;
 
 }
