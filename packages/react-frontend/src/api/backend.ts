@@ -224,17 +224,17 @@ export async function editUser(user: Omit<User, "_id" | "password" | "diariesID"
         },
         body: JSON.stringify(user)
     };
-  
-    const response =  await fetch(url, init);
 
-    if(!response.ok)
+    const response = await fetch(url, init);
+
+    if (!response.ok)
         throw new ApiError(await response.text(), url, init);
 
     return await response.json();
 }
 
 /**
- * DELETE
+ * DELETE /diaries
  * @param pageId
  * @param diaryId
  */
