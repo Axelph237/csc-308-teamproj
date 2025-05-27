@@ -1,9 +1,10 @@
 import dotenv from "dotenv";
+
 dotenv.config();
 
 import express from "express";
 import cors from "cors";
-import { connectToDB } from "./mongoose-connection.js";
+import {connectToDB} from "./mongoose-connection.js";
 import * as cookie from "cookie";
 import {login, signup} from "./auth/auth-services.js";
 import {authenticatedRoute} from "./auth/auth-middleware.js";
@@ -41,8 +42,7 @@ app.post("/auth/signup", async (req, res) => {
         });
 
         res.send("Successfully signed up.");
-    }
-    catch (e) {
+    } catch (e) {
         console.log(e);
         res.status(500).send("Unable to sign up.");
     }
@@ -71,15 +71,14 @@ app.post("/auth/login", async (req, res) => {
             ));
 
         res.send("Successfully logged in.");
-    }
-    catch (e) {
+    } catch (e) {
         console.log(e);
         res.status(500).send("Unable to login.");
     }
 
 })
 
-app.get("/users/account", authenticatedRoute,async (req, res) => {
+app.get("/users/account", authenticatedRoute, async (req, res) => {
     try {
         const user = await mongooseServices.findUserByID(req.user.userId);
         if (!user) {
@@ -91,7 +90,7 @@ app.get("/users/account", authenticatedRoute,async (req, res) => {
     }
 });
 
-app.get("/users/account/diaries", authenticatedRoute,async (req, res) => {
+app.get("/users/account/diaries", authenticatedRoute, async (req, res) => {
     try {
         const diaries = await mongooseServices.findDiariesByUser(req.user.userId);
         if (!diaries) {
@@ -103,7 +102,7 @@ app.get("/users/account/diaries", authenticatedRoute,async (req, res) => {
     }
 });
 
-app.get("/diaries/:diaryId/pages", authenticatedRoute,async (req, res) => {
+app.get("/diaries/:diaryId/pages", authenticatedRoute, async (req, res) => {
     try {
         const pages = await mongooseServices.findPagesByDiary(req.params.diaryId);
         // No pages should be successful
@@ -116,7 +115,7 @@ app.get("/diaries/:diaryId/pages", authenticatedRoute,async (req, res) => {
     }
 });
 
-app.get("/diaries/:diaryId/pages/:pageId", authenticatedRoute,async (req, res) => {
+app.get("/diaries/:diaryId/pages/:pageId", authenticatedRoute, async (req, res) => {
     try {
         const page = await mongooseServices.findPageByDiaryAndPageID(req.params.diaryId, req.params.pageId);
         if (!page) {
@@ -127,15 +126,15 @@ app.get("/diaries/:diaryId/pages/:pageId", authenticatedRoute,async (req, res) =
         res.status(500).send("error finding page: " + error);
     }
 });
-app.post("/users", authenticatedRoute,async (req, res) => {
+app.post("/users", authenticatedRoute, async (req, res) => {
     try {
-        const  {username, password, email, profilePicture } = req.body;
+        const {username, password, email, profilePicture} = req.body;
         if (!username || !password || !email) {
             return res.status(400).send("Missing required user fields");
         }
 
-        const newUser = await mongooseServices.addUser({ username, password, email, profilePicture });
-        res.status(201).send({ id: newUser._id, username: newUser.username });
+        const newUser = await mongooseServices.addUser({username, password, email, profilePicture});
+        res.status(201).send({id: newUser._id, username: newUser.username});
     } catch (error) {
         console.error("Error adding user:", error);
         res.status(500).send(`Error adding user: ${error.message}`);
@@ -153,28 +152,28 @@ app.post("/users", authenticatedRoute,async (req, res) => {
 //     catch (error)
 // }
 
-app.post("/users/account/diaries", authenticatedRoute,async (req, res) => {
+app.post("/users/account/diaries", authenticatedRoute, async (req, res) => {
     try {
-        const  title  = req.body;
+        const title = req.body;
         if (!title) {
             return res.status(400).send("missing required diary title");
         }
 
-        const newDiary = await mongooseServices.addDiary( title , req.user.userId);
+        const newDiary = await mongooseServices.addDiary(title, req.user.userId);
         res.status(201).send(newDiary);
     } catch (error) {
         res.status(500).send("error adding diary");
     }
 });
 
-app.post("/diaries/:diaryId/pages", authenticatedRoute,async (req, res) => {
+app.post("/diaries/:diaryId/pages", authenticatedRoute, async (req, res) => {
     try {
-        const { title, body } = req.body;
+        const {title, body} = req.body;
         if (!title || !body) {
             return res.status(400).send("missing required page fields");
         }
 
-        const newPage = await mongooseServices.addPage({ title, body, date: new Date() }, req.params.diaryId);
+        const newPage = await mongooseServices.addPage({title, body, date: new Date()}, req.params.diaryId);
         res.status(201).send(newPage);
     } catch (error) {
         res.status(500).send("error adding page");
@@ -203,3 +202,18 @@ app.get("/diaries/random", authenticatedRoute, async (req, res) => {
 app.get("/", (req, res) => {
     res.send("localhost:8002/users");
 });
+
+app.delete("/diaries/:diaryId/pages/:pageId", authenticatedRoute, async (req, res) => {
+    const {diaryId, pageId} = req.params;
+
+    try {
+        const deletedPage = await mongooseServices.removePage(pageId, diaryId);
+        if (!deletedPage) {
+            return res.status(404).send("page not found");
+        }
+        res.status(200).send({success: true, page: deletedPage});
+    } catch (error) {
+        console.error("Error deleting page", error);
+        res.status(500).send("Internal server error");
+    }
+})
