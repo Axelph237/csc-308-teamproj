@@ -168,7 +168,7 @@ export async function createPage(diaryId: ObjectId, page: Omit<Page, "_id">): Pr
  *
  */
 export async function findRandomPage(): Promise<Page> {
-    const url = `/api/diaries/`;
+    const url = "/api/diaries/random";
     const init: RequestInit = {
         method: "GET",
         credentials: "include"
@@ -176,10 +176,11 @@ export async function findRandomPage(): Promise<Page> {
 
     const response =  await fetch(url, init);
 
-    const body = await response.json();
     if (!response.ok)
-        throw new ApiError(body.message, url, init);
+        throw new ApiError(await response.text(), url, init);
 
+    const body = await response.json();
+    console.log("Found random page:", body);
     return body;
 }
 
@@ -224,9 +225,10 @@ export async function editUser(user: Omit<User, "_id" | "password" | "diariesID"
     };
 
     const response =  await fetch(url, init);
-    const body = await response.json();
+
     if(!response.ok)
-        throw new ApiError(body.message, url, init);
-    return body;
+        throw new ApiError(await response.text(), url, init);
+
+    return await response.json();
 
 }

@@ -82,7 +82,7 @@ export default function createMongooseServices(connection) {
             ]))[0]
 
             // Get a random index within the diary's entries then return it
-            const randomPageInd = Math.round(Math.random() * diary.numEntries);
+            const randomPageInd = Math.round(Math.random() * (diary.numEntries - 1));
             return diary.entries[randomPageInd];
         },
 
