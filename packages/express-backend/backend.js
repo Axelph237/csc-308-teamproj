@@ -181,6 +181,25 @@ app.post("/diaries/:diaryId/pages", authenticatedRoute,async (req, res) => {
     }
 });
 
+app.get("/diaries/random", authenticatedRoute, async (req, res) => {
+    try {
+        const page = await mongooseServices.findRandomPage();
+
+        if (page) {
+            res.status(201).send(page);
+        }
+        else {
+            const errMsg = "Error finding random page";
+            console.error(errMsg);
+            res.status(500).send(errMsg);
+        }
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).send(error);
+    }
+})
+
 app.get("/", (req, res) => {
     res.send("localhost:8002/users");
 });
