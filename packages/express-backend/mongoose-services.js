@@ -71,11 +71,19 @@ export default function createMongooseServices(connection) {
             return page;
         },
 
-        findRandomPage: () => {
-            const diaryInd = Math.floor(Math.random() * Diary.countDocuments());
-            const randomDiary = Diary.findOne().skip(diaryInd);
-            const pageInd = Math.floor(Math.random() * randomDiary.countDocuments());
-            return randomDiary.entries[pageInd];
+        findRandomPage: async () => {
+            // Get a random diary (using $sample)
+            // The diary must have:
+            // 1) an `entries` field
+            // 2) at least one entry in its `entries` array
+            const diary = (await Diary.aggregate([
+                { $match: { "entries.0": { $exists: true } } },
+                { $sample: { size: 1 } }
+            ]))[0]
+
+            // Get a random index within the diary's entries then return it
+            const randomPageInd = Math.round(Math.random() * diary.numEntries);
+            return diary.entries[randomPageInd];
         },
 
         findPassword: async (userID) => {
