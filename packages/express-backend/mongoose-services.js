@@ -7,7 +7,7 @@ const PageSchema = new mongoose.Schema({
     date: { type: String, required: true },
     body: { type: String, required: true },
     likeCounter: {type: Number, default: 0},
-    comments: [{type: String}]
+    comments: [CommentSchema]
 });
 
 
@@ -32,11 +32,17 @@ const SecuritySchema = new mongoose.Schema({
     refreshToken: { type: String, required: true }
 });
 
+const CommentSchema = new mongoose.Schema({
+    text: { type: String, required: true },
+    author: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // user Id
+});
+
 export default function createMongooseServices(connection) {
     const Page = connection.model("Page", PageSchema);
     const Diary = connection.model("Diary", DiarySchema);
     const User = connection.model("User", UserSchema);
     const Security = connection.model("Security", SecuritySchema);
+    const Comment = connection.model("Comment", CommentSchema);
 
     return {
 
@@ -112,6 +118,7 @@ export default function createMongooseServices(connection) {
             await newSecurity.save();
             return newSecurity;
         },
+        
         // Delete Functions
         removeUser: (userId) => User.findByIdAndDelete(userId),
 
@@ -192,22 +199,18 @@ export default function createMongooseServices(connection) {
 
         // add a comment to a page, needs diaryId and pageId
         addComment: async (diaryId, pageId, comment) => {
+            const newComment = Comment.create(comment);
             const diary = await Diary.findById(diaryId)
             const page = diary.entries.find(entry => entry._id.toString() === pageId)
-            page.comments.push(comment);
+            page.comments.push(newComment);
             await page.save();
             await diary.save();
             return page;
         },
 
         // remove a comment from a page, needs diaryId and pageId
-        // DOES NOT WORK RIGHT NOW (need to refactor how comments are stored)
-        removeComment: async (diaryId, pageId) => {
-            const diary = await Diary.findById(diaryId)
-            const page = diary.entries.find(entry => entry._id.toString() === pageId)
-            page.comments.splice(page.comments.indexOf(page), 1)
-            await diary.save();
-            return page;
+        removeComment: async (commentId) => {
+            Comment.findByIdAndDelete(commentId)
         },
 
 
