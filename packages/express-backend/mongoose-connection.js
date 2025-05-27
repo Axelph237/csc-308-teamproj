@@ -1,14 +1,16 @@
 import mongoose from "mongoose";
 import createMongooseServices from "./mongoose-services.js";
 
-let connection;
-let mongooseServices;
+export let connection;
+export let mongooseServices;
 
 export const connectToDB = async () => {
     if (connection) return mongooseServices;
 
     connection = await mongoose.createConnection(process.env.MONGO_URI).asPromise();
     mongooseServices = createMongooseServices(connection);
+
+    console.log("MongoDB Connected");
     return mongooseServices;
 };
 

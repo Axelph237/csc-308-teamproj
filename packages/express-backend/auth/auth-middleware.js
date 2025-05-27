@@ -2,12 +2,12 @@ import * as cookie from "cookie";
 import {refreshCredentials, validateCredentials} from "./auth-services.js";
 
 export async function authenticatedRoute (req, res, next) {
-    const { auth} = cookie.parse(req.headers.cookie ?? "");
-    if (!auth) {
+    const cookies = cookie.parse(req.headers.cookie ?? "");
+    if (!cookies.auth) {
         res.status(401).send("Authentication Failed: No request auth cookie");
         return;
     }
-    const credentials = JSON.parse(auth);
+    const credentials = JSON.parse(cookies.auth);
 
     // Validate user
     const userValidation = await validateCredentials(credentials);

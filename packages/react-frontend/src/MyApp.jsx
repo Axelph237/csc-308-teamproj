@@ -5,10 +5,10 @@ import {ChatIcon, HomeIcon, PenIcon, UserCircleIcon} from "./assets/icons";
 
 function NavigationBar() {
     const pages = [
-        { link: "/home", name: "Home", icon: <HomeIcon className="icon-sm" /> },
-        { link: "/random", name: "Random", icon: <ChatIcon className="icon-sm" /> },
-        { link: "/write", name: "Write", icon: <PenIcon className="icon-sm" /> },
-        { link: "/account", name: "Account", icon: <UserCircleIcon className="icon-sm" /> },
+        { link: "/app/home", name: "Home", icon: <HomeIcon className="icon-sm" /> },
+        { link: "/app/random", name: "Random", icon: <ChatIcon className="icon-sm" /> },
+        { link: "/app/write", name: "Write", icon: <PenIcon className="icon-sm" /> },
+        { link: "/app/account", name: "Account", icon: <UserCircleIcon className="icon-sm" /> },
     ]
 
     return (
@@ -37,7 +37,7 @@ export default function MyApp() {
             </div>
 
             {/* Content on Desktop */}
-            <div className="flex flex-col md:flex-row h-full w-full">
+            <div className="flex flex-col md:flex-row h-full w-full overflow-y-hidden">
                 <NavigationBar/>
 
                 <div className="h-full w-full overflow-y-auto">

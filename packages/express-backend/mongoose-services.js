@@ -13,7 +13,7 @@ const PageSchema = new mongoose.Schema({
 
 const DiarySchema = new mongoose.Schema({
     title: { type: String, required: true },
-    lastEntry: { type: String, required: true },
+    lastEntry: { type: String, required: false },
     numEntries: { type: Number, required: true, default: 0 },
     entries: [PageSchema]
 });
@@ -40,7 +40,9 @@ export default function createMongooseServices(connection) {
 
     return {
 
-        findUserByUser: (username) => User.findUserByUser(username),
+        models: {Page, Diary, User, Security},
+
+        findUserByUser: (username) => User.findOne({ username }),
 
         findUserByID: (id) => User.findById(id),
 
@@ -53,16 +55,20 @@ export default function createMongooseServices(connection) {
             return user.diariesID;
         },
 
-        findPagesByDiary: (diaryId) => {
-            return Diary.findById(diaryId)
-                .then((result) => result.entries);
+        findPagesByDiary: async (diaryId) => {
+            return await Diary.findById(diaryId).entries;
         },
 
-        findPageByDiaryAndPageID: (diaryId, pageId) => {
-            return Diary.findById(diaryId)
-                .then((result) =>
-                    result.entries.find(entry => entry._id.toString() === pageId)
-                );
+        findPageByDiaryAndPageID: async (diaryId, pageId) => {
+            const diary = await Diary.findById(diaryId);
+            if (!diary)
+                return null;
+
+            const page = diary.entries.find(entry => entry._id.toString() === pageId);
+            if (!page)
+                return null;
+
+            return page;
         },
 
         findRandomPage: () => {
@@ -78,9 +84,10 @@ export default function createMongooseServices(connection) {
         },
 
         // Create Functions
-        addUser: (user) => {
+        addUser: async (user) => {
             const newUser = new User(user);
-            return newUser.save();
+            await newUser.save();
+            return newUser;
         },
 
         addDiary: async (diary, userId) => {
