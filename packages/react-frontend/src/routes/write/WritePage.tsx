@@ -179,6 +179,7 @@ export default function WritePage() {
 
                         <button
                             className="relative text-secondary-300 select-none cursor-pointer"
+                            aria-label="Dropdown"
                             onClick={() => {
                                 setDropdownOpen(!dropdownOpen)
                             }}
@@ -212,14 +213,18 @@ export default function WritePage() {
                         {status &&
                             <div
                                 className={`${status.id === Status.ERROR ? "text-red-500 opacity-65" : "text-accent-500"} flex flex-row items-center gap-2`}>
-                                {status.id === Status.SAVED && <CloudCheckIcon className="icon-sm"/>}
-                                {status.id === Status.CHANGED && <CloudArrowUpIcon className="icon-sm"/>}
-                                {status.id === Status.ERROR && <CloudExclamationIcon className="icon-sm"/>}
+                                {status.id === Status.SAVED &&
+                                    <CloudCheckIcon className="icon-sm" data-testid="icon-saved"/>}
+                                {status.id === Status.CHANGED &&
+                                    <CloudArrowUpIcon className="icon-sm" data-testid="icon-upload"/>}
+                                {status.id === Status.ERROR &&
+                                    <CloudExclamationIcon className="icon-sm" data-testid="icon-error"/>}
                                 {status.msg && <p>{status.msg}</p>}
                             </div>
                         }
                         <button
                             className="btn flex items-center gap-2"
+                            aria-label="Save Button"
                             onClick={handleSubmit}
                         >
                             <SaveIcon className="icon-xs"/>
