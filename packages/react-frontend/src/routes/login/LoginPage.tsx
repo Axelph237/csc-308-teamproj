@@ -6,6 +6,8 @@ import {LockIcon, UserCircleIcon} from "@src/assets/icons";
 
 export default function LoginPage() {
     const [loading, setLoading] = useState(false);
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const formRef = useRef<HTMLFormElement>(null);
 
@@ -14,10 +16,6 @@ export default function LoginPage() {
 
         setLoading(true);
         console.log("Logging in...");
-
-        const formData = new FormData(formRef.current);
-        const username = formData.get("username") as string;
-        const password = formData.get("password") as string;
 
         login(username, password)
             .then(() => {
@@ -34,19 +32,34 @@ export default function LoginPage() {
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-primary-700 bg-opacity-10">
-            <form ref={formRef} className="w-1/2 flex flex-col justify-center gap-6 p-8 rounded-2xl border-2 border-secondary-300">
+            <form ref={formRef} onSubmit={handleSubmit}
+                  className="w-1/2 flex flex-col justify-center gap-6 p-8 rounded-2xl border-2 border-secondary-300">
                 <h1 className="text-2xl font-bold text-secondary-300">
                     Login to your diaries
                 </h1>
 
-                <FormInput label="Username" name="username" type="text" placeholder="your username" />
-                <FormInput label="Password" name="password" type="password" placeholder="your password" />
+                <FormInput
+                    label="Username"
+                    name="username"
+                    type="text"
+                    placeholder="your username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                />
+                <FormInput
+                    label="Password"
+                    name="password"
+                    type="password"
+                    placeholder="your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                />
 
                 <div className={`${loading && "hidden"}`}>
                     <button
                         className="btn"
                         type="submit"
-                        onClick={handleSubmit}>
+                    >
                         Login
                     </button>
                 </div>
