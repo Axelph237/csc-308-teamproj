@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 
 mongoose.set("debug", true);
 
+const CommentSchema = new mongoose.Schema({
+    text: { type: String, required: true },
+    author: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // user Id
+});
+
 const PageSchema = new mongoose.Schema({
     title: { type: String, required: true },
     date: { type: String, required: true },
@@ -9,7 +14,6 @@ const PageSchema = new mongoose.Schema({
     likeCounter: {type: Number, default: 0},
     comments: [CommentSchema]
 });
-
 
 const DiarySchema = new mongoose.Schema({
     title: { type: String, required: true },
@@ -32,11 +36,6 @@ const SecuritySchema = new mongoose.Schema({
     refreshToken: { type: String, required: true }
 });
 
-const CommentSchema = new mongoose.Schema({
-    text: { type: String, required: true },
-    author: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // user Id
-});
-
 export default function createMongooseServices(connection) {
     const Page = connection.model("Page", PageSchema);
     const Diary = connection.model("Diary", DiarySchema);
@@ -47,7 +46,7 @@ export default function createMongooseServices(connection) {
     return {
 
         models: {
-            Page, Diary, User, Security
+            Page, Diary, User, Security, Comment
         },
 
         findUserByUser: (username) => User.findUserByUser(username),
@@ -88,6 +87,7 @@ export default function createMongooseServices(connection) {
         },
 
         // Create Functions
+
         addUser: async (user) => {
             const newUser = new User(user);
             await newUser.save();

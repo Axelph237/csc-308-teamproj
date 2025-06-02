@@ -46,7 +46,7 @@ describe('test mongoose User model', () => {
         });
 
     });
-    it.skip('testing addUser', () => {
+    it('testing addUser', () => {
         const _input = {
             username: 'willmayer77',
             email: 'test@example.com',
@@ -66,7 +66,7 @@ describe('test mongoose User model', () => {
         });
     });
 
-    it.skip('testing removeUser (need to add first)', () => {
+    it('testing removeUser (need to add first)', () => {
         const _input = {
             username: 'willmayer77',
             email: 'test@example.com',

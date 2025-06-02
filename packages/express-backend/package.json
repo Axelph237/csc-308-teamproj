@@ -7,7 +7,7 @@
   "scripts": {
     "mock": "jest mongoose-services.test.js",
     "start": "node backend.js",
-    "test": "cross-env NODE_ENV=test jest --detectOpenHandles",
+    "test": "cross-env NODE_ENV=test jest --detectOpenHandles --coverage",
     "dev": "npx nodemon backend.js"
   },
   "author": "",
