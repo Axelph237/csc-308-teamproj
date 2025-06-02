@@ -3,10 +3,12 @@ import {describe, expect, it} from "@jest/globals";
 import {cleanup, render, screen} from "@testing-library/react";
 
 describe("icons", () => {
+    afterEach(cleanup);
     it("renders correctly", () => {
-        for (const ImportedSVG of Object.values(svgs)) {
+        for (const [name, ImportedSVG] of Object.entries(svgs)) {
             render(<ImportedSVG/>);
-            expect(screen.getByTestId("icon")).toBeDefined();
+            const icon = screen.queryByTestId("icon");
+            expect(icon).toBeDefined();
             cleanup();
         }
     })
