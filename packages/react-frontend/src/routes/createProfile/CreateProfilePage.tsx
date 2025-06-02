@@ -40,21 +40,22 @@ export default function CreateProfilePage() {
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-primary-700 bg-opacity-10">
             <form ref={formRef} className="w-1/2 flex flex-col justify-center gap-6 p-8 rounded-2xl border-2 border-secondary-300">
-                <h1 className="text-2xl font-bold text-secondary-300">
+                <h1 className="text-2xl font-bold text-secondary-300" data-testid="cypress-title">
                     Create Profile
                 </h1>
 
 
-                <FormInput label="Username" name="username" type="text" placeholder="your username" />
-                <FormInput label="Email" name="email" type="email" placeholder="your email" />
-                <FormInput label="Password" name="password" type="password" placeholder="your password" />
-                <FormInput label="Confirm Password" name="confirmPassword" type="password" placeholder="retype password" />
+                <FormInput label="Username" name="username" type="text" placeholder="your username" data-testid="cypress-usernameForm"/>
+                <FormInput label="Email" name="email" type="email" placeholder="your email" data-testid="cypress-emailForm"/>
+                <FormInput label="Password" name="password" type="password" placeholder="your password" data-testid="cypress-passwordForm1"/>
+                <FormInput label="Confirm Password" name="confirmPassword" type="password" placeholder="retype password" data-testid="cypress-passwordForm2"/>
 
                 <div className={`${loading && "hidden"}`}>
                     <button
                         className="btn"
                         type="submit"
-                        onClick={handleSubmit}>
+                        onClick={handleSubmit}
+                        data-testid="cypress-createProfile-button">
                         Create Profile
                     </button>
                 </div>

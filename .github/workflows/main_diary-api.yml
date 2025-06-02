@@ -27,7 +27,7 @@ jobs:
         run: |
           npm install --workspaces=false
           npm run -w express-backend build --if-present
-          npm run -w express-backend test --if-present || true
+          npm run test -w express-backend --if-present
         working-directory: packages/express-backend
 
 
