@@ -3,11 +3,13 @@ import {CommentIcon, EyeIcon, PenIcon, UserCircleIcon} from "../../assets/icons"
 import {useEffect, useRef, useState} from "react";
 import {Page} from "types/page";
 import {findRandomPage} from "../../../src/api/backend";
+import SvgLine from "@src/components/svgLine";
 
 export default function RandomPage() {
     const [ page, setPage ] = useState<Page | undefined>();
     const [loading, setLoading ] = useState(true);
     const [error, setError ] = useState<string | null>(null);
+    const [commentsOpen, setCommentsOpen] = useState(false);
     const commentInputRef = useRef(null);
 
     useEffect(() => {
@@ -30,32 +32,40 @@ export default function RandomPage() {
 
 
     return (
-        <div className="flex flex-row justify-center items-center gap-10 min-h-full">
-            {/* Entry info */}
-            <div className="rounded-lg border-2 border-secondary-500 p-4 flex flex-col gap-2 min-w-1/4 max-w-1/3">
-
-                <div className="flex flex-row justify-start items-center gap-2">
-                    <CommentIcon className="icon-sm"/>
-                    <h1>Comments</h1>
-                </div>
-
-                {/* Likes Counter - UNUSED */}
-                {/*<div className="flex flex-row justify-start items-center gap-2 opacity-50">*/}
-                {/*    <EyeIcon className="icon-xs"/>*/}
-                {/*    <p>1,045,608</p>*/}
-                {/*</div>*/}
-
-                <p>🔥😍😻🤢</p>
-
-                {/* Comment Input */}
-                <label className="border-2 border-secondary-500 rounded p-4 m-2 max-w-full min-h-12 items-center justify-center flex flex-col" onClick={() => commentInputRef.current.focus()}>
-                    <span>Add Comment</span>
-                    <span contentEditable suppressContentEditableWarning ref={commentInputRef} className="outline-none break-words whitespace-pre-wrap w-full"></span>
-                </label>
-            </div>
+        <div className="flex flex-row justify-center items-center gap-10 min-h-full p-6">
             {/* Diary */}
-            <div className="rounded-lg border-2 border-secondary-500 p-4 flex max-w-1/2">
-                {page && page.body && <Markdown source={page.body} />}
+            <div className="rounded-lg shadow-lg shadow-primary-900 bg-primary-400 p-4 flex flex-row gap-3 max-w-full">
+                {/* Main text */}
+                <div className="flex flex-col gap-3">
+                    <h1>{page && page.title}</h1>
+                    <SvgLine strokeWidth={1} stroke="#ffffff" />
+                    {page && <Markdown source={page.body} />}
+                </div>
+                <SvgLine vertical strokeWidth={1} stroke="#ffffff" />
+                {/* Sidebar */}
+                <div className="flex flex-col justify-start items-center gap-6 transition-all duration-150 items-center justify-center">
+                    <b>React</b>
+                    <span className="flex flex-col items-center gap-1">
+                        <button
+                            className="text-4xl select-none cursor-pointer hover:scale-120 transition-all duration-150">😻</button>
+                        <p>{page?.likeCounter ? page.likeCounter : 0}</p>
+                    </span>
+
+                    <span className="flex flex-col items-center gap-1">
+                        <button
+                            className={`${commentsOpen && "opacity-25"} cursor-pointer hover:scale-120 transition-all duration-150`}
+                            onClick={() => setCommentsOpen(!commentsOpen)}><CommentIcon className="icon-sm"/></button>
+                        <p>{page?.comments ? page.comments.length : 0}</p>
+                    </span>
+                </div>
+                {commentsOpen && (<div className="flex flex-col gap-2 items-center w-1/2">
+                    <b>Comments</b>
+                    <label
+                        className="bg-primary-600 rounded p-4 m-2 w-full min-h-12 items-center justify-center flex flex-col"
+                        onClick={() => commentInputRef.current.focus()}>
+                        <input ref={commentInputRef} className="outline-none break-words whitespace-pre-wrap w-full" type="text" placeholder="Add Comment"/>
+                    </label>
+                </div>)}
             </div>
         </div>
     );

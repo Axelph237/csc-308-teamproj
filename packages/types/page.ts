@@ -6,5 +6,7 @@ export const page = Type.Object({
     title: Type.String(),
     date: Type.String(),
     body: Type.String(),
+    likeCounter: Type.Number(),
+    comments: Type.Array(Type.String()),
 })
 export type Page = Static<typeof page>;
