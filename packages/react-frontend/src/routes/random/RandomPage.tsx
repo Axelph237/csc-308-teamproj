@@ -1,6 +1,6 @@
 import Markdown from "../../components/Markdown";
-import {EyeIcon, UserCircleIcon} from "../../assets/icons";
-import {useEffect, useState} from "react";
+import {CommentIcon, EyeIcon, PenIcon, UserCircleIcon} from "../../assets/icons";
+import {useEffect, useRef, useState} from "react";
 import {Page} from "types/page";
 import {findRandomPage} from "../../../src/api/backend";
 
@@ -8,6 +8,7 @@ export default function RandomPage() {
     const [ page, setPage ] = useState<Page | undefined>();
     const [loading, setLoading ] = useState(true);
     const [error, setError ] = useState<string | null>(null);
+    const commentInputRef = useRef(null);
 
     useEffect(() => {
         const fetchRandomPage = async () => {
@@ -29,25 +30,28 @@ export default function RandomPage() {
 
 
     return (
-        <div className="flex flex-row justify-center items-center gap-10">
+        <div className="flex flex-row justify-center items-center gap-10 min-h-full">
             {/* Entry info */}
-            <div className="rounded-lg border-2 border-secondary-500 p-4 flex flex-col gap-2 min-w-1/4">
+            <div className="rounded-lg border-2 border-secondary-500 p-4 flex flex-col gap-2 min-w-1/4 max-w-1/3">
 
                 <div className="flex flex-row justify-start items-center gap-2">
-                    <UserCircleIcon className="icon-sm"/>
-                    <h1>Anon user</h1>
+                    <CommentIcon className="icon-sm"/>
+                    <h1>Comments</h1>
                 </div>
 
-                <div className="flex flex-row justify-start items-center gap-2 opacity-50">
-                    <EyeIcon className="icon-xs"/>
-                    <p>1,045,608</p>
-                </div>
+                {/* Likes Counter - UNUSED */}
+                {/*<div className="flex flex-row justify-start items-center gap-2 opacity-50">*/}
+                {/*    <EyeIcon className="icon-xs"/>*/}
+                {/*    <p>1,045,608</p>*/}
+                {/*</div>*/}
 
                 <p>🔥😍😻🤢</p>
 
-                <div className="border-2 border-secondary-500 rounded p-4 m-2">
-                    Comments
-                </div>
+                {/* Comment Input */}
+                <label className="border-2 border-secondary-500 rounded p-4 m-2 max-w-full min-h-12 items-center justify-center flex flex-col" onClick={() => commentInputRef.current.focus()}>
+                    <span>Add Comment</span>
+                    <span contentEditable suppressContentEditableWarning ref={commentInputRef} className="outline-none break-words whitespace-pre-wrap w-full"></span>
+                </label>
             </div>
             {/* Diary */}
             <div className="rounded-lg border-2 border-secondary-500 p-4 flex max-w-1/2">
