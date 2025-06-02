@@ -12,9 +12,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 22.14.0
-      - run: | 
+      - run: |
           npm ci
           npm run lint || true
           npm run -w react-frontend build
-          cd packages/react-frontend
-          npm run test 
+          npm run test
