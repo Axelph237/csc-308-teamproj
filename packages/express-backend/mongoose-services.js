@@ -15,7 +15,6 @@ const PageSchema = new mongoose.Schema({
     comments: [CommentSchema]
 });
 
-
 const DiarySchema = new mongoose.Schema({
     title: { type: String, required: true },
     lastEntry: { type: String, required: true },
@@ -88,6 +87,7 @@ export default function createMongooseServices(connection) {
         },
 
         // Create Functions
+
         addUser: async (user) => {
             const newUser = new User(user);
             await newUser.save();
