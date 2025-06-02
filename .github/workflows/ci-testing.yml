@@ -13,7 +13,8 @@ jobs:
         with:
           node-version: 22.14.0
       - run: |
+          cd packages/react-frontend
           npm ci
           npm run lint || true
-          npm run -w react-frontend build
+          npm run dev
           npm run test
