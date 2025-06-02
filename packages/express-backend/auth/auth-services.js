@@ -60,7 +60,7 @@ export function login(username, password) {
             reject("INVALID_USER");
 
         // TODO get user's hashed password from mongo
-        mongooseServices.findUserByUser(username)
+        mongooseServices.findUserByUsername(username)
             .then(user => {
                 if (!user)
                     reject("USER_NOT_FOUND");

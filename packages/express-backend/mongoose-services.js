@@ -49,7 +49,10 @@ export default function createMongooseServices(connection) {
             Page, Diary, User, Security, Comment
         },
 
-        findUserByUser: (username) => User.findUserByUser(username),
+        findUserByUsername: async (username) => {
+            const user = await User.findOne({username})
+            return user
+        },
 
         findUserByID: (id) => User.findById(id),
 
