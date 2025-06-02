@@ -10,8 +10,6 @@ import {createDiary, getUserDiaries} from "../../../src/api/backend";
 import type * as backendApi from "../../../src/api/backend";
 import {userEvent} from "@testing-library/user-event";
 
-
-// Mocking the getUserDiaries function (ensure it's correctly mocked)
 jest.mock("../../../src/api/backend", () => ({
     getUserDiaries: jest.fn(),
     createDiary: jest.fn(),
@@ -116,27 +114,23 @@ describe("HomePage Component", () => {
             </MemoryRouter>
         );
 
-        // Wait for loading to finish
         await waitFor(() => {
             expect(screen.queryByText("Loading...")).toBeFalsy();
         });
 
         const createButton = screen.getByText("Create Diary");
         await userEvent.click(createButton);
-        // Ensure input is hidden initially
+
         const input = await screen.findByRole("textbox");
         expect(input).toBeTruthy();
 
 
-        // The input should now be visible and focused
         await waitFor(() => {
-            // expect(input).not.toHaveClass("hidden");
             expect(document.activeElement).toBe(input);
         });
     });
 
     it("calls createDiary and renders new diary on save", async () => {
-        // Mock return value of createDiary
         mockedCreateDiary.mockResolvedValue({
             _id: "123",
             title: "New Test Diary",
@@ -151,25 +145,20 @@ describe("HomePage Component", () => {
             </MemoryRouter>
         );
 
-        // Wait for existing diaries to load
         await waitFor(() => {
             expect(screen.getByText("Diary 1")).toBeDefined();
             expect(screen.getByText("A Second Diary")).toBeDefined();
         });
 
-        // Click "Create Diary"
         const createButton = screen.getByText("Create Diary");
         await userEvent.click(createButton);
 
-        // Type into input
         const input = await screen.findByRole("textbox");
         await userEvent.type(input, "New Test Diary");
 
-        // Click save icon (add data-testid to SaveIcon in component if needed)
         const saveIcon = screen.getByLabelText("save-icon");
         await userEvent.click(saveIcon);
 
-        // Assert createDiary called with correct data
         await waitFor(() => {
             expect(mockedCreateDiary).toHaveBeenCalledWith({
                 title: "New Test Diary",
@@ -179,7 +168,6 @@ describe("HomePage Component", () => {
             });
         });
 
-        // Assert new diary appears
         const newDiaryTitle = await screen.findByText("New Test Diary");
         expect(newDiaryTitle).toBeDefined();
     });
