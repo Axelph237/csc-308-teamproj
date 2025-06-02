@@ -1,8 +1,8 @@
 import {useParams, useNavigate} from 'react-router-dom';
 import Markdown from "../../components/Markdown";
 import {PenIcon, TrashIcon} from "../../assets/icons";
-import {Fragment, useEffect, useState} from "react";
-import {getUserDiaries, getDiaryPages, ApiError, removePage} from "../../api/backend";
+import {act, Fragment, useEffect, useState} from "react";
+import {getUserDiaries, ApiError, removePage} from "../../api/backend";
 import {Page} from "types/page";
 import {Diary} from "types/diary";
 
@@ -23,12 +23,7 @@ function DiaryEntry({diary, page, onPageDeleted}: { diary: Diary, page: Page, on
             await removePage(page._id, diary._id);
             onPageDeleted(); // Rerenders page
         } catch (err) {
-            if (err instanceof ApiError) {
-                alert(`Failed to delete page: ${err.message}`);
-            } else {
-                console.error("Unexpected error:", err);
-                alert("An unexpected error occurred.");
-            }
+            alert("Failed to delete page: " + err);
         }
     }
 
@@ -54,6 +49,7 @@ function DiaryEntry({diary, page, onPageDeleted}: { diary: Diary, page: Page, on
                     <button
                         className="text-primary-800 opacity-50 hover:opacity-90 transition-all duration-200 cursor-pointer"
                         onClick={handleRemovePage}
+                        aria-label="Remove page"
                     >
                         <TrashIcon className="icon-sm"/>
                     </button>
@@ -111,14 +107,18 @@ function DiaryPage() {
 
             if (!diary)
                 setError("Diary not found.");
+            act(() => {
+                setDiary(diary);
+            })
 
-            setDiary(diary);
-            console.log("Loaded diary:", diary);
         } catch (error) {
             console.error(error);
             setError("Failed to load diary." + error);
         } finally {
-            setLoading(false);
+            act(() => {
+                setLoading(false);
+            })
+
         }
     }
 
