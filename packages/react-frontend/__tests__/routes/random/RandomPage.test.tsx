@@ -1,4 +1,8 @@
 import {render, screen, waitFor} from "@testing-library/react";
+import {TextEncoder} from 'util';
+
+global.TextEncoder = TextEncoder;
+
 import {MemoryRouter} from "react-router-dom";
 import {expect, describe, it, jest, beforeEach} from "@jest/globals";
 import {findRandomPage} from "../../../src/api/backend";

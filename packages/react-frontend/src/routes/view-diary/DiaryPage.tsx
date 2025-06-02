@@ -1,8 +1,8 @@
 import {useParams, useNavigate} from 'react-router-dom';
 import Markdown from "../../components/Markdown";
 import {PenIcon, TrashIcon} from "../../assets/icons";
-import {Fragment, useEffect, useState} from "react";
-import {getUserDiaries, getDiaryPages, ApiError} from "../../api/backend";
+import {act, Fragment, useEffect, useState} from "react";
+import {getUserDiaries, ApiError, removePage} from "../../api/backend";
 import {Page} from "types/page";
 import {Diary} from "types/diary";
 
@@ -15,9 +15,17 @@ function DiaryHeader({diary}: { diary: Diary }) {
     );
 }
 
-function DiaryEntry({ diary, page }: { diary: Diary, page: Page }) {
+function DiaryEntry({diary, page, onPageDeleted}: { diary: Diary, page: Page, onPageDeleted: () => void }) {
     const [hovering, setHovering] = useState(false);
     const navigate = useNavigate();
+    const handleRemovePage = async () => {
+        try {
+            await removePage(page._id, diary._id);
+            onPageDeleted(); // Rerenders page
+        } catch (err) {
+            alert("Failed to delete page: " + err);
+        }
+    }
 
     return (
         <li
@@ -36,10 +44,12 @@ function DiaryEntry({ diary, page }: { diary: Diary, page: Page }) {
                     <p className="text-sm text-secondary-100 opacity-75">{page.date}</p>
                 </div>
 
-                <div className={`${!hovering && "opacity-50"} lex flex-row gap-2 items-center transition-all duartion-200`}>
+                <div
+                    className={`${!hovering && "opacity-50"} lex flex-row gap-2 items-center transition-all duartion-200`}>
                     <button
                         className="text-primary-800 opacity-50 hover:opacity-90 transition-all duration-200 cursor-pointer"
-                        onClick={() => alert("Can't delete that right now :/")}
+                        onClick={handleRemovePage}
+                        aria-label="Remove page"
                     >
                         <TrashIcon className="icon-sm"/>
                     </button>
@@ -61,13 +71,13 @@ function DiaryEntry({ diary, page }: { diary: Diary, page: Page }) {
     )
 }
 
-function DiaryEntries({diary}: { diary: Diary }) {
+function DiaryEntries({diary, onPageDeleted}: { diary: Diary, onPageDeleted: () => void }) {
     return (
         <ul className="grid grid-cols-2 gap-6 p-6 ">
             {diary.entries.length > 0
                 ? diary.entries.map((page, index) =>
                     <Fragment key={index}>
-                        <DiaryEntry diary={diary} page={page} />
+                        <DiaryEntry diary={diary} page={page} onPageDeleted={onPageDeleted}/>
                     </Fragment>
                 )
                 : <div>
@@ -84,30 +94,35 @@ function DiaryPage() {
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        async function fetchDiary() {
-            try {
-                if (!diaryId) {
-                    setError("Diary not found.");
-                    return;
-                }
 
-                const diary = (await getUserDiaries())
-                    .find((d) => d._id === diaryId);
-
-                if (!diary)
-                    setError("Diary not found.");
-
-                setDiary(diary);
-                console.log("Loaded diary:", diary);
-            } catch (error) {
-                console.error(error);
-                setError("Failed to load diary." + error);
-            } finally {
-                setLoading(false);
+    const fetchDiary = async () => {
+        try {
+            if (!diaryId) {
+                setError("Diary not found.");
+                return;
             }
-        }
 
+            const diary = (await getUserDiaries())
+                .find((d) => d._id === diaryId);
+
+            if (!diary)
+                setError("Diary not found.");
+            act(() => {
+                setDiary(diary);
+            })
+
+        } catch (error) {
+            console.error(error);
+            setError("Failed to load diary." + error);
+        } finally {
+            act(() => {
+                setLoading(false);
+            })
+
+        }
+    }
+
+    useEffect(() => {
         fetchDiary();
     }, [diaryId]); // runs whenever index changes
 
@@ -118,7 +133,7 @@ function DiaryPage() {
     return (
         <div>
             <DiaryHeader diary={diary}/>
-            <DiaryEntries diary={diary}/>
+            <DiaryEntries diary={diary} onPageDeleted={fetchDiary}/>
         </div>
     );
 }

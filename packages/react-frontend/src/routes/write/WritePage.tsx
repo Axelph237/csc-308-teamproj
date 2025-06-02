@@ -11,6 +11,7 @@ import {
 import Markdown from "../../components/Markdown";
 import "./WritePage.css";
 import {createPage, getPage, getUserDiaries} from "../../api/backend";
+
 import {useParams, useNavigate, useSearchParams} from "react-router-dom";
 
 enum Status {
@@ -40,7 +41,7 @@ export default function WritePage() {
     // Handlers
     const editorHandler = useEditable(editorRef, (text) => {
         setText(text);
-        setStatus({ id: Status.CHANGED });
+        setStatus({id: Status.CHANGED});
     })
 
     const handleKeyPress = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -178,23 +179,27 @@ export default function WritePage() {
 
                         <button
                             className="relative text-secondary-300 select-none cursor-pointer"
-                            onClick={() => {setDropdownOpen(!dropdownOpen)}}
+                            aria-label="Dropdown"
+                            onClick={() => {
+                                setDropdownOpen(!dropdownOpen)
+                            }}
                         >
                             {/* Closed */}
                             <div className="flex flex-row items-center p-2 border-2 border-secondary-300 rounded-lg">
-                                { typeof selectedDiary === "number" ? userDiaries[selectedDiary].title : "Choose diary" }
-                                {dropdownOpen ? <CaretDownIcon className="icon-sm"/> : <CaretUpIcon className="icon-sm"/>}
+                                {typeof selectedDiary === "number" ? userDiaries[selectedDiary].title : "Choose diary"}
+                                {dropdownOpen ? <CaretDownIcon className="icon-sm"/> :
+                                    <CaretUpIcon className="icon-sm"/>}
                             </div>
 
                             {/* Opened */}
                             <ul className={`${!dropdownOpen && "hidden"} absolute top-0 left-0 bg-primary-600 flex flex-col items-center justify-center border-2 border-secondary-300 rounded-lg overflow-hidden`}>
-                                { userDiaries?.map((diary, i) =>
-                                <Fragment key={i}>
-                                    <li className={`${selectedDiary === i && "bg-primary-800"} hover:bg-primary-800 p-2 w-full text-nowrap`}
-                                    onClick={() => handleDiarySelect(i)}>
-                                        {diary.title}
-                                    </li>
-                                </Fragment>)}
+                                {userDiaries?.map((diary, i) =>
+                                    <Fragment key={i}>
+                                        <li className={`${selectedDiary === i && "bg-primary-800"} hover:bg-primary-800 p-2 w-full text-nowrap`}
+                                            onClick={() => handleDiarySelect(i)}>
+                                            {diary.title}
+                                        </li>
+                                    </Fragment>)}
                             </ul>
                         </button>
 
@@ -206,15 +211,20 @@ export default function WritePage() {
                     <div className="flex justify-end items-center gap-6">
                         {/* Status */}
                         {status &&
-                            <div className={`${status.id === Status.ERROR ? "text-red-500 opacity-65" : "text-accent-500"} flex flex-row items-center gap-2`}>
-                                {status.id === Status.SAVED && <CloudCheckIcon className="icon-sm"/>}
-                                {status.id === Status.CHANGED && <CloudArrowUpIcon className="icon-sm"/>}
-                                {status.id === Status.ERROR && <CloudExclamationIcon className="icon-sm"/>}
+                            <div
+                                className={`${status.id === Status.ERROR ? "text-red-500 opacity-65" : "text-accent-500"} flex flex-row items-center gap-2`}>
+                                {status.id === Status.SAVED &&
+                                    <CloudCheckIcon className="icon-sm" data-testid="icon-saved"/>}
+                                {status.id === Status.CHANGED &&
+                                    <CloudArrowUpIcon className="icon-sm" data-testid="icon-upload"/>}
+                                {status.id === Status.ERROR &&
+                                    <CloudExclamationIcon className="icon-sm" data-testid="icon-error"/>}
                                 {status.msg && <p>{status.msg}</p>}
                             </div>
                         }
                         <button
                             className="btn flex items-center gap-2"
+                            aria-label="Save Button"
                             onClick={handleSubmit}
                         >
                             <SaveIcon className="icon-xs"/>

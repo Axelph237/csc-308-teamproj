@@ -5,6 +5,7 @@ export let connection;
 export let mongooseServices;
 
 export const connectToDB = async () => {
+
     if (connection) return mongooseServices;
 
     connection = await mongoose.createConnection(process.env.MONGO_URI).asPromise();

@@ -12,8 +12,10 @@ export default function RandomPage() {
     useEffect(() => {
         const fetchRandomPage = async () => {
             try{
-                setPage(await findRandomPage());
+                const page = await findRandomPage();
+                setPage(page);
             } catch(err) {
+                console.log(err);
                 setError("Failed to load page");
             } finally {
                 setLoading(false);
