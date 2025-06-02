@@ -74,11 +74,16 @@ export default function createMongooseServices(connection) {
                 );
         },
 
-        findRandomPage: () => {
-            const diaryInd = Math.floor(Math.random() * Diary.countDocuments());
-            const randomDiary = Diary.findOne().skip(diaryInd);
-            const pageInd = Math.floor(Math.random() * randomDiary.countDocuments());
-            return randomDiary.entries[pageInd];
+        findRandomPage: async () => {
+            const randomDiary = await Diary.aggregate({
+                $match: { numEntries: { $gt: 0 } },
+                $sample: { size: 1 }
+            })
+
+            const pageIndex = Math.round(Math.random() * randomDiary.entries.length - 1);
+
+            return randomDiary.entries[pageIndex];
+
         },
 
         findPassword: async (userID) => {
