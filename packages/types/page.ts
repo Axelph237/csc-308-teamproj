@@ -1,6 +1,12 @@
 import {Static, Type} from "@sinclair/typebox";
 import {objectIdObj} from "./objectId";
 
+export const comment = Type.Object({
+    _id: objectIdObj,
+    text: Type.String(),
+    author: objectIdObj
+})
+
 export const page = Type.Object({
     _id: objectIdObj,
     title: Type.String(),
