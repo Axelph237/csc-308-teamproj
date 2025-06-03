@@ -108,7 +108,7 @@ export default function RandomPage() {
                     {/* Posted comments */}
                     <ul className="flex flex-col justify-start gap-2 w-full">
                         {pageInfo.page.comments && pageInfo.page.comments.map((comment, i) => <Fragment key={i}>
-                            <li className="bg-primary-600 w-full p-4 rounded-lg">
+                            <li className="comment">
                                 {comment.text}
                             </li>
                         </Fragment>)}

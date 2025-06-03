@@ -5,6 +5,7 @@ import {act, Fragment, useEffect, useState} from "react";
 import {getUserDiaries, ApiError, removePage} from "../../api/backend";
 import {Page} from "types/page";
 import {Diary} from "types/diary";
+import SvgLine from "@src/components/svgLine";
 
 function DiaryHeader({diary}: { diary: Diary }) {
 
@@ -64,8 +65,31 @@ function DiaryEntry({diary, page, onPageDeleted}: { diary: Diary, page: Page, on
             </div>
 
             <div
-                className="flex bg-primary-600 min-h-full overflow-y-scroll pl-4 pr-4">
+                className="flex flex-col bg-primary-600 min-h-full overflow-y-scroll px-4 pb-24 gap-3">
                 <Markdown source={page.body}/>
+                <div className="w-full flex flex-col">
+                    <SvgLine strokeWidth={1} stroke="#ffffff" />
+                    <span className="bg-primary-500 p-3 gap-3 flex flex-col rounded-br-lg rounded-bl-lg">
+
+                    {/*    Comments */}
+                        {page.likeCounter && (
+                            <span><b>Likes 😻</b> {page.likeCounter} </span>
+                        )}
+                        {page.comments && (
+                            <>
+                                <span><b>Comments</b> {page.comments.length}</span>
+                                {page.comments.length > 0
+                                    ? (<ul>
+                                        {page.comments.map((comment, i) => <Fragment key={i}>
+                                            <li className="comment">{comment.text}</li>
+                                        </Fragment>)}
+                                    </ul>)
+                                    : "No comments"
+                                }
+                            </>
+                        )}
+                    </span>
+                </div>
             </div>
         </li>
     )
