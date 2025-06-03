@@ -77,15 +77,19 @@ export default function createMongooseServices(connection) {
         },
 
         findRandomPage: async () => {
-            const randomDiary = await Diary.aggregate({
-                $match: { numEntries: { $gt: 0 } },
+            // Aggregate pipeline:
+            // - Match all diaries w/ more than 1 entry
+            // - Select one of these at random
+            // Then get first (and only) element in aggregate array
+            const randomDiary = (await Diary.aggregate([{
+                $match: { numEntries: { $gt: 0 } }
+            }, {
                 $sample: { size: 1 }
-            })
+            }]))[0]
 
-            const pageIndex = Math.round(Math.random() * randomDiary.entries.length - 1);
+            const pageIndex = Math.round(Math.random() * (randomDiary.numEntries - 1));
 
             return randomDiary.entries[pageIndex];
-
         },
 
         findPassword: async (userID) => {
