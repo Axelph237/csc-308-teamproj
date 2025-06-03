@@ -1,22 +1,22 @@
 import Markdown from "../../components/Markdown";
-import {CommentIcon, EyeIcon, PenIcon, UserCircleIcon} from "../../assets/icons";
-import {useEffect, useRef, useState} from "react";
+import {CommentIcon, EyeIcon, PenIcon, SendIcon, UserCircleIcon} from "../../assets/icons";
+import {useEffect, useRef, useState, KeyboardEvent, Fragment} from "react";
 import {Page} from "types/page";
-import {findRandomPage} from "../../../src/api/backend";
+import {addLike, findRandomPage, postComment} from "../../../src/api/backend";
 import SvgLine from "@src/components/svgLine";
 
 export default function RandomPage() {
-    const [ page, setPage ] = useState<Page | undefined>();
+    const [ pageInfo, setPageInfo ] = useState<{ parentDiaryId: string, page: Page} | undefined>();
     const [loading, setLoading ] = useState(true);
     const [error, setError ] = useState<string | null>(null);
     const [commentsOpen, setCommentsOpen] = useState(false);
-    const commentInputRef = useRef(null);
+    const commentInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         const fetchRandomPage = async () => {
             try{
-                const page = await findRandomPage();
-                setPage(page);
+                const result = await findRandomPage();
+                setPageInfo(result);
             } catch(err) {
                 console.log(err);
                 setError("Failed to load page");
@@ -27,6 +27,31 @@ export default function RandomPage() {
 
         fetchRandomPage();
     }, []);
+
+    const handleCommentSubmit = () => {
+        const comment = commentInputRef.current.value;
+        commentInputRef.current.value = "";
+
+        postComment(pageInfo.parentDiaryId, pageInfo.page._id, comment)
+            .then((page: Page) => setPageInfo({ parentDiaryId: pageInfo.parentDiaryId, page }))
+            .catch((err) => {
+                console.log(err);
+                commentInputRef.current.value = comment;
+            });
+    }
+
+    const handleEnter = (event: KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Enter") {
+            handleCommentSubmit();
+        }
+    }
+
+    const handleAddLike = () => {
+        addLike(pageInfo.parentDiaryId, pageInfo.page._id)
+            .then((page: Page) => setPageInfo({ parentDiaryId: pageInfo.parentDiaryId, page }))
+            .catch((err) => console.log(err));
+    }
+
     if(loading) return <div className="p-6">Loading...</div>;
     if(error) return <div className="p-6 text-red-500">Error: {error}</div>;
 
@@ -34,38 +59,57 @@ export default function RandomPage() {
     return (
         <div className="flex flex-row justify-center items-center gap-10 min-h-full p-6">
             {/* Diary */}
-            <div className="rounded-lg shadow-lg shadow-primary-900 bg-primary-400 p-4 flex flex-row gap-3 max-w-full">
+            <div className="rounded-lg shadow-lg shadow-primary-900 bg-primary-400 p-4 flex flex-col gap-3 max-w-full">
                 {/* Main text */}
                 <div className="flex flex-col gap-3">
-                    <h1>{page && page.title}</h1>
-                    <SvgLine strokeWidth={1} stroke="#ffffff" />
-                    {page && <Markdown source={page.body} />}
+                    <h1>{pageInfo.page && pageInfo.page.title}</h1>
+                    <SvgLine strokeWidth={1} stroke="#ffffff"/>
+                    {pageInfo.page && <Markdown source={pageInfo.page.body}/>}
                 </div>
-                <SvgLine vertical strokeWidth={1} stroke="#ffffff" />
+                <SvgLine strokeWidth={1} stroke="#ffffff"/>
                 {/* Sidebar */}
-                <div className="flex flex-col justify-start items-center gap-6 transition-all duration-150 items-center justify-center">
-                    <b>React</b>
+                <div
+                    className="flex flex-row justify-center items-end gap-6 transition-all duration-150 items-center justify-center">
+                    {/* Likes button */}
                     <span className="flex flex-col items-center gap-1">
                         <button
-                            className="text-4xl select-none cursor-pointer hover:scale-120 transition-all duration-150">😻</button>
-                        <p>{page?.likeCounter ? page.likeCounter : 0}</p>
+                            className="text-4xl select-none cursor-pointer hover:scale-120 transition-all duration-150" onClick={handleAddLike}>😻</button>
+                        <p>{pageInfo.page?.likeCounter ? pageInfo.page.likeCounter : 0}</p>
                     </span>
 
+                    {/* Comments button */}
                     <span className="flex flex-col items-center gap-1">
                         <button
                             className={`${commentsOpen && "opacity-25"} cursor-pointer hover:scale-120 transition-all duration-150`}
                             onClick={() => setCommentsOpen(!commentsOpen)}><CommentIcon className="icon-sm"/></button>
-                        <p>{page?.comments ? page.comments.length : 0}</p>
+                        <p>{pageInfo.page?.comments ? pageInfo.page.comments.length : 0}</p>
                     </span>
                 </div>
-                {commentsOpen && (<div className="flex flex-col gap-2 items-center w-1/2">
-                    <b>Comments</b>
+                {/* Comments section */}
+                <div className={`${commentsOpen || "hidden"} flex flex-col gap-2 items-center`}>
                     <label
-                        className="bg-primary-600 rounded p-4 m-2 w-full min-h-12 items-center justify-center flex flex-col"
+                        className="bg-primary-600 rounded p-4 m-2 w-full min-h-12 items-center justify-center flex flex-row"
                         onClick={() => commentInputRef.current.focus()}>
-                        <input ref={commentInputRef} className="outline-none break-words whitespace-pre-wrap w-full" type="text" placeholder="Add Comment"/>
+                        <input ref={commentInputRef} className="outline-none break-words whitespace-pre-wrap w-full"
+                               type="text"
+                               placeholder="Add Comment"
+                               onKeyDown={handleEnter}/>
+                        <SendIcon
+                            className="icon-sm opacity-25 hover:opacity-100 hover:scale-120 transition-all duration-150 cursor-pointer"
+                            onClick={handleCommentSubmit}/>
                     </label>
-                </div>)}
+
+                    <b>Comments</b>
+
+                    {/* Posted comments */}
+                    <ul className="flex flex-col justify-start gap-2 w-full">
+                        {pageInfo.page.comments && pageInfo.page.comments.map((comment, i) => <Fragment key={i}>
+                            <li className="bg-primary-600 w-full p-4 rounded-lg">
+                                {comment.text}
+                            </li>
+                        </Fragment>)}
+                    </ul>
+                </div>
             </div>
         </div>
     );

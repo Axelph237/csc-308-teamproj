@@ -6,6 +6,7 @@ export const comment = Type.Object({
     text: Type.String(),
     author: objectIdObj
 })
+export type Comment = Static<typeof comment>;
 
 export const page = Type.Object({
     _id: objectIdObj,
@@ -13,6 +14,6 @@ export const page = Type.Object({
     date: Type.String(),
     body: Type.String(),
     likeCounter: Type.Number(),
-    comments: Type.Array(Type.String()),
+    comments: Type.Array(comment),
 })
 export type Page = Static<typeof page>;

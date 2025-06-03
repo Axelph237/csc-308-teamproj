@@ -2,6 +2,7 @@ import {User} from "types/user";
 import {Diary} from "types/diary";
 import {Page} from "types/page";
 import {ObjectId} from "types/objectId";
+import {Comment} from "types/page";
 
 
 export class ApiError extends Error {
@@ -168,7 +169,7 @@ export async function createPage(diaryId: ObjectId, page: Omit<Page, "_id">): Pr
  * GET /diaries/
  *
  */
-export async function findRandomPage(): Promise<Page> {
+export async function findRandomPage(): Promise<{ parentDiaryId: string, page: Page}> {
     const url = "/api/diaries/random";
     const init: RequestInit = {
         method: "GET",
@@ -262,4 +263,47 @@ export async function removePage(pageId: ObjectId, diaryId: ObjectId): Promise<a
 
     return body;
 
+}
+
+export async function postComment(diaryId: ObjectId, pageId: ObjectId, comment: string): Promise<Page> {
+    const url = `/api/diaries/${diaryId}/pages/${pageId}/comments`;
+    const init: RequestInit = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ comment }),
+        credentials: "include"
+    }
+
+    return fetchWithParse(url, init);
+}
+
+
+export async function addLike(diaryId: ObjectId, pageId: ObjectId): Promise<Page> {
+    const url = `/api/diaries/${diaryId}/pages/${pageId}/likes`;
+    const init: RequestInit = {
+        method: "POST",
+        credentials: "include"
+    }
+
+    return fetchWithParse(url, init);
+}
+
+async function fetchWithParse(url: string, init: RequestInit): Promise<any> {
+    const response = await fetch(url, init);
+
+    const bodyText = await response.text();
+    let body: any;
+    try {
+        body = JSON.parse(bodyText);
+    } catch (e) {
+        console.error("Failed to parse JSON:", bodyText);
+        throw new Error("Unexpected server response.");
+    }
+
+    if (!response.ok) {
+        throw new Error(body.message || "Failed to remove page.");
+    }
+    return body;
 }
