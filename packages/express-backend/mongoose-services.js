@@ -17,7 +17,7 @@ const PageSchema = new mongoose.Schema({
 
 const DiarySchema = new mongoose.Schema({
     title: { type: String, required: true },
-    lastEntry: { type: String, required: true },
+    lastEntry: { type: String },
     numEntries: { type: Number, required: true, default: 0 },
     entries: [PageSchema]
 });
@@ -76,11 +76,23 @@ export default function createMongooseServices(connection) {
                 );
         },
 
-        findRandomPage: () => {
-            const diaryInd = Math.floor(Math.random() * Diary.countDocuments());
-            const randomDiary = Diary.findOne().skip(diaryInd);
-            const pageInd = Math.floor(Math.random() * randomDiary.countDocuments());
-            return randomDiary.entries[pageInd];
+        findRandomPage: async () => {
+            // Aggregate pipeline:
+            // - Match all diaries w/ more than 1 entry
+            // - Select one of these at random
+            // Then get first (and only) element in aggregate array
+            const randomDiary = (await Diary.aggregate([{
+                $match: { numEntries: { $gt: 0 } }
+            }, {
+                $sample: { size: 1 }
+            }]))[0]
+
+            const pageIndex = Math.round(Math.random() * (randomDiary.numEntries - 1));
+
+            return {
+                parentDiaryId: randomDiary._id.toString(),
+                page: randomDiary.entries[pageIndex]
+            };
         },
 
         findPassword: async (userID) => {
@@ -183,7 +195,7 @@ export default function createMongooseServices(connection) {
         addLike: async (diaryId, pageId) => {
             const diary = await Diary.findById(diaryId)
             const page = diary.entries.find(entry => entry._id.toString() === pageId)
-            page.likeCounter++;
+            page.likeCounter++; // I love that you can add infinite likes as a single user - Aiden
             await page.save();
             await diary.save();
             return page;
@@ -201,10 +213,22 @@ export default function createMongooseServices(connection) {
 
         // add a comment to a page, needs diaryId and pageId
         addComment: async (diaryId, pageId, comment) => {
-            const newComment = Comment.create(comment);
+            const newComment = await Comment.create(comment);
             const diary = await Diary.findById(diaryId)
-            const page = diary.entries.find(entry => entry._id.toString() === pageId)
-            page.comments.push(newComment);
+
+            if (!diary)
+                throw new Error("Failed to find diary.");
+
+            const page = diary.entries.find((entry) => entry._id.toString() === pageId);
+
+            if (!page)
+                throw new Error("Failed to find page in diary.");
+
+            if (page?.comments)
+                page.comments.push(newComment);
+            else
+                page.comments = [newComment];
+
             await page.save();
             await diary.save();
             return page;

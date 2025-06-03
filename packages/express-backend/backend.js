@@ -182,10 +182,10 @@ app.post("/diaries/:diaryId/pages", authenticatedRoute, async (req, res) => {
 
 app.get("/diaries/random", authenticatedRoute, async (req, res) => {
     try {
-        const page = await mongooseServices.findRandomPage();
+        const result = await mongooseServices.findRandomPage();
 
-        if (page) {
-            res.status(201).send(page);
+        if (result.page) {
+            res.status(201).send(result);
         }
         else {
             const errMsg = "Error finding random page";
@@ -215,5 +215,46 @@ app.delete("/diaries/:diaryId/pages/:pageId", authenticatedRoute, async (req, re
     } catch (error) {
         console.error("Error deleting page", error);
         res.status(500).send("Internal server error");
+    }
+})
+
+app.post("/diaries/:diaryId/pages/:pageId/comments", authenticatedRoute, async (req, res) => {
+    const {diaryId, pageId} = req.params;
+
+    const comment = {
+        author: req.user.userId,
+        text: req.body.comment
+    }
+
+    console.log("Adding comment", comment);
+    console.log("To page", pageId);
+
+    try {
+        const page = await mongooseServices.addComment(diaryId, pageId, comment);
+
+        if (page)
+            res.status(200).send(page);
+        else
+            res.status(404).send("Failed to find given diary and page combination.");
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).send(error);
+    }
+})
+
+app.post("/diaries/:diaryId/pages/:pageId/likes", authenticatedRoute, async (req, res) => {
+    const {diaryId, pageId} = req.params;
+
+    try {
+        const page = await mongooseServices.addLike(diaryId, pageId);
+
+        if (page)
+            res.status(200).send(page);
+        else
+            res.status(404).send("Failed to find page");
+    }
+    catch (error) {
+        res.status(500).send(error)
     }
 })
