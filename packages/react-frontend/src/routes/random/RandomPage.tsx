@@ -1,9 +1,10 @@
 import Markdown from "../../components/Markdown";
 import {CommentIcon, EyeIcon, PenIcon, SendIcon, UserCircleIcon} from "../../assets/icons";
-import {useEffect, useRef, useState, KeyboardEvent, Fragment} from "react";
+import {useEffect, useRef, useState, KeyboardEvent, MouseEvent, Fragment} from "react";
 import {Page} from "types/page";
 import {addLike, findRandomPage, postComment} from "../../../src/api/backend";
 import SvgLine from "@src/components/svgLine";
+import "./heartParticle.css";
 
 export default function RandomPage() {
     const [ pageInfo, setPageInfo ] = useState<{ parentDiaryId: string, page: Page} | undefined>();
@@ -46,7 +47,9 @@ export default function RandomPage() {
         }
     }
 
-    const handleAddLike = () => {
+    const handleAddLike = (event: MouseEvent<HTMLButtonElement>) => {
+        heartEffect(event.currentTarget);
+
         addLike(pageInfo.parentDiaryId, pageInfo.page._id)
             .then((page: Page) => setPageInfo({ parentDiaryId: pageInfo.parentDiaryId, page }))
             .catch((err) => console.log(err));
@@ -73,7 +76,8 @@ export default function RandomPage() {
                     {/* Likes button */}
                     <span className="flex flex-col items-center gap-1">
                         <button
-                            className="text-4xl select-none cursor-pointer hover:scale-120 transition-all duration-150" onClick={handleAddLike}>😻</button>
+                            className="relative text-4xl select-none cursor-pointer hover:scale-120 transition-all duration-150"
+                            onClick={handleAddLike}>😻</button>
                         <p>{pageInfo.page?.likeCounter ? pageInfo.page.likeCounter : 0}</p>
                     </span>
 
@@ -113,4 +117,27 @@ export default function RandomPage() {
             </div>
         </div>
     );
+}
+
+function heartEffect(parent: HTMLElement) {
+    const MAX_FORCE = 12;
+    const MAX_LIFETIME = 2;
+    const MIN_LIFETIME = 1.5;
+    // Basic styling
+    const particle = document.createElement("span");
+
+    particle.style.position = "absolute"; // Ensure particle is outside typically DOM layout
+    particle.classList.add("heart-particle"); // Particle animation handled in css
+    particle.style.setProperty("--force-x", `${
+        (Math.random() * MAX_FORCE) * (Math.random() < 0.5 ? -1 : 1)    
+    }`);
+    particle.style.setProperty("--lifetime", `${
+        Math.random() * (MAX_LIFETIME - MIN_LIFETIME) + MIN_LIFETIME
+    }s`)
+
+    // Text styling
+    const hearts = ["😻","💞","💖","💗","💓","️💘","😍","🥰"];
+    particle.innerText = hearts[Math.round(Math.random() * (hearts.length - 1))]; // Random heart
+
+    parent.appendChild(particle); // Add particle to element
 }
