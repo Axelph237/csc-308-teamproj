@@ -30,7 +30,15 @@ const mockDiaries: Diary[] = [
                 _id: "entry1",
                 title: "Morning",
                 date: "03-10-25",
-                body: "Hello world!"
+                body: "Hello world!",
+                likeCounter: 0,
+                comments: [
+                    {
+                        _id: "c1",
+                        text: "helloooo",
+                        author: "bob"
+                    }
+                ],
             }
         ]
     },

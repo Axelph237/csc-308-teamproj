@@ -21,10 +21,15 @@ describe("RandomPage Component", () => {
     beforeEach(() => {
         // Set up mock for getUserDiaries
         mockedFindRandomPage.mockResolvedValue({
-            _id: "44",
-            title: "Diary 1",
-            date: "2025-01-02",
-            body: "Today I hiked up a mountain."
+            parentDiaryId: "123",
+            page: {
+                _id: "44",
+                title: "Diary 1",
+                date: "2025-01-02",
+                body: "Today I hiked up a mountain.",
+                likeCounter: 0,
+                comments: []
+            }
         });
     });
 
