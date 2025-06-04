@@ -12,11 +12,10 @@ function NavigationBar() {
     ]
 
     return (
-        <div className="fixed bottom-0 md:static flex flex-row md:flex-col gap-12 p-3 bg-secondary-500 md:w-fit md:h-full w-full h-fit justify-center items-center">
-
+        <div
+            className="bottom-0 left-0 right-0 md:top-0 md:left-0 md:bottom-0 md:right-auto md:h-full md:w-fit flex flex-row md:flex-col gap-12 p-3 bg-secondary-500 justify-center items-center">
             {pages.map((page, index) => (
-
-                <div key={index} className="hover:text-primary-500 transition-all duration-150 font-semibold" >
+                <div key={index} className="hover:text-primary-500 transition-all duration-150 font-semibold">
                     <Link to={page.link} className="flex flex-col items-center justify-center">
                         {page.icon}
                         <p>{page.name}</p>
@@ -38,11 +37,11 @@ export default function MyApp() {
 
             {/* Content on Desktop */}
             <div className="flex flex-col md:flex-row h-full w-full overflow-y-hidden">
-                <NavigationBar/>
-
                 <div className="h-full w-full overflow-y-auto">
                     <Outlet/>
                 </div>
+
+                <NavigationBar/>
             </div>
         </div>
     );
