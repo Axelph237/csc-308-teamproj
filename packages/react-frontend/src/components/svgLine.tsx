@@ -12,7 +12,7 @@ export default function SvgLine({ vertical = false, strokeWidth, ...lineProps }:
     const y2 = vertical ? "100%" : strokeWidth / 2 + "px";
 
     return (
-        <svg style={vertical ? { width: strokeWidth } : { height: strokeWidth }}>
+        <svg style={vertical ? { width: strokeWidth, height: "100%" } : { height: strokeWidth, width: "100%" }}>
             <line
                 x1={x1}
                 y1={y1}
