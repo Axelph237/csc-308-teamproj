@@ -199,7 +199,7 @@ export async function editPassword(userId: ObjectId, password: string): Promise<
             "Content-Type": "application/json"
         },
         credentials: "include",
-        body: JSON.stringify(password)
+        body: JSON.stringify({password})
     };
 
     const response = await fetch(url, init);

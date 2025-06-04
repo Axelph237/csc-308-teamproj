@@ -1,39 +1,40 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 mongoose.set("debug", true);
 
 const CommentSchema = new mongoose.Schema({
-    text: { type: String, required: true },
-    author: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // user Id
+    text: {type: String, required: true},
+    author: {type: mongoose.Schema.Types.ObjectId, ref: "User"}, // user Id
 });
 
 const PageSchema = new mongoose.Schema({
-    title: { type: String, required: true },
-    date: { type: String, required: true },
-    body: { type: String, required: true },
+    title: {type: String, required: true},
+    date: {type: String, required: true},
+    body: {type: String, required: true},
     likeCounter: {type: Number, default: 0},
     comments: [CommentSchema]
 });
 
 const DiarySchema = new mongoose.Schema({
-    title: { type: String, required: true },
-    lastEntry: { type: String },
-    numEntries: { type: Number, required: true, default: 0 },
+    title: {type: String, required: true},
+    lastEntry: {type: String},
+    numEntries: {type: Number, required: true, default: 0},
     entries: [PageSchema]
 });
 
 const UserSchema = new mongoose.Schema({
-    username: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    diariesID: [{ type: mongoose.Schema.Types.ObjectId, ref: "Diary" }],
-    profilePicture: { type: String },
-    securityID: { type: mongoose.Schema.Types.ObjectId, ref: "Security" },
+    username: {type: String, required: true, unique: true},
+    password: {type: String, required: true},
+    email: {type: String, required: true, unique: true},
+    diariesID: [{type: mongoose.Schema.Types.ObjectId, ref: "Diary"}],
+    profilePicture: {type: String},
+    securityID: {type: mongoose.Schema.Types.ObjectId, ref: "Security"},
 });
 
 const SecuritySchema = new mongoose.Schema({
-    authToken: { type: String, required: true },
-    refreshToken: { type: String, required: true }
+    authToken: {type: String, required: true},
+    refreshToken: {type: String, required: true}
 });
 
 export default function createMongooseServices(connection) {
@@ -50,7 +51,7 @@ export default function createMongooseServices(connection) {
         },
 
         findUserByUsername: async (username) => {
-            return User.findOne({ username });
+            return User.findOne({username});
         },
 
         findUserByID: (id) => User.findById(id),
@@ -82,9 +83,9 @@ export default function createMongooseServices(connection) {
             // - Select one of these at random
             // Then get first (and only) element in aggregate array
             const randomDiary = (await Diary.aggregate([{
-                $match: { numEntries: { $gt: 0 } }
+                $match: {numEntries: {$gt: 0}}
             }, {
-                $sample: { size: 1 }
+                $sample: {size: 1}
             }]))[0]
 
             const pageIndex = Math.round(Math.random() * (randomDiary.numEntries - 1));
@@ -167,8 +168,9 @@ export default function createMongooseServices(connection) {
             return await User.findByIdAndUpdate(userId, filteredUser, {new: true});
         },
 
-        editPassword: (userId, password) => {
-            return User.findByIdAndUpdate(userId, {password}, {new: true});
+        editPassword: async (userId, password) => {
+            const hash = await bcrypt.hash(password, 10);
+            return User.findByIdAndUpdate(userId, {password: hash}, {new: true});
         },
 
         editPage: async (diaryId, pageId, pageData) => {
