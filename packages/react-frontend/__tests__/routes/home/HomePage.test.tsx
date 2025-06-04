@@ -5,17 +5,18 @@ global.TextEncoder = TextEncoder;
 import {MemoryRouter} from "react-router-dom";
 import HomePage from "../../../src/routes/home/HomePage";
 import {expect, describe, it, jest, beforeEach} from "@jest/globals";
-import {getUserDiaries} from "../../../src/api/backend";
+import {createDiary, getUserDiaries} from "../../../src/api/backend";
 
 import type * as backendApi from "../../../src/api/backend";
+import {userEvent} from "@testing-library/user-event";
 
-
-// Mocking the getUserDiaries function (ensure it's correctly mocked)
 jest.mock("../../../src/api/backend", () => ({
     getUserDiaries: jest.fn(),
+    createDiary: jest.fn(),
 }));
 
 const mockedGetUserDiaries = getUserDiaries as jest.MockedFunction<typeof backendApi.getUserDiaries>;
+const mockedCreateDiary = createDiary as jest.MockedFunction<typeof backendApi.createDiary>;
 
 describe("HomePage Component", () => {
     beforeEach(() => {
@@ -104,5 +105,70 @@ describe("HomePage Component", () => {
         const errorMessage = await screen.findByText("Error: Failed to load diaries")
 
         expect(errorMessage).toBeDefined();
+    });
+
+    it("shows input when Create Diary is clicked", async () => {
+        render(
+            <MemoryRouter>
+                <HomePage/>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.queryByText("Loading...")).toBeFalsy();
+        });
+
+        const createButton = screen.getByText("Create Diary");
+        await userEvent.click(createButton);
+
+        const input = await screen.findByRole("textbox");
+        expect(input).toBeTruthy();
+
+
+        await waitFor(() => {
+            expect(document.activeElement).toBe(input);
+        });
+    });
+
+    it("calls createDiary and renders new diary on save", async () => {
+        mockedCreateDiary.mockResolvedValue({
+            _id: "123",
+            title: "New Test Diary",
+            lastEntry: undefined,
+            numEntries: 0,
+            entries: []
+        });
+
+        render(
+            <MemoryRouter>
+                <HomePage/>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText("Diary 1")).toBeDefined();
+            expect(screen.getByText("A Second Diary")).toBeDefined();
+        });
+
+        const createButton = screen.getByText("Create Diary");
+        await userEvent.click(createButton);
+
+        const input = await screen.findByRole("textbox");
+        await userEvent.type(input, "New Test Diary");
+
+        const saveIcon = screen.getByLabelText("save-icon");
+        await userEvent.click(saveIcon);
+
+        await waitFor(() => {
+            expect(mockedCreateDiary).toHaveBeenCalledWith({
+                title: "New Test Diary",
+                lastEntry: undefined,
+                numEntries: 0,
+                entries: [],
+            });
+        });
+
+        const newDiaryTitle = await screen.findByText("New Test Diary");
+        expect(newDiaryTitle).toBeDefined();
     });
 });

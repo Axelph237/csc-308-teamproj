@@ -47,7 +47,7 @@ function HomeBody() {
             inputRef.current.focus();
     }, [creatingDiary]);
 
-    if(loading) return <div className="p-6">Loading...</div>;
+    if (loading) return <div className="p-6">Loading...</div>;
     if (error) return <div className="p-6 text-red-500">Error: {error}</div>;
 
 
@@ -68,7 +68,7 @@ function HomeBody() {
             entries: []
         });
 
-        setDiaries([ ...diaries, newDiary ]);
+        setDiaries([...diaries, newDiary]);
     }
 
 
@@ -94,8 +94,11 @@ function HomeBody() {
                 <BookIcon className={`icon-md ${creatingDiary && "hidden"}`}/>
                 <h2 className={`text-xl font-bold select-none ${creatingDiary && "hidden"}`}>Create Diary</h2>
 
-                <input id="create-diary-input" ref={inputRef} className={`${!creatingDiary && "hidden"} text-center w-full h-full outline-none text-xl font-bold text-secondary-100`} />
-                <SaveIcon className={`icon-md hover:text-primary-100 ${!creatingDiary && "hidden"}`}  onClick={handleSaveClick}/>
+                <input id="create-diary-input" ref={inputRef}
+                       className={`${!creatingDiary && "hidden"} text-center w-full h-full outline-none text-xl font-bold text-secondary-100`}/>
+                <SaveIcon aria-label="save-icon"
+                          className={`icon-md hover:text-primary-100 ${!creatingDiary && "hidden"}`}
+                          onClick={handleSaveClick}/>
             </div>
         </div>
     );
