@@ -14,6 +14,7 @@ import {createPage, getPage, getUserDiaries} from "../../api/backend";
 
 import {useParams, useNavigate, useSearchParams} from "react-router-dom";
 import SvgLine from "@src/components/svgLine";
+import {useDocTitle} from "@src/lib/useDocTitle";
 
 enum Status {
     SAVED,
@@ -22,6 +23,7 @@ enum Status {
 }
 
 export default function WritePage() {
+    useDocTitle("Diary Share | Write");
     // States
     const [text, setText] = useState("");
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10));

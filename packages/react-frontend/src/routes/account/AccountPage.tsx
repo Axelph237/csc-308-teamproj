@@ -2,8 +2,10 @@ import {useState, useEffect} from "react";
 import {Link} from "react-router-dom";
 import {getUser, editPassword, editUser} from "../../../src/api/backend";
 import {User} from "types/user";
+import {useDocTitle} from "@src/lib/useDocTitle";
 
 export default function AccountsPage() {
+    useDocTitle("Diary Share | Account");
     const [user, setUser] = useState<User>();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);

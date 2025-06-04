@@ -5,11 +5,14 @@ import {Page} from "types/page";
 import {addLike, findRandomPage, postComment} from "../../../src/api/backend";
 import SvgLine from "@src/components/svgLine";
 import "./heartParticle.css";
+import {useDocTitle} from "@src/lib/useDocTitle";
 
 export default function RandomPage() {
-    const [pageInfo, setPageInfo] = useState<{ parentDiaryId: string, page: Page } | undefined>();
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    useDocTitle("Diary Share | Random Diaries");
+    const [ pageInfo, setPageInfo ] = useState<{ parentDiaryId: string, page: Page} | undefined>();
+    const [loading, setLoading ] = useState(true);
+    const [error, setError ] = useState<string | null>(null);
+
     const [commentsOpen, setCommentsOpen] = useState(false);
     const commentInputRef = useRef<HTMLInputElement>(null);
 

@@ -1,6 +1,8 @@
 import {Link} from "react-router-dom";
+import {useDocTitle} from "@src/lib/useDocTitle";
 
 export default function LandingPage() {
+    useDocTitle("Diary Share");
     return (
         <div className="flex flex-col items-center gap-6 p-12 min-h-screen">
             <h1 className="text-2xl font-bold" data-testid="cypress-title">Welcome to Diary</h1>

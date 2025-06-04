@@ -32,7 +32,7 @@ export default function MyApp() {
         <div className="flex flex-col w-screen h-screen">
             {/* Header */}
             <div className="hidden md:flex flex-row justify-center items-center bg-primary-800 p-4">
-                <h1>Diary</h1>
+                <h1>Diary Share</h1>
             </div>
 
             {/* Content on Desktop */}

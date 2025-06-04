@@ -4,6 +4,7 @@ import {BookIcon, SaveIcon} from "../../assets/icons";
 import {useEffect, useRef, useState} from "react";
 import {createDiary, getUserDiaries} from "../../api/backend";
 import {Diary} from "types/diary";
+import {useDocTitle} from "@src/lib/useDocTitle";
 
 function HomeHeader() {
     return (
@@ -15,6 +16,7 @@ function HomeHeader() {
 
 
 function HomeBody() {
+    useDocTitle("Diary Share | Home");
     // const diaries = [
     //     {title: "Diary 1", date: "2021-01-01"},
     //     {title: "Diary 2", date: "2021-02-01"},
