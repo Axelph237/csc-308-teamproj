@@ -2,8 +2,10 @@ import {Link, useNavigate} from "react-router-dom";
 import {FormEvent, useRef, useState} from "react";
 import {signup} from "@src/api/auth";
 import FormInput from "@src/components/FormInput";
+import {useDocTitle} from "@src/lib/useDocTitle";
 
 export default function CreateProfilePage() {
+    useDocTitle("Diary Share | Signup");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const formRef = useRef<HTMLFormElement>(null);

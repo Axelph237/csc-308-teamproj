@@ -3,8 +3,10 @@ import {FormEvent, useRef, useState} from "react";
 import {login} from "@src/api/auth";
 import FormInput from "@src/components/FormInput";
 import {LockIcon, UserCircleIcon} from "@src/assets/icons";
+import {useDocTitle} from "@src/lib/useDocTitle";
 
 export default function LoginPage() {
+    useDocTitle("Diary Share | Login");
     const [loading, setLoading] = useState(false);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");

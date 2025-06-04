@@ -6,6 +6,7 @@ import {getUserDiaries, ApiError, removePage} from "../../api/backend";
 import {Page} from "types/page";
 import {Diary} from "types/diary";
 import SvgLine from "@src/components/svgLine";
+import {useDocTitle} from "@src/lib/useDocTitle";
 
 function DiaryHeader({diary}: { diary: Diary }) {
 
@@ -113,6 +114,7 @@ function DiaryEntries({diary, onPageDeleted}: { diary: Diary, onPageDeleted: () 
 }
 
 function DiaryPage() {
+    useDocTitle("Diary Share | View Diary");
     let {diaryId} = useParams();
     const [diary, setDiary] = useState<Diary | null>(null);
     const [error, setError] = useState<string | null>(null);
