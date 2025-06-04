@@ -70,6 +70,8 @@ export default function WritePage() {
             title: title ?? "Untitled Page",
             date: date,
             body: text,
+            likeCounter: 0,
+            comments: [],
         };
         try {
             const diary = userDiaries ? userDiaries[selectedDiary] : null;
@@ -270,7 +272,7 @@ export default function WritePage() {
                 </div>
 
                 <div className="h-full">
-                    <SvgLine strokeWidth={2} stroke={"var(--color-primary-500)"} vertical />
+                    <SvgLine strokeWidth={2} stroke={"var(--color-primary-500)"} vertical/>
                 </div>
 
                 {/* Preview */}
