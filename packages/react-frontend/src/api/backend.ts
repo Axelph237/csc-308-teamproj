@@ -169,7 +169,7 @@ export async function createPage(diaryId: ObjectId, page: Omit<Page, "_id">): Pr
  * GET /diaries/
  *
  */
-export async function findRandomPage(): Promise<{ parentDiaryId: string, page: Page}> {
+export async function findRandomPage(): Promise<{ parentDiaryId: string, page: Page }> {
     const url = "/api/diaries/random";
     const init: RequestInit = {
         method: "GET",
@@ -199,7 +199,7 @@ export async function editPassword(userId: ObjectId, password: string): Promise<
             "Content-Type": "application/json"
         },
         credentials: "include",
-        body: JSON.stringify(password)
+        body: JSON.stringify({password})
     };
 
     const response = await fetch(url, init);
@@ -272,7 +272,7 @@ export async function postComment(diaryId: ObjectId, pageId: ObjectId, comment: 
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ comment }),
+        body: JSON.stringify({comment}),
         credentials: "include"
     }
 

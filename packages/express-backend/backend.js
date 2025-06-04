@@ -186,14 +186,12 @@ app.get("/diaries/random", authenticatedRoute, async (req, res) => {
 
         if (result.page) {
             res.status(201).send(result);
-        }
-        else {
+        } else {
             const errMsg = "Error finding random page";
             console.error(errMsg);
             res.status(500).send(errMsg);
         }
-    }
-    catch (error) {
+    } catch (error) {
         console.log(error);
         res.status(500).send(error);
     }
@@ -236,8 +234,7 @@ app.post("/diaries/:diaryId/pages/:pageId/comments", authenticatedRoute, async (
             res.status(200).send(page);
         else
             res.status(404).send("Failed to find given diary and page combination.");
-    }
-    catch (error) {
+    } catch (error) {
         console.log(error);
         res.status(500).send(error);
     }
@@ -253,8 +250,48 @@ app.post("/diaries/:diaryId/pages/:pageId/likes", authenticatedRoute, async (req
             res.status(200).send(page);
         else
             res.status(404).send("Failed to find page");
-    }
-    catch (error) {
+    } catch (error) {
         res.status(500).send(error)
     }
 })
+
+app.put("/users/:id", authenticatedRoute, async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const updateData = req.body;
+
+        // Make sure only allowed fields are passed (handled in the service)
+        const updatedUser = await mongooseServices.editUser(updateData, userId);
+
+        if (!updatedUser) {
+            return res.status(404).send("User not found");
+        }
+
+        res.status(200).send(updatedUser);
+    } catch (error) {
+        console.error("Error updating user:", error);
+        res.status(500).send("Failed to update user");
+    }
+});
+
+app.put("/users/:id/password", authenticatedRoute, async (req, res) => {
+    try {
+        const userId = req.params.id;
+        const {password} = req.body;
+
+        if (!password || typeof password !== "string") {
+            return res.status(400).send({message: "Password is required"});
+        }
+
+        const updatedUser = await mongooseServices.editPassword(userId, password);
+        console.log(updatedUser);
+        if (!updatedUser) {
+            return res.status(404).send({message: "User not found"});
+        }
+
+        res.status(200).send(updatedUser);
+    } catch (error) {
+        console.error("Error updating password:", error);
+        res.status(500).send({message: "Failed to update password"});
+    }
+});
