@@ -23,6 +23,6 @@ export default function Markdown({source}: { source: string }) {
     });
 
     return (
-        <div className="content" dangerouslySetInnerHTML={{__html: marked.parse(source)}}/>
+        <div className="content break-all" dangerouslySetInnerHTML={{__html: marked.parse(source)}}/>
     )
 }
