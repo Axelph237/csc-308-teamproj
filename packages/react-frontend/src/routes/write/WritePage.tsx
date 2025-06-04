@@ -251,7 +251,7 @@ export default function WritePage() {
                     onPaste={handlePaste}
                     contentEditable={true}
                     suppressContentEditableWarning={true}
-                    className="py-2 px-6 h-full w-full md:border-r-2 border-secondary-400 flex-1">
+                    className="py-2 px-6 h-full w-full md:border-r-2 border-secondary-400 flex-1 break-all">
                     {text.split(/\r?\n/).map((content, i, arr) => (
                         <Fragment key={i}>
                             {/* Split identifiers from text */}
