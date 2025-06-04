@@ -97,7 +97,7 @@ function DiaryEntry({diary, page, onPageDeleted}: { diary: Diary, page: Page, on
 
 function DiaryEntries({diary, onPageDeleted}: { diary: Diary, onPageDeleted: () => void }) {
     return (
-        <ul className="grid grid-cols-2 gap-6 p-6 ">
+        <ul className="grid md:grid-cols-2 gap-6 p-6 ">
             {diary.entries.length > 0
                 ? diary.entries.map((page, index) =>
                     <Fragment key={index}>

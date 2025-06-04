@@ -13,6 +13,7 @@ import "./WritePage.css";
 import {createPage, getPage, getUserDiaries} from "../../api/backend";
 
 import {useParams, useNavigate, useSearchParams} from "react-router-dom";
+import SvgLine from "@src/components/svgLine";
 
 enum Status {
     SAVED,
@@ -251,7 +252,7 @@ export default function WritePage() {
                     onPaste={handlePaste}
                     contentEditable={true}
                     suppressContentEditableWarning={true}
-                    className="py-2 px-6 h-full w-full md:border-r-2 border-secondary-400 flex-1">
+                    className="py-2 px-6 h-full w-full flex-1 break-all">
                     {text.split(/\r?\n/).map((content, i, arr) => (
                         <Fragment key={i}>
                             {/* Split identifiers from text */}
@@ -266,6 +267,10 @@ export default function WritePage() {
                             {i < arr.length - 1 ? '\n' : null}
                         </Fragment>
                     ))}
+                </div>
+
+                <div className="h-full">
+                    <SvgLine strokeWidth={2} stroke={"var(--color-primary-500)"} vertical />
                 </div>
 
                 {/* Preview */}
