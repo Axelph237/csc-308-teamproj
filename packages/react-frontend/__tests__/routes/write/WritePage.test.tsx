@@ -51,6 +51,10 @@ describe("Write Page", () => {
 
     it("Test upload & status", async () => {
         const user = userEvent.setup();
+        const updatedVals = {
+            likeCounter: 0,
+            comments: []
+        }
         mockedGetUserDiaries.mockResolvedValue([
             {
                 _id: "abc123",
@@ -62,7 +66,8 @@ describe("Write Page", () => {
                         _id: "entry1",
                         title: "Morning",
                         date: "03-10-25",
-                        body: "Hello world!"
+                        body: "Hello world!",
+                        ...updatedVals,
                     }
                 ]
             },
@@ -72,6 +77,8 @@ describe("Write Page", () => {
             title: "Untitled Page",
             date: "2025-05-06",
             body: testSource,
+            ...updatedVals,
+
         });
         const {debug} = render(
             <MemoryRouter initialEntries={["/diary?diary=abc123"]}>
@@ -115,6 +122,7 @@ describe("Write Page", () => {
                 title: "My New Page Title",
                 date: expect.any(String),
                 body: testSource + "\n",
+                ...updatedVals,
             });
             expect(screen.getByText("Saved!")).toBeDefined();
         });

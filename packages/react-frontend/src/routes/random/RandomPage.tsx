@@ -12,15 +12,16 @@ export default function RandomPage() {
     const [ pageInfo, setPageInfo ] = useState<{ parentDiaryId: string, page: Page} | undefined>();
     const [loading, setLoading ] = useState(true);
     const [error, setError ] = useState<string | null>(null);
+
     const [commentsOpen, setCommentsOpen] = useState(false);
     const commentInputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         const fetchRandomPage = async () => {
-            try{
+            try {
                 const result = await findRandomPage();
                 setPageInfo(result);
-            } catch(err) {
+            } catch (err) {
                 console.log(err);
                 setError("Failed to load page");
             } finally {
@@ -36,7 +37,7 @@ export default function RandomPage() {
         commentInputRef.current.value = "";
 
         postComment(pageInfo.parentDiaryId, pageInfo.page._id, comment)
-            .then((page: Page) => setPageInfo({ parentDiaryId: pageInfo.parentDiaryId, page }))
+            .then((page: Page) => setPageInfo({parentDiaryId: pageInfo.parentDiaryId, page}))
             .catch((err) => {
                 console.log(err);
                 commentInputRef.current.value = comment;
@@ -53,12 +54,12 @@ export default function RandomPage() {
         heartEffect(event.currentTarget);
 
         addLike(pageInfo.parentDiaryId, pageInfo.page._id)
-            .then((page: Page) => setPageInfo({ parentDiaryId: pageInfo.parentDiaryId, page }))
+            .then((page: Page) => setPageInfo({parentDiaryId: pageInfo.parentDiaryId, page}))
             .catch((err) => console.log(err));
     }
 
-    if(loading) return <div className="p-6">Loading...</div>;
-    if(error) return <div className="p-6 text-red-500">Error: {error}</div>;
+    if (loading) return <div className="p-6">Loading...</div>;
+    if (error) return <div className="p-6 text-red-500">Error: {error}</div>;
 
 
     return (
@@ -87,6 +88,7 @@ export default function RandomPage() {
                     <span className="flex flex-col items-center gap-1">
                         <button
                             className={`${commentsOpen && "opacity-25"} cursor-pointer hover:scale-120 transition-all duration-150`}
+                            aria-label="toggle-comments"
                             onClick={() => setCommentsOpen(!commentsOpen)}><CommentIcon className="icon-sm"/></button>
                         <p>{pageInfo.page?.comments ? pageInfo.page.comments.length : 0}</p>
                     </span>
@@ -102,6 +104,7 @@ export default function RandomPage() {
                                onKeyDown={handleEnter}/>
                         <SendIcon
                             className="icon-sm opacity-25 hover:opacity-100 hover:scale-120 transition-all duration-150 cursor-pointer"
+                            aria-label="send-button"
                             onClick={handleCommentSubmit}/>
                     </label>
 
@@ -131,14 +134,14 @@ function heartEffect(parent: HTMLElement) {
     particle.style.position = "absolute"; // Ensure particle is outside typically DOM layout
     particle.classList.add("heart-particle"); // Particle animation handled in css
     particle.style.setProperty("--force-x", `${
-        (Math.random() * MAX_FORCE) * (Math.random() < 0.5 ? -1 : 1)    
+        (Math.random() * MAX_FORCE) * (Math.random() < 0.5 ? -1 : 1)
     }`);
     particle.style.setProperty("--lifetime", `${
         Math.random() * (MAX_LIFETIME - MIN_LIFETIME) + MIN_LIFETIME
     }s`)
 
     // Text styling
-    const hearts = ["😻","💞","💖","💗","💓","️💘","😍","🥰"];
+    const hearts = ["😻", "💞", "💖", "💗", "💓", "️💘", "😍", "🥰"];
     particle.innerText = hearts[Math.round(Math.random() * (hearts.length - 1))]; // Random heart
 
     parent.appendChild(particle); // Add particle to element

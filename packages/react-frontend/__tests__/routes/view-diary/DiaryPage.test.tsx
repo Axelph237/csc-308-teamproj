@@ -30,7 +30,15 @@ const mockDiaries: Diary[] = [
                 _id: "entry1",
                 title: "Morning",
                 date: "03-10-25",
-                body: "Hello world!"
+                body: "Hello world!",
+                likeCounter: 102,
+                comments: [
+                    {
+                        _id: "c1",
+                        text: "hi!",
+                        author: "bob"
+                    }
+                ],
             }
         ]
     },
@@ -73,6 +81,10 @@ describe("DiaryPage Component", () => {
             expect(screen.getByText("Morning")).toBeDefined();
             expect(screen.getByText("03-10-25")).toBeDefined();
             expect(screen.getByText("Hello world!")).toBeDefined();
+            expect(screen.getByText("Likes 😻")).toBeDefined();
+            expect(screen.getByText("102")).toBeDefined();
+            expect(screen.getByText("Comments")).toBeDefined();
+            expect(screen.getByText("hi!")).toBeDefined();
 
         });
     });
