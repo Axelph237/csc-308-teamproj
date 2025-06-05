@@ -7,6 +7,9 @@ import LoginPage from "../../../src/routes/login/LoginPage";
 import * as auth from "@src/api/auth";
 import {expect, describe, it, jest} from "@jest/globals";
 import {userEvent} from "@testing-library/user-event";
+import toastMock from "react-hot-toast";
+
+jest.mock("react-hot-toast");
 
 describe("LoginPage Component", () => {
 
@@ -21,9 +24,12 @@ describe("LoginPage Component", () => {
             expect(screen.getByText("Username")).toBeDefined();
             expect(screen.getByText("Password")).toBeDefined();
 
-            const button = screen.getByRole("button");
-            expect(button).toBeDefined();
-            expect(button.textContent).toBe("Login");
+            const loginButton = screen.getByRole("button", {name: "Login"});
+            expect(loginButton).toBeDefined();
+
+            const backButton = screen.getByRole("button", {name: "← Back"});
+            expect(backButton).toBeDefined();
+            expect(backButton.textContent.toLowerCase()).toContain("back");
         });
     });
     it("logs in successfully", async () => {
@@ -51,9 +57,6 @@ describe("LoginPage Component", () => {
         const mockLogin = jest
             .spyOn(auth, "login")
             .mockRejectedValueOnce("Invalid credentials");
-        
-        const alertMock = jest.spyOn(window, "alert").mockImplementation(() => {
-        });
 
         render(
             <MemoryRouter initialEntries={["/login"]}>
@@ -69,11 +72,10 @@ describe("LoginPage Component", () => {
 
         await waitFor(() => {
             expect(mockLogin).toHaveBeenCalledWith("wronguser", "wrongpass");
-            expect(alertMock).toHaveBeenCalledWith("Invalid credentials");
+            expect(toastMock.error).toHaveBeenCalledWith("Invalid credentials");
         });
 
         mockLogin.mockRestore();
-        alertMock.mockRestore();
     });
 
 

@@ -1,14 +1,14 @@
 // src/MyApp.jsx
-import { Outlet, Link } from "react-router-dom";
-
+import {Outlet, Link} from "react-router-dom";
 import {ChatIcon, HomeIcon, PenIcon, UserCircleIcon} from "./assets/icons";
+import {Toaster} from "react-hot-toast";
 
 function NavigationBar() {
     const pages = [
-        { link: "/app/home", name: "Home", icon: <HomeIcon className="icon-sm" /> },
-        { link: "/app/random", name: "Random", icon: <ChatIcon className="icon-sm" /> },
-        { link: "/app/write", name: "Write", icon: <PenIcon className="icon-sm" /> },
-        { link: "/app/account", name: "Account", icon: <UserCircleIcon className="icon-sm" /> },
+        {link: "/app/home", name: "Home", icon: <HomeIcon className="icon-sm"/>},
+        {link: "/app/random", name: "Random", icon: <ChatIcon className="icon-sm"/>},
+        {link: "/app/write", name: "Write", icon: <PenIcon className="icon-sm"/>},
+        {link: "/app/account", name: "Account", icon: <UserCircleIcon className="icon-sm"/>},
     ]
 
     return (
@@ -30,6 +30,7 @@ function NavigationBar() {
 export default function MyApp() {
     return (
         <div className="flex flex-col w-screen h-screen">
+            <Toaster position="top-right"/>
             {/* Header */}
             <div className="hidden md:flex flex-row justify-center items-center bg-primary-800 p-4">
                 <h1>Diary Share</h1>

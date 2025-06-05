@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import {getUser, editPassword, editUser} from "../../../src/api/backend";
 import {User} from "types/user";
 import {useDocTitle} from "@src/lib/useDocTitle";
+import toast from "react-hot-toast";
 
 export default function AccountsPage() {
     useDocTitle("Diary Share | Account");
@@ -39,6 +40,18 @@ export default function AccountsPage() {
     if (error) return <div className="p-6 text-red-500">Error: {error}</div>;
 
 
+    function isStrongPassword(password: string): string | null {
+        const errors = [];
+
+        if (password.length < 8) errors.push("at least 8 characters");
+        if ((password.match(/[A-Z]/g) || []).length < 2) errors.push("at least 2 uppercase letters");
+        if ((password.match(/[a-z]/g) || []).length < 2) errors.push("at least 2 lowercase letters");
+        if ((password.match(/[0-9]/g) || []).length < 1) errors.push("at least 1 number");
+        if ((password.match(/[^A-Za-z0-9]/g) || []).length < 1) errors.push("at least 1 special character");
+
+        return errors.length > 0 ? "Password must include " + errors.join(", ") : null;
+    }
+
     const handlePasswordChange = (event) => {
         const newPassword = event.target.value;
         if (newPassword) {
@@ -47,15 +60,21 @@ export default function AccountsPage() {
     };
 
     const handleNewPassword = async () => {
+        const passwordError = isStrongPassword(password);
+        if (passwordError) {
+            toast.error(passwordError);
+            return;
+        }
+
         if (password && user?._id) {
             try {
                 await editPassword(user._id, password);
-                alert("Password changed successfully");
+                toast.success("Password changed successfully");
                 setIsPasswordModalOpen(false);
                 setPassword("");
             } catch (err) {
                 console.error("Failed to change password", err);
-                alert("Error changing password");
+                toast.error("Error changing password");
             }
         }
     };
@@ -74,16 +93,15 @@ export default function AccountsPage() {
                 };
                 await editUser(updatedUser, user._id);
 
-                alert("Profile picture updated!");
+                toast.success("Profile picture updated!");
                 setProfilePicture(imageUrl);
                 setIsPicModalOpen(false);
                 setImageUrl("");
             } catch (err) {
                 console.error("Failed to update profile picture", err);
-                alert("Error changing profile picture");
+                toast.error("Error changing profile picture");
             }
         }
-
     }
 
     const handleCancelUpload = () => {
@@ -135,7 +153,7 @@ export default function AccountsPage() {
             {isPicModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
                     <div className="flex flex-col bg-white items-center justify-center p-6 gap-5 rounded-lg w-96">
-                        {/* File input*/}
+                        {/* URL input*/}
                         <input type="text"
                                placeholder="Enter image URL"
                                value={imageUrl}

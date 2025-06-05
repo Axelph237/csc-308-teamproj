@@ -9,6 +9,9 @@ import userEvent from "@testing-library/user-event";
 import type * as backendApi from "../../../src/api/backend";
 import {jest} from "@jest/globals";
 import {act} from "react";
+import toastMock from "react-hot-toast";
+
+jest.mock("react-hot-toast");
 
 jest.mock("../../../src/api/backend", () => ({
     getUser: jest.fn(),
@@ -77,33 +80,78 @@ describe("AccountPage Component", () => {
             expect(email).toBeDefined();
         });
     });
-    it("opens password modal and shows modal buttons", async () => {
+    it("opens password modal and cancels it", async () => {
         await renderWithRouter(<AccountPage/>);
-
 
         const resetBtn = screen.getByRole("button", {name: "Reset Password"});
         await user.click(resetBtn);
 
         const cancelModalBtn = await screen.getByRole("button", {name: "Cancel"});
-        const changePwdBtn = await screen.getByRole("button", {name: "Change Password"});
         expect(cancelModalBtn).toBeDefined();
-        expect(changePwdBtn).toBeTruthy();
 
+        // Click cancel
+        await user.click(cancelModalBtn);
+
+        // Optionally assert the modal disappeared
+        await waitFor(() => {
+            expect(screen.queryByPlaceholderText("Enter new password")).toBeNull();
+        });
+    });
+
+    it("toast error weak new password through modal", async () => {
+        await renderWithRouter(<AccountPage/>);
+
+        const resetBtn = screen.getByRole("button", {name: "Reset Password"});
+        await user.click(resetBtn);
+
+        const changePwdBtn = await screen.getByRole("button", {name: "Change Password"});
         const newPwdInput = await screen.findByPlaceholderText("Enter new password");
 
-        await user.type(newPwdInput, "newPassword");
-
-        // click the "change password" button
+        await user.type(newPwdInput, "weak");
         await user.click(changePwdBtn);
 
         await waitFor(() => {
-            expect(mockedEditPassword).toBeCalledWith("1", "newPassword");
-        })
-
-
+            expect(toastMock.error).toHaveBeenCalledWith(expect.stringContaining("Password must include"));
+        });
     });
 
-    it("opens profile picture modal and shows", async () => {
+    it("submits a new password through modal", async () => {
+        await renderWithRouter(<AccountPage/>);
+
+        const resetBtn = screen.getByRole("button", {name: "Reset Password"});
+        await user.click(resetBtn);
+
+        const changePwdBtn = await screen.getByRole("button", {name: "Change Password"});
+        const newPwdInput = await screen.findByPlaceholderText("Enter new password");
+
+        await user.type(newPwdInput, "NEwp12!!");
+        await user.click(changePwdBtn);
+
+        await waitFor(() => {
+            expect(mockedEditPassword).toHaveBeenCalledWith("1", "NEwp12!!");
+        });
+    });
+
+    it("opens profile picture modal and cancels it", async () => {
+        await renderWithRouter(<AccountPage/>);
+
+        const profileBtn = screen.getByRole("button", {name: "Change Profile Picture"});
+        await user.click(profileBtn);
+
+        const cancelModalBtn = await screen.getByRole("button", {name: "Cancel"});
+        expect(cancelModalBtn).toBeDefined();
+
+        // Click cancel
+        await user.click(cancelModalBtn);
+
+        // Assert modal is closed
+        await waitFor(() => {
+            expect(screen.queryByPlaceholderText("Enter image URL")).toBeNull();
+        });
+    });
+
+
+    it("uploads a new profile pic", async () => {
         await renderWithRouter(<AccountPage/>);
 
         const profileBtn = screen.getByRole("button", {name: "Change Profile Picture"});
@@ -139,7 +187,7 @@ describe("AccountPage Component", () => {
                 username: "testuser",
             }, "1");
         })
-        expect(window.alert).toHaveBeenCalledWith("Profile picture updated!");
+        expect(toastMock.success).toHaveBeenCalledWith("Profile picture updated!");
 
     });
 
