@@ -1,6 +1,6 @@
 const toastMock = {
-    error: jest.fn(),
-    success: jest.fn(),
+  error: jest.fn(),
+  success: jest.fn(),
 };
 
 export default toastMock;
