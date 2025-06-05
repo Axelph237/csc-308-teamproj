@@ -295,3 +295,26 @@ app.put("/users/:id/password", authenticatedRoute, async (req, res) => {
         res.status(500).send({message: "Failed to update password"});
     }
 });
+
+app.put("/diaries/:diaryId/pages/:pageId", authenticatedRoute, async (req, res) => {
+    try {
+        const {diaryId, pageId} = req.params;
+        const pageData = req.body;
+
+        // Validate input
+        if (!pageData || typeof pageData !== "object") {
+            return res.status(400).send({message: "Invalid page data"});
+        }
+
+        const updatedPage = await mongooseServices.editPage(diaryId, pageId, pageData);
+
+        if (!updatedPage) {
+            return res.status(404).send({message: "Page not found"});
+        }
+
+        res.status(200).send(updatedPage);
+    } catch (err) {
+        console.error("Error updating page:", err);
+        res.status(500).send({message: "Failed to update page"});
+    }
+});

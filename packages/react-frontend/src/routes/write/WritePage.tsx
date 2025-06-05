@@ -10,7 +10,7 @@ import {
 } from "../../assets/icons";
 import Markdown from "../../components/Markdown";
 import "./WritePage.css";
-import {createPage, getPage, getUserDiaries} from "../../api/backend";
+import {createPage, getPage, getUserDiaries, editPage} from "../../api/backend";
 
 import {useParams, useNavigate, useSearchParams} from "react-router-dom";
 import SvgLine from "@src/components/svgLine";
@@ -64,6 +64,9 @@ export default function WritePage() {
         }
     }
 
+    const diaryId = searchParams.get("diary");
+    const pageId = searchParams.get("page");
+
     const handleSubmit = async () => {
         const title = titleRef.current.value;
         const {text} = editorHandler.getState();
@@ -85,7 +88,11 @@ export default function WritePage() {
                 });
                 return;
             }
-            await createPage(diary.id, page);
+            if (pageId) {
+                await editPage(diary.id, pageId, page);
+            } else {
+                await createPage(diary.id, page);
+            }
             setStatus({
                 id: Status.SAVED,
                 msg: "Saved!"
@@ -103,22 +110,11 @@ export default function WritePage() {
     const handleDiarySelect = (index: number) => {
         if (!userDiaries)
             return;
-
         setSelectedDiary(index);
     }
 
-
     // Lifecycle methods
     useEffect(() => {
-        // Once on component mount
-
-        // Load in page details
-        const diaryId = searchParams.get("diary");
-        const pageId = searchParams.get("page");
-
-        console.log("diaryId:", diaryId);
-        console.log("pageId:", pageId);
-
         // Load in user diaries
         const loadDiaries = async () => {
             const diaries = await getUserDiaries();

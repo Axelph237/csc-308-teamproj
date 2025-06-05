@@ -262,7 +262,40 @@ export async function removePage(pageId: ObjectId, diaryId: ObjectId): Promise<a
     }
 
     return body;
+}
 
+/**
+ * PUT /diaries/:diaryId/pages/:pageId
+ * Updates a page inside a diary
+ *
+ * @param diaryId - The ID of the diary
+ * @param pageId - The ID of the page to update
+ * @param pageData - The updated page fields (title, body, date, etc.)
+ * @returns The updated Page object
+ */
+export async function editPage(
+    diaryId: string,
+    pageId: string,
+    pageData: Partial<Omit<Page, "_id">> // allow updating any fields except _id
+): Promise<Page> {
+    const url = `/api/diaries/${diaryId}/pages/${pageId}`;
+
+    const init: RequestInit = {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(pageData)
+    };
+
+    const response = await fetch(url, init);
+
+    if (!response.ok) {
+        throw new ApiError(await response.text(), url, init);
+    }
+
+    return await response.json();
 }
 
 export async function postComment(diaryId: ObjectId, pageId: ObjectId, comment: string): Promise<Page> {
