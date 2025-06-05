@@ -31,7 +31,7 @@ function DiaryEntry({diary, page, onPageDeleted}: { diary: Diary, page: Page, on
 
     return (
         <li
-            className="flex flex-col rounded-2xl shadow-lg shadow-primary-900 bg-primary-400 overflow-hidden max-h-96"
+            className="flex flex-col rounded-2xl shadow-lg shadow-primary-900 bg-primary-100 overflow-hidden max-h-96"
             style={{minHeight: "150px"}}
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
@@ -69,7 +69,7 @@ function DiaryEntry({diary, page, onPageDeleted}: { diary: Diary, page: Page, on
                 className="flex flex-col bg-primary-600 min-h-full overflow-y-scroll px-4 pb-24 gap-3">
                 <Markdown source={page.body}/>
                 <div className="w-full flex flex-col">
-                    <SvgLine strokeWidth={1} stroke="#ffffff" />
+                    <SvgLine strokeWidth={1} stroke="#ffffff"/>
                     <span className="bg-primary-500 p-3 gap-3 flex flex-col rounded-br-lg rounded-bl-lg">
 
                     {/*    Comments */}
