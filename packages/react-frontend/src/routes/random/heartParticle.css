@@ -1,37 +1,38 @@
 .heart-particle {
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.5rem;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
 
-    --force-x: 0;
-    --lifetime: 1.5s;
+  --force-x: 0;
+  --lifetime: 1.5s;
 
-    animation:
-            moveY var(--lifetime) forwards ease-in,
-            moveX var(--lifetime) forwards ease-out,
-            pop calc(var(--lifetime) / 4) calc(var(--lifetime) / 4 * 3) forwards ease-in-out;
+  animation:
+    moveY var(--lifetime) forwards ease-in,
+    moveX var(--lifetime) forwards ease-out,
+    pop calc(var(--lifetime) / 4) calc(var(--lifetime) / 4 * 3) forwards
+      ease-in-out;
 }
 
 @keyframes moveY {
-    from {
-        top: 50%;
-    }
-    to {
-        top: -200%;
-    }
+  from {
+    top: 50%;
+  }
+  to {
+    top: -200%;
+  }
 }
 
 @keyframes moveX {
-    from {
-        left: 50%;
-    }
-    to {
-        left: calc(50% + (var(--force-x) * 5px));
-    }
+  from {
+    left: 50%;
+  }
+  to {
+    left: calc(50% + (var(--force-x) * 5px));
+  }
 }
 
 @keyframes pop {
-    to {
-        opacity: 0;
-    }
+  to {
+    opacity: 0;
+  }
 }
