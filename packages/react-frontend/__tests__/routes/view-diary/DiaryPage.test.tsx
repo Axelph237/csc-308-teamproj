@@ -72,6 +72,20 @@ describe("DiaryPage Component", () => {
         expect(screen.getByText("Test Diary")).toBeDefined();
     });
 
+    it("shows error when diaryId is undefined", async () => {
+        render(
+            <MemoryRouter initialEntries={["/app/diary"]}>
+                <Routes>
+                    <Route path="/app/diary" element={<DiaryPage/>}/>
+                </Routes>
+            </MemoryRouter>
+        );
+
+        await waitFor(() => {
+            expect(screen.getByText("Error: Diary not found.")).toBeDefined();
+        });
+    });
+
     it("renders entries for valid diary index", async () => {
         mockedGetUserDiaries.mockResolvedValue([mockDiaries[0]]);
         renderWithRoute("abc123");

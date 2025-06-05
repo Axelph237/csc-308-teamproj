@@ -2,16 +2,12 @@ import {render, screen, waitFor} from "@testing-library/react";
 import {TextEncoder} from 'util';
 
 global.TextEncoder = TextEncoder;
-
 import {MemoryRouter} from "react-router-dom";
 import {expect, describe, it, jest, beforeEach} from "@jest/globals";
 import {findRandomPage, addLike, postComment} from "../../../src/api/backend";
 import RandomPage from "../../../src/routes/random/RandomPage";
 import type * as backendApi from "../../../src/api/backend";
-import HomePage from "@src/routes/home/HomePage";
 import {userEvent} from "@testing-library/user-event";
-import {send} from "vite";
-
 
 jest.mock("../../../src/api/backend", () => ({
     findRandomPage: jest.fn(),
