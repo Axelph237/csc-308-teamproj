@@ -1,11 +1,11 @@
-import { ApiError } from "@src/api/backend";
+import {ApiError, fetchWithParse} from "@src/api/backend";
 
 export async function signup(
   email: string,
   username: string,
   password: string,
 ): Promise<string> {
-  const url = "/api/auth/signup";
+  const url = "/auth/signup";
   const init = {
     method: "POST",
     headers: {
@@ -18,19 +18,14 @@ export async function signup(
     }),
   };
 
-  const response = await fetch(url, init);
-
-  const data = await response.text();
-  if (!response.ok) throw new ApiError(data, url, init);
-
-  return data;
+  return await fetchWithParse(url, init);
 }
 
 export async function login(
   username: string,
   password: string,
 ): Promise<string> {
-  const url = "/api/auth/login";
+  const url = "/auth/login";
   const init = {
     method: "POST",
     headers: {
@@ -42,10 +37,5 @@ export async function login(
     }),
   };
 
-  const response = await fetch(url, init);
-
-  const data = await response.text();
-  if (!response.ok) throw new ApiError(data, url, init);
-
-  return data;
+  return await fetchWithParse(url, init);
 }

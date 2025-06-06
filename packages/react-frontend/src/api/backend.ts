@@ -19,34 +19,26 @@ export class ApiError extends Error {
  * GET /users/:id
  */
 export async function getUser(): Promise<User> {
-  const url = "/api/users/account";
+  const url = "/users/account";
   const init: RequestInit = {
     method: "GET",
     credentials: "include",
   };
 
-  const response = await fetch(url, init);
-
-  if (!response.ok) throw new ApiError(await response.text(), url, init);
-
-  return await response.json();
+  return await fetchWithParse(url, init);
 }
 
 /**
  * GET /users/:id/diaries -> TODO update to /diaries on backend
  */
 export async function getUserDiaries(): Promise<Diary[]> {
-  const url = "/api/users/account/diaries";
+  const url = "/users/account/diaries";
   const init: RequestInit = {
     method: "GET",
     credentials: "include",
   };
 
-  const response = await fetch(url, init);
-
-  if (!response.ok) throw new ApiError(await response.text(), url, init);
-
-  return await response.json();
+  return await fetchWithParse(url, init);
 }
 
 /**
@@ -54,18 +46,13 @@ export async function getUserDiaries(): Promise<Diary[]> {
  * @param diaryId - The id of the diary to retrieve data from.
  */
 export async function getDiaryPages(diaryId: ObjectId): Promise<Page[]> {
-  const url = `/api/diaries/${diaryId}/pages`;
+  const url = `/diaries/${diaryId}/pages`;
   const init: RequestInit = {
     method: "GET",
     credentials: "include",
   };
 
-  const response = await fetch(url, init);
-
-  const body = await response.json();
-  if (!response.ok) throw new ApiError(body.message, url, init);
-
-  return body;
+  return await fetchWithParse(url, init);
 }
 
 /**
@@ -77,17 +64,13 @@ export async function getPage(
   diaryId: ObjectId,
   pageId: ObjectId,
 ): Promise<Page> {
-  const url = `/api/diaries/${diaryId}/pages/${pageId}`;
+  const url = `/diaries/${diaryId}/pages/${pageId}`;
   const init: RequestInit = {
     method: "GET",
     credentials: "include",
   };
 
-  const response = await fetch(url, init);
-
-  if (!response.ok) throw new ApiError(await response.text(), url, init);
-
-  return response.json();
+  return await fetchWithParse(url, init);
 }
 
 /**
@@ -97,7 +80,7 @@ export async function getPage(
 export async function createUser(
   user: Omit<User, "_id" | "diariesID">,
 ): Promise<User> {
-  const url = "/api/users";
+  const url = "/users";
   const init: RequestInit = {
     method: "POST",
     credentials: "include",
@@ -107,12 +90,7 @@ export async function createUser(
     body: JSON.stringify(user),
   };
 
-  const response = await fetch(url, init);
-
-  const body = await response.json();
-  if (!response.ok) throw new ApiError(body.message, url, init);
-
-  return body;
+  return await fetchWithParse(url, init);
 }
 
 /**
@@ -120,7 +98,7 @@ export async function createUser(
  * @param diary - The diary to create.
  */
 export async function createDiary(diary: Omit<Diary, "_id">): Promise<Diary> {
-  const url = "/api/users/account/diaries";
+  const url = "/users/account/diaries";
   const init: RequestInit = {
     method: "POST",
     credentials: "include",
@@ -130,11 +108,7 @@ export async function createDiary(diary: Omit<Diary, "_id">): Promise<Diary> {
     body: JSON.stringify(diary),
   };
 
-  const response = await fetch(url, init);
-
-  if (!response.ok) throw new ApiError(await response.text(), url, init);
-
-  return await response.json();
+  return await fetchWithParse(url, init);
 }
 
 /**
@@ -146,7 +120,7 @@ export async function createPage(
   diaryId: ObjectId,
   page: Omit<Page, "_id">,
 ): Promise<Page> {
-  const url = `/api/diaries/${diaryId}/pages`;
+  const url = `/diaries/${diaryId}/pages`;
   const init: RequestInit = {
     method: "POST",
     credentials: "include",
@@ -156,12 +130,7 @@ export async function createPage(
     body: JSON.stringify(page),
   };
 
-  const response = await fetch(url, init);
-
-  const body = await response.json();
-  if (!response.ok) throw new ApiError(body.message, url, init);
-
-  return body;
+  return await fetchWithParse(url, init);
 }
 
 /**
@@ -172,19 +141,13 @@ export async function findRandomPage(): Promise<{
   parentDiaryId: string;
   page: Page;
 }> {
-  const url = "/api/diaries/random";
+  const url = "/diaries/random";
   const init: RequestInit = {
     method: "GET",
     credentials: "include",
   };
 
-  const response = await fetch(url, init);
-
-  if (!response.ok) throw new ApiError(await response.text(), url, init);
-
-  const body = await response.json();
-  console.log("Found random page:", body);
-  return body;
+  return await fetchWithParse(url, init);
 }
 
 /**
@@ -196,7 +159,7 @@ export async function editPassword(
   userId: ObjectId,
   password: string,
 ): Promise<User> {
-  const url = `/api/users/${userId}/password`;
+  const url = `/users/${userId}/password`;
   const init: RequestInit = {
     method: "PUT",
     headers: {
@@ -206,10 +169,7 @@ export async function editPassword(
     body: JSON.stringify({ password }),
   };
 
-  const response = await fetch(url, init);
-  const body = await response.json();
-  if (!response.ok) throw new ApiError(body.message, url, init);
-  return body;
+  return await fetchWithParse(url, init);
 }
 
 /**
@@ -221,7 +181,7 @@ export async function editUser(
   user: Omit<User, "_id" | "password" | "diariesID">,
   userId: ObjectId,
 ): Promise<User> {
-  const url = `/api/users/${userId}`;
+  const url = `/users/${userId}`;
   const init: RequestInit = {
     method: "PUT",
     credentials: "include",
@@ -231,11 +191,7 @@ export async function editUser(
     body: JSON.stringify(user),
   };
 
-  const response = await fetch(url, init);
-
-  if (!response.ok) throw new ApiError(await response.text(), url, init);
-
-  return await response.json();
+  return await fetchWithParse(url, init);
 }
 
 /**
@@ -247,28 +203,13 @@ export async function removePage(
   pageId: ObjectId,
   diaryId: ObjectId,
 ): Promise<any> {
-  const url = `/api/diaries/${diaryId}/pages/${pageId}`;
+  const url = `/diaries/${diaryId}/pages/${pageId}`;
   const init: RequestInit = {
     method: "DELETE",
     credentials: "include",
   };
 
-  const response = await fetch(url, init);
-
-  const bodyText = await response.text();
-  let body;
-  try {
-    body = JSON.parse(bodyText);
-  } catch (e) {
-    console.error("Failed to parse JSON:", bodyText);
-    throw new Error("Unexpected server response.");
-  }
-
-  if (!response.ok) {
-    throw new Error(body.message || "Failed to remove page.");
-  }
-
-  return body;
+  return await fetchWithParse(url, init);
 }
 
 /**
@@ -285,7 +226,7 @@ export async function editPage(
   pageId: string,
   pageData: Partial<Omit<Page, "_id">>, // allow updating any fields except _id
 ): Promise<Page> {
-  const url = `/api/diaries/${diaryId}/pages/${pageId}`;
+  const url = `/diaries/${diaryId}/pages/${pageId}`;
 
   const init: RequestInit = {
     method: "PUT",
@@ -296,13 +237,7 @@ export async function editPage(
     body: JSON.stringify(pageData),
   };
 
-  const response = await fetch(url, init);
-
-  if (!response.ok) {
-    throw new ApiError(await response.text(), url, init);
-  }
-
-  return await response.json();
+  return await fetchWithParse(url, init);
 }
 
 export async function postComment(
@@ -310,7 +245,7 @@ export async function postComment(
   pageId: ObjectId,
   comment: string,
 ): Promise<Page> {
-  const url = `/api/diaries/${diaryId}/pages/${pageId}/comments`;
+  const url = `/diaries/${diaryId}/pages/${pageId}/comments`;
   const init: RequestInit = {
     method: "POST",
     headers: {
@@ -327,7 +262,7 @@ export async function addLike(
   diaryId: ObjectId,
   pageId: ObjectId,
 ): Promise<Page> {
-  const url = `/api/diaries/${diaryId}/pages/${pageId}/likes`;
+  const url = `/diaries/${diaryId}/pages/${pageId}/likes`;
   const init: RequestInit = {
     method: "POST",
     credentials: "include",
@@ -336,20 +271,25 @@ export async function addLike(
   return fetchWithParse(url, init);
 }
 
-async function fetchWithParse(url: string, init: RequestInit): Promise<any> {
-  const response = await fetch(url, init);
+export async function fetchWithParse(url: string, init: RequestInit): Promise<any> {
+  const response = await fetch(__API_TARGET__ + url, init);
 
-  const bodyText = await response.text();
   let body: any;
   try {
-    body = JSON.parse(bodyText);
+    const contentType = response.headers.get('Content-Type') || '';
+    if (contentType.includes('application/json')) {
+      body = response.json();
+    } else {
+      body = response.text();
+    }
   } catch (e) {
-    console.error("Failed to parse JSON:", bodyText);
-    throw new Error("Unexpected server response.");
+    console.error("Failed to parse JSON:", body);
+    throw new ApiError("Unexpected server response: " + e.toString(), url, init);
   }
 
   if (!response.ok) {
-    throw new Error(body.message || "Failed to remove page.");
+    throw new ApiError(body.message, url, init);
   }
+
   return body;
 }

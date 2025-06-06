@@ -15,19 +15,14 @@ export default ({ mode }) => {
         "@src": resolve(dirname(fileURLToPath(import.meta.url)), "src"),
       },
     },
-    server: {
-      proxy: {
-        "/api": {
-          target: env.VITE_API_TARGET_DOMAIN,
-          changeOrigin: true,
-          secure: false,
-          cookieDomainRewrite: env.VITE_API_TARGET_DOMAIN,
-          rewrite: (path) => path.replace(/^\/api/, ""),
-        },
-      },
-    },
     build: {
       outDir: "dist",
+    },
+    define: {
+      __API_TARGET__: JSON.stringify(env.VITE_API_TARGET_DOMAIN)
+    },
+    server: {
+      historyApiFallback: true, // Add this
     },
   });
 };
