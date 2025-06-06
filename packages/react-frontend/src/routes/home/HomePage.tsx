@@ -8,7 +8,7 @@ import { useDocTitle } from "@src/lib/useDocTitle";
 
 function HomeHeader() {
   return (
-    <div className="flex p-6">
+    <div className="flex p-6" data-testid="cypress-title">
       <h1>Welcome to Diary </h1>
     </div>
   );
@@ -92,6 +92,7 @@ function HomeBody() {
         <BookIcon className={`icon-md ${creatingDiary && "hidden"}`} />
         <h2
           className={`text-xl font-bold select-none ${creatingDiary && "hidden"}`}
+          data-testid="cypress-createDiary"
         >
           Create Diary
         </h2>
@@ -105,6 +106,7 @@ function HomeBody() {
           aria-label="save-icon"
           className={`icon-md hover:text-primary-100 ${!creatingDiary && "hidden"}`}
           onClick={handleSaveClick}
+          data-testid="cypress-saveDiaryButton"
         />
       </div>
     </div>

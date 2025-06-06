@@ -49,7 +49,7 @@ export default function LoginPage() {
         onSubmit={handleSubmit}
         className="w-1/2 flex flex-col justify-center gap-6 p-8 rounded-2xl border-2 border-secondary-300"
       >
-        <h1 className="text-2xl font-bold text-secondary-300">
+        <h1 className="text-2xl font-bold text-secondary-300" data-testid="cypress-title">
           Login to your diaries
         </h1>
 
@@ -60,6 +60,7 @@ export default function LoginPage() {
           placeholder="your username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          data-testid="cypress-usernameFormInput"
         />
         <FormInput
           label="Password"
@@ -68,10 +69,11 @@ export default function LoginPage() {
           placeholder="your password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          data-testid="cypress-passwordFormInput"
         />
 
         <div className={`${loading && "hidden"}`}>
-          <button className="btn" type="submit">
+          <button className="btn" type="submit" data-testid="cypress-loginButton">
             Login
           </button>
         </div>
