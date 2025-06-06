@@ -2,7 +2,7 @@
 import ReactDOMClient from "react-dom/client";
 
 import "./main.css";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import HomePage from "./routes/home/HomePage.tsx";
 import RandomPage from "./routes/random/RandomPage.tsx";
 import WritePage from "./routes/write/WritePage.tsx";
@@ -34,27 +34,26 @@ const root = ReactDOMClient.createRoot(container);
     the <Outlet /> component of the <MyApp /> component.
  */
 root.render(
-    //  Define the project as a Browser Routed project
-    <BrowserRouter>
-        {/* All sub-elements are considered routes */}
-        <Routes>
-            {/* Define a route and any child routes */}
-            <Route path={"/"} element={<LandingPage />} />
-            <Route path={"createProfile"} element={<CreateProfilePage />} />
-            <Route path={"login"} element={<LoginPage />} />
-            {/* This first "Route" is a layout that verifies user authenticity before allowing access */}
-            <Route element={<ProtectedRoutes />} >
-                {/* Primary app route */}
-                <Route path={"app"} element={<MyApp />} >
-                    {/* Children of that app route */}
-                    <Route path={"home"} element={<HomePage />} />
-                    <Route path={"diaries/:diaryId"} element={<DiaryPage />} />
-                    <Route path={"random"} element={<RandomPage />} />
-                    <Route path={"write"} element={<WritePage />} />
-                    <Route path={"account"} element={<AccountsPage />} />
-                </Route>
-            </Route>
-
-        </Routes>
-    </BrowserRouter>
+  //  Define the project as a Browser Routed project
+  <BrowserRouter>
+    {/* All sub-elements are considered routes */}
+    <Routes>
+      {/* Define a route and any child routes */}
+      <Route path={"/"} element={<LandingPage />} />
+      <Route path={"createProfile"} element={<CreateProfilePage />} />
+      <Route path={"login"} element={<LoginPage />} />
+      {/* This first "Route" is a layout that verifies user authenticity before allowing access */}
+      <Route element={<ProtectedRoutes />}>
+        {/* Primary app route */}
+        <Route path={"app"} element={<MyApp />}>
+          {/* Children of that app route */}
+          <Route path={"home"} element={<HomePage />} />
+          <Route path={"diaries/:diaryId"} element={<DiaryPage />} />
+          <Route path={"random"} element={<RandomPage />} />
+          <Route path={"write"} element={<WritePage />} />
+          <Route path={"account"} element={<AccountsPage />} />
+        </Route>
+      </Route>
+    </Routes>
+  </BrowserRouter>,
 );

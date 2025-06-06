@@ -1,11 +1,12 @@
-import * as mockingoose from 'mockingoose';
+import * as mockingoose from "mockingoose";
 import mongoose from "mongoose";
-const { Types: { ObjectId } } = mongoose;
+const {
+  Types: { ObjectId },
+} = mongoose;
 
 import createMongooseServices from "./mongoose-services.js";
 
-import {describe, expect, it} from "@jest/globals";
-
+import { describe, expect, it } from "@jest/globals";
 
 const {
     models,
@@ -29,69 +30,62 @@ const {
 
 const { User, Diary, Page } = models;
 
+describe("test mongoose User model", () => {
+  it("should return the doc with findById", () => {
+    const _doc = {
+      _id: "661bf7e21d2c3a7a4f3e6b19",
+      username: "willmayer77",
+      password: "password",
+      email: "test@example.com",
+      diariesID: [],
+      profilePicture: "",
+    };
 
-describe('test mongoose User model', () => {
+    mockingoose(User).toReturn(_doc, "findOne");
 
-    it('should return the doc with findById', () => {
-        const _doc = {
-            _id: '661bf7e21d2c3a7a4f3e6b19',
-            username: 'willmayer77',
-            password: "password",
-            email: 'test@example.com',
-            diariesID: [],
-            profilePicture: ''
-        };
-
-        mockingoose(User).toReturn(_doc, 'findOne');
-
-        return findUserByID({ _id: '661bf7e21d2c3a7a4f3e6b19' }).then(doc => {
-            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_doc);
-        });
-
+    return findUserByID({ _id: "661bf7e21d2c3a7a4f3e6b19" }).then((doc) => {
+      expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_doc);
     });
-    it.skip('testing addUser', () => {
-        const _input = {
-            username: 'willmayer77',
-            email: 'test@example.com',
-            password: "password"
-        };
-        const _mockedSave = {
-            _id: '661bf7e21d2c3a7a4f3e6b19',
-            ..._input,
-            diariesID: [],
-            profilePicture: ''
-        };
+  });
+  it("testing addUser", () => {
+    const _input = {
+      username: "willmayer77",
+      email: "test@example.com",
+      password: "password",
+    };
+    const _mockedSave = {
+      _id: "661bf7e21d2c3a7a4f3e6b19",
+      ..._input,
+      diariesID: [],
+      profilePicture: "",
+    };
 
-        mockingoose(User).toReturn(_mockedSave, 'save');
+    mockingoose(User).toReturn(_mockedSave, "save");
 
-        return addUser(_input).then(doc => {
-            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedSave);
-        });
+    return addUser(_input).then((doc) => {
+      expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedSave);
     });
+  });
 
-    it.skip('testing removeUser (need to add first)', () => {
-        const _input = {
-            username: 'willmayer77',
-            email: 'test@example.com',
-            password: "password"
-        };
-        const _mockedSave = {
-            _id: '661bf7e21d2c3a7a4f3e6b19',
-            ..._input,
-            diariesID: [],
-            profilePicture: ''
-        };
-        const _mockedDelete = {}
+  it("testing removeUser (need to add first)", () => {
+    const _input = {
+      username: "willmayer77",
+      email: "test@example.com",
+      password: "password",
+    };
+    const _mockedSave = {
+      _id: "661bf7e21d2c3a7a4f3e6b19",
+      ..._input,
+      diariesID: [],
+      profilePicture: "",
+    };
+    const _mockedDelete = {};
 
-        mockingoose(User).toReturn(_mockedSave, 'save');
-        mockingoose(User).toReturn(_mockedDelete, 'findOneAndRemove');
+    mockingoose(User).toReturn(_mockedSave, "save");
+    mockingoose(User).toReturn(_mockedDelete, "findOneAndRemove");
 
-        return addUser(_input).then(doc => {
-            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedSave);
-        });
-        return removeUser( '661bf7e21d2c3a7a4f3e6b19' ).then(doc => {
-            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedDelete);
-        })
+    return addUser(_input).then((doc) => {
+      expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedSave);
     });
 
     it('should edit allowed fields of a user', async () => {
@@ -137,23 +131,66 @@ describe('test mongoose User model', () => {
 
         expect(JSON.parse(JSON.stringify(result))).toMatchObject(expectedUser);
     });
+  });
+
+  it("should edit allowed fields of a user", async () => {
+    const userId = "661bf7e21d2c3a7a4f3e6b19";
+    const updatedFields = {
+      username: "newUsername",
+      email: "newemail@example.com",
+      profilePicture: "newpic.jpg",
+      password: "shouldBeIgnored", // should not be updated
+    };
+
+    const expectedUser = {
+      _id: userId,
+      username: "newUsername",
+      email: "newemail@example.com",
+      profilePicture: "newpic.jpg",
+      diariesID: [],
+    };
+
+    mockingoose(User).toReturn(expectedUser, "findOneAndUpdate");
+
+    const result = await editUser(updatedFields, userId);
+
+    expect(JSON.parse(JSON.stringify(result))).toMatchObject(expectedUser);
+  });
+  it("should edit user password", async () => {
+    const userId = "661bf7e21d2c3a7a4f3e6b19";
+    const newPassword = "newSecurePassword123";
+
+    const expectedUser = {
+      _id: userId,
+      username: "willmayer77",
+      email: "test@example.com",
+      password: newPassword,
+      diariesID: [],
+      profilePicture: "",
+    };
+
+    mockingoose(User).toReturn(expectedUser, "findOneAndUpdate");
+
+    const result = await editPassword(userId, newPassword);
+
+    expect(JSON.parse(JSON.stringify(result))).toMatchObject(expectedUser);
+  });
 });
 
-describe('test mongoose Diary model', () => {
-    it('should return the doc with findById', () => {
-        const _doc = {
-            _id: '507f191e810c19729de860ea',
-            title: "My Diary Model",
-            lastEntry: "10/20/30",
-            numEntries: 0,
-            entries: []
-        };
+describe("test mongoose Diary model", () => {
+  it("should return the doc with findById", () => {
+    const _doc = {
+      _id: "507f191e810c19729de860ea",
+      title: "My Diary Model",
+      lastEntry: "10/20/30",
+      numEntries: 0,
+      entries: [],
+    };
 
-        mockingoose(Diary).toReturn(_doc, 'findOne');
+    mockingoose(Diary).toReturn(_doc, "findOne");
 
-        return findDiaryByID({ _id: '507f191e810c19729de860ea' }).then(doc => {
-            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_doc);
-        });
+    return findDiaryByID({ _id: "507f191e810c19729de860ea" }).then((doc) => {
+      expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_doc);
     });
 
     it('should return empty array if diary is not found in findPagesByDiary', async () => {
@@ -203,36 +240,54 @@ describe('test mongoose Diary model', () => {
             expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedDelete);
         })
     });
+  });
 });
 
-describe('test mongoose Page model', () => {
-    it('should return the correct page for diary and page ID', () => {
-        const mockPageId = '662e9eac6f6c4b2f9c4f9f22';
-        const _mockedDiary = {
-            _id: '662e9eac6f6c4b2f9c4f9f21',
-            title: "Test Diary",
-            lastEntry: "04/15/25",
-            numEntries: 1,
-            entries: [
-                {
-                    _id: mockPageId,
-                    title: "Test Page",
-                    date: "04/15/25",
-                    body: "This is a test page"
-                }
-            ]
-        };
+describe("test mongoose Page model", () => {
+  it("should return the correct page for diary and page ID", () => {
+    const mockPageId = "662e9eac6f6c4b2f9c4f9f22";
+    const _mockedDiary = {
+      _id: "662e9eac6f6c4b2f9c4f9f21",
+      title: "Test Diary",
+      lastEntry: "04/15/25",
+      numEntries: 1,
+      entries: [
+        {
+          _id: mockPageId,
+          title: "Test Page",
+          date: "04/15/25",
+          body: "This is a test page",
+        },
+      ],
+    };
 
-        mockingoose(Diary).toReturn(_mockedDiary, 'findOne');
+    mockingoose(Diary).toReturn(_mockedDiary, "findOne");
 
-        return findPageByDiaryAndPageID(_mockedDiary._id, mockPageId).then(page => {
-            expect(JSON.parse(JSON.stringify(page))).toMatchObject({
-                _id: mockPageId,
-                title: "Test Page",
-                date: "04/15/25",
-                body: "This is a test page"
-            });
+    return findPageByDiaryAndPageID(_mockedDiary._id, mockPageId).then(
+      (page) => {
+        expect(JSON.parse(JSON.stringify(page))).toMatchObject({
+          _id: mockPageId,
+          title: "Test Page",
+          date: "04/15/25",
+          body: "This is a test page",
         });
+      },
+    );
+  });
+  it("testing addPage", () => {
+    const _input = {
+      title: "I did summn today",
+      date: "3000 BCE",
+      body: "yabadababdeodeodaodaodaodaodoad",
+    };
+    const _mockedSave = {
+      ..._input,
+    };
+
+    mockingoose(Page).toReturn(_mockedSave, "save");
+
+    return addPage(_input).then((doc) => {
+      expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedSave);
     });
 
     it('should return a random page', async () => {

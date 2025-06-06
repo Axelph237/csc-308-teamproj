@@ -1,9 +1,7 @@
 {
   "compilerOptions": {
     "paths": {
-      "@src/*": [
-        "./src/*"
-      ]
+      "@src/*": ["./src/*"]
     },
     "jsx": "react-jsx",
     // or "react-jsx" if using React 17 or later
@@ -13,7 +11,7 @@
     // or another appropriate module system for your project
     "target": "es5",
     // or "es6" based on your needs
-    "types": [ "jest" ]
+    "types": ["jest"]
   },
   "references": [
     {
