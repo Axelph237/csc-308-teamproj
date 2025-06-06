@@ -111,7 +111,7 @@ const config: Config = {
                 },
             },
         },
-        "__API_TARGET__": "http://localhost:8001"a
+        // "__API_TARGET__": "http://localhost:8001"
     },
 
     // Run tests from one or more projects
