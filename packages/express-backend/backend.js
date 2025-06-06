@@ -64,8 +64,8 @@ app.post("/auth/login", async (req, res) => {
       cookie.serialize("auth", JSON.stringify(credentials), {
         httpOnly: true,
         path: "/",
-        sameSite: "lax", // or "strict"
-        secure: process.env.NODE_ENV === "production", // important for HTTPS
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        secure: process.env.NODE_ENV === "production",
         maxAge: 60 * 60 * 24 * 7, // 1 week
       }),
     );
