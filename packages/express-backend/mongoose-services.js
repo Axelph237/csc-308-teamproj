@@ -203,6 +203,4 @@ export default function createMongooseServices(connection) {
             return security;
         }
     };
-
-
 }
