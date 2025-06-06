@@ -1,8 +1,0 @@
-{
-  "routes": [
-    {
-      "route": "/api/*",
-      "rewrite": "diary-api-h4e3dvgsc3g9avh3.westus-01.azurewebsites.net/:path*"
-    }
-  ]
-}
