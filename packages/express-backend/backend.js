@@ -211,6 +211,47 @@ app.get("/diaries/random", authenticatedRoute, async (req, res) => {
   }
 });
 
+app.post("/diaries/:diaryId/pages/:pageId/like", authenticatedRoute, async (req, res) => {
+    try {
+        const { diaryId, pageId } = req.params;
+
+        const likedPage = await mongooseServices.addLike(diaryId, pageId);
+
+        if (!likedPage) {
+            return res.status(404).send("Page not found");
+        }
+
+        res.status(200).send({ message: "Like added", likeCounter: likedPage.likeCounter });
+    } catch (error) {
+        console.error("Error adding like:", error);
+        res.status(500).send("Error adding like");
+    }
+});
+
+app.post("/diaries/:diaryId/pages/:pageId/comment", authenticatedRoute, async (req, res) => {
+    try {
+        const { diaryId, pageId } = req.params;
+        const { comment } = req.body;
+
+        if (!comment || typeof comment !== "string") {
+            return res.status(400).send("Invalid or missing comment");
+        }
+
+        const updatedPage = await mongooseServices.addComment(diaryId, pageId, comment);
+
+        if (!updatedPage) {
+            return res.status(404).send("Page not found");
+        }
+
+        res.status(200).send({ message: "Comment added", comments: updatedPage.comments });
+    } catch (error) {
+        console.error("Error adding comment:", error);
+        res.status(500).send("Error adding comment");
+    }
+});
+
+
+
 app.get("/", (req, res) => {
   res.send("localhost:8002/users");
 });

@@ -10,6 +10,21 @@
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles --coverage",
     "dev": "npx nodemon backend.js"
   },
+    "jest": {
+      "collectCoverage": true,
+      "collectCoverageFrom": [
+        "**/*.js",
+        "!**/node_modules/**",
+        "!**/*.test.js",
+        "!**/*sorter.js",
+        "!**/*prettify.js",
+        "!**/*block-navigation.js",
+        "!**/*user.js",
+        "!**/*user-services.js",
+        "!**/*mongoose-connection.js",
+        "!**/*backend.js"
+      ]
+    },
   "author": "",
   "license": "ISC",
   "dependencies": {
