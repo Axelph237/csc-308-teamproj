@@ -25,5 +25,3 @@ dist-ssr
 
 # Secret files
 .env
-.env.production
-.env.staging
