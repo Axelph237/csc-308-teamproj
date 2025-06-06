@@ -50,7 +50,7 @@ VITE_API_BASE_URL= ?
 Create a `.env` file:
 
 ```env
-PORT= ?
+PORT= ??
 ```
 
 ---
