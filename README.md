@@ -83,6 +83,9 @@ Runs the React frontend using Vite dev server.
 ```bash
 npm test -w packages/react-frontend
 ```
+Coverage Report:
+<img width="804" alt="Screenshot 2025-06-06 at 11 59 13 AM" src="https://github.com/user-attachments/assets/dd0f2dc9-dd34-4983-b2fd-7aa7faa3904d" />
+
 
 ### Backend tests (Jest + Mockingoose):
 
