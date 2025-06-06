@@ -56,7 +56,8 @@ export default function createMongooseServices(connection) {
         },
 
         findPagesByDiary: async (diaryId) => {
-            return await Diary.findById(diaryId).entries;
+            const diary = await Diary.findById(diaryId);
+            return diary ? diary.entries : [];
         },
 
         findPageByDiaryAndPageID: async (diaryId, pageId) => {
@@ -71,12 +72,15 @@ export default function createMongooseServices(connection) {
             return page;
         },
 
-        findRandomPage: () => {
-            const diaryInd = Math.floor(Math.random() * Diary.countDocuments());
-            const randomDiary = Diary.findOne().skip(diaryInd);
-            const pageInd = Math.floor(Math.random() * randomDiary.countDocuments());
+        findRandomPage: async () => {
+            const count = await Diary.countDocuments();
+            const diaryInd = Math.floor(Math.random() * count);
+            const randomDiary = await Diary.findOne().skip(diaryInd);
+            if (!randomDiary || !randomDiary.entries.length) return null;
+            const pageInd = Math.floor(Math.random() * randomDiary.entries.length);
             return randomDiary.entries[pageInd];
         },
+
 
         findPassword: async (userID) => {
             const user = await User.findById(userID);
