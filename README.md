@@ -92,6 +92,8 @@ Coverage Report:
 ```bash
 npm test -w packages/express-backend
 ```
+Coverage Report:
+![image](https://github.com/user-attachments/assets/24d7b6a4-4fb5-4450-a0d7-fb25c4a5890e)
 
 ### Fast backend mock test:
 
