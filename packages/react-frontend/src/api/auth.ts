@@ -1,4 +1,4 @@
-import {ApiError, fetchWithParse} from "@src/api/backend";
+import { ApiError, fetchWithParse } from "@src/api/backend";
 
 export async function signup(
   email: string,
@@ -26,8 +26,9 @@ export async function login(
   password: string,
 ): Promise<string> {
   const url = "/auth/login";
-  const init = {
+  const init: RequestInit = {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },

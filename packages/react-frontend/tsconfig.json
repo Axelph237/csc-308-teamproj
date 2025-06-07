@@ -1,21 +1,31 @@
 {
   "compilerOptions": {
     "paths": {
-      "@src/*": ["./src/*"]
+      "@src/*": [
+        "./src/*"
+      ]
     },
     "jsx": "react-jsx",
     // or "react-jsx" if using React 17 or later
     "esModuleInterop": true,
     // Enable esModuleInterop for easier import handling
-    "module": "commonjs",
+    "module": "esnext",
     // or another appropriate module system for your project
-    "target": "es5",
+    "target": "esnext",
+    "moduleResolution": "bundler",
     // or "es6" based on your needs
-    "types": ["jest"]
+    "types": [
+      "jest"
+    ]
   },
   "references": [
     {
       "path": "../types"
     }
+  ],
+  "include": [
+    "src",
+    "vite-env.d.ts"
   ]
 }
+
