@@ -1,35 +1,40 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 mongoose.set("debug", true);
 
-const PageSchema = new mongoose.Schema({
-    title: { type: String, required: true },
-    date: { type: String, required: true },
-    body: { type: String, required: true },
-    likeCounter: {type: Number, default: 0},
-    comments: [{type: String}]
+const CommentSchema = new mongoose.Schema({
+  text: { type: String, required: true },
+  author: { type: mongoose.Schema.Types.ObjectId, ref: "User" }, // user Id
 });
 
+const PageSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  date: { type: String, required: true },
+  body: { type: String, required: true },
+  likeCounter: { type: Number, default: 0 },
+  comments: [CommentSchema],
+});
 
 const DiarySchema = new mongoose.Schema({
-    title: { type: String, required: true },
-    lastEntry: { type: String, required: false },
-    numEntries: { type: Number, required: true, default: 0 },
-    entries: [PageSchema]
+  title: { type: String, required: true },
+  lastEntry: { type: String },
+  numEntries: { type: Number, required: true, default: 0 },
+  entries: [PageSchema],
 });
 
 const UserSchema = new mongoose.Schema({
-    username: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    diariesID: [{ type: mongoose.Schema.Types.ObjectId, ref: "Diary" }],
-    profilePicture: { type: String },
-    securityID: { type: mongoose.Schema.Types.ObjectId, ref: "Security" },
+  username: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  diariesID: [{ type: mongoose.Schema.Types.ObjectId, ref: "Diary" }],
+  profilePicture: { type: String },
+  securityID: { type: mongoose.Schema.Types.ObjectId, ref: "Security" },
 });
 
 const SecuritySchema = new mongoose.Schema({
-    authToken: { type: String, required: true },
-    refreshToken: { type: String, required: true }
+  authToken: { type: String, required: true },
+  refreshToken: { type: String, required: true },
 });
 
 export default function createMongooseServices(connection) {

@@ -7,7 +7,7 @@
   "scripts": {
     "mock": "jest mongoose-services.test.js",
     "start": "node backend.js",
-    "test": "jest backend.test.js mongoose-services.test.js",
+    "test": "cross-env NODE_ENV=test jest --detectOpenHandles --coverage",
     "dev": "npx nodemon backend.js"
   },
     "jest": {
@@ -32,6 +32,10 @@
     "dotenv": "^16.5.0",
     "express": "^4.21.2",
     "mockingoose": "^2.16.2",
+    "bcrypt": "^5.1.1",
+    "cookie": "^1.0.2",
+    "jose": "^6.0.10",
+    "mongoose": "^8.9.5",
     "mongodb-memory-server": "^10.1.4"
   },
   "devDependencies": {

@@ -1,46 +1,41 @@
-import {ApiError} from "@src/api/backend";
+import {ApiError, fetchWithParse} from "@src/api/backend";
 
-export async function signup(email: string, username: string, password: string): Promise<string> {
-    const url = "/api/auth/signup"
-    const init = {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            email,
-            username,
-            password
-        })
-    };
+export async function signup(
+  email: string,
+  username: string,
+  password: string,
+): Promise<string> {
+  const url = "/auth/signup";
+  const init = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      username,
+      password,
+    }),
+  };
 
-    const response =  await fetch(url, init);
-
-    const data = await response.text();
-    if (!response.ok)
-        throw new ApiError(data, url, init);
-
-    return data;
+  return await fetchWithParse(url, init);
 }
 
-export async function login(username: string, password: string): Promise<string> {
-    const url = "/api/auth/login"
-    const init = {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            username,
-            password
-        })
-    };
+export async function login(
+  username: string,
+  password: string,
+): Promise<string> {
+  const url = "/auth/login";
+  const init = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      username,
+      password,
+    }),
+  };
 
-    const response =  await fetch(url, init);
-
-    const data = await response.text();
-    if (!response.ok)
-        throw new ApiError(data, url, init);
-
-    return data;
+  return await fetchWithParse(url, init);
 }

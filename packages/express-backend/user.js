@@ -17,10 +17,10 @@ const UserSchema = new mongoose.Schema(
       },
     },
   },
-  { collection: "users_list" }
+  { collection: "users_list" },
 );
 
 const User = mongoose.model("User", UserSchema);
-const rah = mogoose.model("")
+const rah = mogoose.model("");
 
 export default User;

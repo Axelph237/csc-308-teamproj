@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import * as jose from "jose";
-import {mongooseServices} from "../mongoose-connection.js";
+import { mongooseServices } from "../mongoose-connection.js";
 
 //
 // FUNCTIONS FOR SIGNING UP, LOGGING IN, AND LOGGING OUT
@@ -15,30 +15,30 @@ import {mongooseServices} from "../mongoose-connection.js";
  * @return {Promise<any>} - True when finishing successfully.
  */
 export function signup({ username, email, password }) {
-    return new Promise((resolve, reject) => {
-        if (!username || !email || !password)
-            reject("INVALID_DETAILS");
+  return new Promise((resolve, reject) => {
+    if (!username || !email || !password) reject("INVALID_DETAILS");
 
-        try {
-            const hash = bcrypt.hashSync(password, 10);
+    try {
+      const hash = bcrypt.hashSync(password, 10);
 
-            mongooseServices.addUser({
-                username, email,
-                password: hash,
-            })
-                .then((res) => {
-                    console.log("Created user");
-                    resolve(res)
-                })
-                .catch(err => {
-                    console.log("Failed to create user");
-                    reject(err);
-                });
-        }
-        catch (e) {
-            reject(e);
-        }
-    });
+      mongooseServices
+        .addUser({
+          username,
+          email,
+          password: hash,
+        })
+        .then((res) => {
+          console.log("Created user");
+          resolve(res);
+        })
+        .catch((err) => {
+          console.log("Failed to create user");
+          reject(err);
+        });
+    } catch (e) {
+      reject(e);
+    }
+  });
 }
 
 /**
@@ -52,40 +52,35 @@ export function signup({ username, email, password }) {
  *  }>} - An object containing `accessToken` and `refreshToken` fields.
  */
 export function login(username, password) {
-    // BCrypt uses a callback for its compare() function
-    // Using an explicit Promise allows us to resolve/reject the Promise
-    // inside this callback.
-    return new Promise((resolve, reject) => {
-        if (!username || !password)
-            reject("INVALID_USER");
+  // BCrypt uses a callback for its compare() function
+  // Using an explicit Promise allows us to resolve/reject the Promise
+  // inside this callback.
+  return new Promise((resolve, reject) => {
+    if (!username || !password) reject("INVALID_USER");
 
-        // TODO get user's hashed password from mongo
-        mongooseServices.findUserByUser(username)
-            .then(user => {
-                if (!user)
-                    reject("USER_NOT_FOUND");
+    // TODO get user's hashed password from mongo
+    mongooseServices
+      .findUserByUsername(username)
+      .then((user) => {
+        if (!user) reject("USER_NOT_FOUND");
 
-                const hashedPassword = user.password;
+        const hashedPassword = user.password;
 
-                // Compare given password to hashedPassword
-                bcrypt.compare(password, hashedPassword, async (err, isMatch) => {
-                    // If error is thrown
-                    if (err)
-                        reject(err);
+        // Compare given password to hashedPassword
+        bcrypt.compare(password, hashedPassword, async (err, isMatch) => {
+          // If error is thrown
+          if (err) reject(err);
 
-                    // Check if password matched
-                    if (isMatch) {
-                        const credentials = await createCredentials(user._id, user.email);
+          // Check if password matched
+          if (isMatch) {
+            const credentials = await createCredentials(user._id, user.email);
 
-                        resolve(credentials);
-                    }
-                    else
-                        reject("INVALID_PASSWORD")
-                });
-            })
-            .catch(err => reject(err));
-
-    });
+            resolve(credentials);
+          } else reject("INVALID_PASSWORD");
+        });
+      })
+      .catch((err) => reject(err));
+  });
 }
 
 //
@@ -104,30 +99,28 @@ export function login(username, password) {
  * or an object containing an `errorMessage` string.
  */
 export async function validateCredentials(credentials) {
-    // Credentials are wrong type
-    if (typeof credentials !== "object")
-        return { errorMessage: "BAD_CREDENTIALS_TYPE" }
+  // Credentials are wrong type
+  if (typeof credentials !== "object")
+    return { errorMessage: "BAD_CREDENTIALS_TYPE" };
 
-    // Credentials missing access token
-    if (!credentials.accessToken)
-        return { errorMessage: "ACCESS_TOKEN_MISSING" }
+  // Credentials missing access token
+  if (!credentials.accessToken) return { errorMessage: "ACCESS_TOKEN_MISSING" };
 
-    // Verify payload
-    const payload = await verifyJWT(credentials.accessToken);
-    console.log("JWT verified w/ payload:", payload);
-    if (!payload)
-        return { errorMessage: "ACCESS_TOKEN_INVALID" }
+  // Verify payload
+  const payload = await verifyJWT(credentials.accessToken);
+  console.log("JWT verified w/ payload:", payload);
+  if (!payload) return { errorMessage: "ACCESS_TOKEN_INVALID" };
 
-    // Verify payload expiration date
-    const currDateInSecs = Math.round(Date.now() / 1000);
-    if (currDateInSecs > payload.exp)
-        return { errorMessage: "ACCESS_TOKEN_EXPIRED" }
+  // Verify payload expiration date
+  const currDateInSecs = Math.round(Date.now() / 1000);
+  if (currDateInSecs > payload.exp)
+    return { errorMessage: "ACCESS_TOKEN_EXPIRED" };
 
-    // Return user data
-    return {
-        userId: payload.sub,
-        email: payload.subEmail,
-    }
+  // Return user data
+  return {
+    userId: payload.sub,
+    email: payload.subEmail,
+  };
 }
 
 /**
@@ -140,19 +133,22 @@ export async function validateCredentials(credentials) {
  * }>} - An object containing an `accessToken` and `refreshToken`.
  */
 export async function createCredentials(userId, email) {
-    const accessToken = await generateJWT({
-        sub: userId.toString(),
-        email: email
-    })
+  const accessToken = await generateJWT({
+    sub: userId.toString(),
+    email: email,
+  });
 
-    const refreshToken = await generateJWT({
-        sub: userId
-    }, '7days')
+  const refreshToken = await generateJWT(
+    {
+      sub: userId,
+    },
+    "7days",
+  );
 
-    return {
-        accessToken,
-        refreshToken
-    }
+  return {
+    accessToken,
+    refreshToken,
+  };
 }
 
 /**
@@ -164,32 +160,33 @@ export async function createCredentials(userId, email) {
  * } | false>} - The new credentials. Or, false if the refresh token is expired.
  */
 export async function refreshCredentials(credentials) {
-    // Credentials are wrong type
-    if (typeof credentials !== "object" || !credentials.refreshToken || !credentials.accessToken)
-        throw new Error("Missing refresh token");
+  // Credentials are wrong type
+  if (
+    typeof credentials !== "object" ||
+    !credentials.refreshToken ||
+    !credentials.accessToken
+  )
+    throw new Error("Missing refresh token");
 
-    // Get refresh token
-    const refreshPayload = await verifyJWT(credentials.refreshToken);
-    if (!refreshPayload)
-        throw new Error("Invalid refresh token");
+  // Get refresh token
+  const refreshPayload = await verifyJWT(credentials.refreshToken);
+  if (!refreshPayload) throw new Error("Invalid refresh token");
 
-    // Get access token
-    const accessPayload = await verifyJWT(credentials.accessToken);
-    if (!accessPayload)
-        throw new Error("Invalid access token");
+  // Get access token
+  const accessPayload = await verifyJWT(credentials.accessToken);
+  if (!accessPayload) throw new Error("Invalid access token");
 
-    /// Verify refresh token expiration date
-    const currDateInSecs = Math.round(Date.now() / 1000);
-    if (currDateInSecs > refreshPayload.exp)
-        return false;
+  /// Verify refresh token expiration date
+  const currDateInSecs = Math.round(Date.now() / 1000);
+  if (currDateInSecs > refreshPayload.exp) return false;
 
-    // Grant new access token
-    const newToken = await generateJWT({ ...accessPayload })
+  // Grant new access token
+  const newToken = await generateJWT({ ...accessPayload });
 
-    return {
-        accessToken: newToken,
-        refreshToken: credentials.refreshToken
-    }
+  return {
+    accessToken: newToken,
+    refreshToken: credentials.refreshToken,
+  };
 }
 
 //
@@ -201,17 +198,17 @@ export async function refreshCredentials(credentials) {
  * @param payload - A set of custom claims to add to the JWT.
  * @param exp - Time until token expiration. Defaults to 1 day.
  */
-async function generateJWT(payload, exp  = '1day') {
-    const encoder = new TextEncoder();
-    const secret = encoder.encode(process.env.JWT_SECRET);
+async function generateJWT(payload, exp = "1day") {
+  const encoder = new TextEncoder();
+  const secret = encoder.encode(process.env.JWT_SECRET);
 
-    return await new jose.SignJWT(payload)
-        .setProtectedHeader({ alg: "HS256" })
-        .setIssuedAt(Date.now())
-        .setIssuer(process.env.JWT_ISSUER)
-        .setAudience(process.env.JWT_AUDIENCE)
-        .setExpirationTime(exp)
-        .sign(secret);
+  return await new jose.SignJWT(payload)
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt(Date.now())
+    .setIssuer(process.env.JWT_ISSUER)
+    .setAudience(process.env.JWT_AUDIENCE)
+    .setExpirationTime(exp)
+    .sign(secret);
 }
 
 /**
@@ -220,20 +217,17 @@ async function generateJWT(payload, exp  = '1day') {
  * @returns {Promise<object>} - the JWT payload, or false if the JWT fails verification.
  */
 async function verifyJWT(jwt) {
-    try {
-        const encoder = new TextEncoder();
-        const secret = encoder.encode(process.env.JWT_SECRET);
+  try {
+    const encoder = new TextEncoder();
+    const secret = encoder.encode(process.env.JWT_SECRET);
 
-        const {
-            payload
-        } = await jose.jwtVerify(jwt, secret, {
-            issuer: process.env.JWT_ISSUER,
-            audience: process.env.JWT_AUDIENCE,
-        })
+    const { payload } = await jose.jwtVerify(jwt, secret, {
+      issuer: process.env.JWT_ISSUER,
+      audience: process.env.JWT_AUDIENCE,
+    });
 
-        return payload;
-    }
-    catch (e) {
-        return false;
-    }
+    return payload;
+  } catch (e) {
+    return false;
+  }
 }
