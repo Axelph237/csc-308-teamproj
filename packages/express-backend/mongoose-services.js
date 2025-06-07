@@ -48,6 +48,7 @@ export default function createMongooseServices(connection) {
         models: {Page, Diary, User, Security},
 
         findUserByUsername: async (username) => {
+            console.log(username);
             return User.findOne({username});
         },
 
@@ -80,12 +81,29 @@ export default function createMongooseServices(connection) {
         },
 
         findRandomPage: async () => {
-            const count = await Diary.countDocuments();
-            const diaryInd = Math.floor(Math.random() * count);
-            const randomDiary = await Diary.findOne().skip(diaryInd);
-            if (!randomDiary || !randomDiary.entries.length) return null;
-            const pageInd = Math.floor(Math.random() * randomDiary.entries.length);
-            return randomDiary.entries[pageInd];
+            // Aggregate pipeline:
+            // - Match all diaries w/ more than 1 entry
+            // - Select one of these at random
+            // Then get first (and only) element in aggregate array
+            const randomDiary = (
+                await Diary.aggregate([
+                    {
+                        $match: {numEntries: {$gt: 0}},
+                    },
+                    {
+                        $sample: {size: 1},
+                    },
+                ])
+            )[0];
+
+            const pageIndex = Math.round(
+                Math.random() * (randomDiary.numEntries - 1),
+            );
+
+            return {
+                parentDiaryId: randomDiary._id.toString(),
+                page: randomDiary.entries[pageIndex],
+            };
         },
 
 
