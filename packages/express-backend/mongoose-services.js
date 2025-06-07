@@ -38,235 +38,173 @@ const SecuritySchema = new mongoose.Schema({
 });
 
 export default function createMongooseServices(connection) {
-  const Page = connection.model("Page", PageSchema);
-  const Diary = connection.model("Diary", DiarySchema);
-  const User = connection.model("User", UserSchema);
-  const Security = connection.model("Security", SecuritySchema);
-  const Comment = connection.model("Comment", CommentSchema);
+    const Page = connection.model("Page", PageSchema);
+    const Diary = connection.model("Diary", DiarySchema);
+    const User = connection.model("User", UserSchema);
+    const Security = connection.model("Security", SecuritySchema);
 
-  return {
-    models: {
-      Page,
-      Diary,
-      User,
-      Security,
-      Comment,
-    },
+    return {
 
-    findUserByUsername: async (username) => {
-      return User.findOne({ username });
-    },
+        models: {Page, Diary, User, Security},
 
-    findUserByID: (id) => User.findById(id),
+        findUserByUser: (username) => User.findOne({ username }),
 
-    findDiaryByID: (id) => Diary.findById(id),
+        findUserByID: (id) => User.findById(id),
 
-    findDiariesByUser: async (userId) => {
-      const user = await User.findById(userId);
-      await user.populate("diariesID");
-      await user.save();
-      return user.diariesID;
-    },
+        findDiaryByID: (id) => Diary.findById(id),
 
-    findPagesByDiary: (diaryId) => {
-      return Diary.findById(diaryId).then((result) => result.entries);
-    },
+        findDiariesByUser: async (userId) => {
+            const user = await User.findById(userId);
+            await user.populate("diariesID");
+            await user.save();
+            return user.diariesID;
+        },
 
-    findPageByDiaryAndPageID: (diaryId, pageId) => {
-      return Diary.findById(diaryId).then((result) =>
-        result.entries.find((entry) => entry._id.toString() === pageId),
-      );
-    },
+        findPagesByDiary: async (diaryId) => {
+            const diary = await Diary.findById(diaryId);
+            return diary ? diary.entries : [];
+        },
 
-    findRandomPage: async () => {
-      // Aggregate pipeline:
-      // - Match all diaries w/ more than 1 entry
-      // - Select one of these at random
-      // Then get first (and only) element in aggregate array
-      const randomDiary = (
-        await Diary.aggregate([
-          {
-            $match: { numEntries: { $gt: 0 } },
-          },
-          {
-            $sample: { size: 1 },
-          },
-        ])
-      )[0];
+        findPageByDiaryAndPageID: async (diaryId, pageId) => {
+            const diary = await Diary.findById(diaryId);
+            if (!diary)
+                return null;
 
-      const pageIndex = Math.round(
-        Math.random() * (randomDiary.numEntries - 1),
-      );
+            const page = diary.entries.find(entry => entry._id.toString() === pageId);
+            if (!page)
+                return null;
 
-      return {
-        parentDiaryId: randomDiary._id.toString(),
-        page: randomDiary.entries[pageIndex],
-      };
-    },
+            return page;
+        },
 
-    findPassword: async (userID) => {
-      const user = await User.findById(userID);
-      return user.password;
-    },
+        findRandomPage: async () => {
+            const count = await Diary.countDocuments();
+            const diaryInd = Math.floor(Math.random() * count);
+            const randomDiary = await Diary.findOne().skip(diaryInd);
+            if (!randomDiary || !randomDiary.entries.length) return null;
+            const pageInd = Math.floor(Math.random() * randomDiary.entries.length);
+            return randomDiary.entries[pageInd];
+        },
 
-    // Create Functions
 
-    addUser: async (user) => {
-      const newUser = new User(user);
-      await newUser.save();
-      return newUser;
-    },
+        findPassword: async (userID) => {
+            const user = await User.findById(userID);
+            return user.password;
+        },
 
-    addDiary: async (diary, userId) => {
-      const newDiary = new Diary(diary);
-      const diaryId = newDiary._id;
-      await newDiary.save();
-      const user = await User.findById(userId);
-      user.diariesID.push(diaryId);
-      await user.save();
-      return newDiary;
-    },
+        // Create Functions
+        addUser: async (user) => {
+            const newUser = new User(user);
+            await newUser.save();
+            return newUser;
+        },
 
-    addPage: async (page, diaryId) => {
-      const diary = await Diary.findById(diaryId);
-      const newPage = new Page(page);
-      diary.entries.push(newPage);
-      diary.numEntries++;
-      await diary.save();
-      return newPage;
-    },
+        addDiary: async (diary, userId) => {
+            const newDiary = new Diary(diary);
+            const diaryId = newDiary._id;
+            await newDiary.save();
+            const user = await User.findById(userId);
+            user.diariesID.push(diaryId);
+            await user.save();
+            return newDiary;
+        },
 
-    addSecurity: async (security) => {
-      const newSecurity = new Security(security);
-      await newSecurity.save();
-      return newSecurity;
-    },
+        addPage: async (page, diaryId) => {
+            const diary = await Diary.findById(diaryId);
+            const newPage = new Page(page);
+            diary.entries.push(newPage);
+            diary.numEntries++;
+            await diary.save();
+            return newPage;
+        },
 
-    // Delete Functions
-    removeUser: (userId) => User.findByIdAndDelete(userId),
+        // Delete Functions
+        removeUser: (userId) => User.findByIdAndDelete(userId),
 
-    removeDiary: async (diaryId, userId) => {
-      const user = await User.findById(userId);
-      user.diariesID.pull(diaryId);
-      await user.save();
-      const diary = await Diary.findById(diaryId);
-      await Diary.findByIdAndDelete(diaryId);
-      return diary;
-    },
+        removeDiary: async (diaryId, userId) => {
+            const user = await User.findById(userId);
+            user.diariesID.pull(diaryId);
+            await user.save();
+            const diary = await Diary.findById(diaryId);
+            await Diary.findByIdAndDelete(diaryId);
+            return diary;
+        },
 
-    removePage: async (pageId, diaryId) => {
-      const diary = await Diary.findById(diaryId);
-      const page = diary.entries.id(pageId);
-      page.deleteOne();
-      diary.numEntries--;
-      await diary.save();
-      return page;
-    },
+        removePage: async (pageId, diaryId) => {
+            const diary = await Diary.findById(diaryId);
+            const page = diary.entries.id(pageId);
+            page.deleteOne();
+            diary.numEntries--;
+            await diary.save();
+            return page;
+        },
 
-    removeSecurity: async (securityId) => {
-      Security.findByIdAndDelete(securityId);
-    },
+        // Update Functions
+        editUser: async (user, userId) => {
+            const allowedFields = ["username", "email", "profilePicture"];
+            const filteredUser = Object.fromEntries(
+                Object.entries(user).filter(([key]) => allowedFields.includes(key))
+            );
+            return await User.findByIdAndUpdate(userId, filteredUser, {new: true});
+        },
 
-    // Update Functions
-    editUser: async (user, userId) => {
-      const allowedFields = ["username", "email", "profilePicture"];
-      const filteredUser = Object.fromEntries(
-        Object.entries(user).filter(([key]) => allowedFields.includes(key)),
-      );
-      return await User.findByIdAndUpdate(userId, filteredUser, { new: true });
-    },
+        editPassword: (userId, password) => {
+            return User.findByIdAndUpdate(userId, {password}, {new: true});
+        },
 
-    editPassword: async (userId, password) => {
-      const hash = await bcrypt.hash(password, 10);
-      return User.findByIdAndUpdate(userId, { password: hash }, { new: true });
-    },
+        editPage: async (diaryId, pageId, pageData) => {
+            const diary = await Diary.findById(diaryId);
+            const page = diary.entries.id(pageId);
+            Object.assign(page, pageData);
+            await diary.save();
+            return page;
+        },
+        // add one like to a pages like counter, needs diaryId and PageId
+        addLike: async (diaryId, pageId) => {
+            const page = Diary.findById(diaryId)
+                .then((result) =>
+                    result.entries.find(entry => entry._id.toString() === pageId)
+                );
+            page.likeCounter++;
+            return page;
+        },
 
-    editPage: async (diaryId, pageId, pageData) => {
-      const diary = await Diary.findById(diaryId);
-      const page = diary.entries.id(pageId);
-      Object.assign(page, pageData);
-      await diary.save();
-      return page;
-    },
+        // remove one like from a pages like counter, needs diaryId and PageId
+        removeLike: async (diaryId, pageId) => {
+            const page = Diary.findById(diaryId)
+                .then((result) =>
+                    result.entries.find(entry => entry._id.toString() === pageId)
+                );
+            page.likeCounter--;
+            return page;
+        },
 
-    editDiary: async (diaryId, diary) => {
-      const oldDiary = await Diary.findById(diaryId);
-      Diary.assign(oldDiary, diary);
-      return await oldDiary.save();
-    },
+        //
+        addComment: async (diaryId, pageId, comment) => {
+            const diary = await Diary.findById(diaryId);
+            console.log("entries:", diary.entries);
+            console.log("pageId:", pageId);
+            const page = diary.entries.find(entry => entry._id.toString() === pageId);
+            if (!page) throw new Error("Page not found");
+            page.comments.push(comment);
+            await diary.save(); // Save parent
+            return page;
+        },
+        // upsert functions for security
+        upsertAuthToken: async (userId, authToken) => {
+            const user = await User.findById(userId);
+            const security = await Security.findById(user.securityID);
+            security.authToken = authToken;
+            await security.save();
+            return security;
+        },
 
-    editDiaryTitle: async (diaryId, title) => {
-      const diary = await Diary.findById(diaryId);
-      diary.title = title;
-      return await diary.save();
-    },
-
-    // add one like to a pages like counter, needs diaryId and PageId
-    addLike: async (diaryId, pageId) => {
-      const diary = await Diary.findById(diaryId);
-      const page = diary.entries.find(
-        (entry) => entry._id.toString() === pageId,
-      );
-      page.likeCounter++; // I love that you can add infinite likes as a single user - Aiden
-      await page.save();
-      await diary.save();
-      return page;
-    },
-
-    // remove one like from a pages like counter, needs diaryId and PageId
-    removeLike: async (diaryId, pageId) => {
-      const diary = await Diary.findById(diaryId);
-      const page = diary.entries.find(
-        (entry) => entry._id.toString() === pageId,
-      );
-      page.likeCounter--;
-      await page.save();
-      await diary.save();
-      return page;
-    },
-
-    // add a comment to a page, needs diaryId and pageId
-    addComment: async (diaryId, pageId, comment) => {
-      const newComment = await Comment.create(comment);
-      const diary = await Diary.findById(diaryId);
-
-      if (!diary) throw new Error("Failed to find diary.");
-
-      const page = diary.entries.find(
-        (entry) => entry._id.toString() === pageId,
-      );
-
-      if (!page) throw new Error("Failed to find page in diary.");
-
-      if (page?.comments) page.comments.push(newComment);
-      else page.comments = [newComment];
-
-      await page.save();
-      await diary.save();
-      return page;
-    },
-
-    // remove a comment from a page, needs diaryId and pageId
-    removeComment: async (commentId) => {
-      Comment.findByIdAndDelete(commentId);
-    },
-
-    // upsert functions for security
-    upsertAuthToken: async (userId, authToken) => {
-      const user = await User.findById(userId);
-      const security = await Security.findById(user.securityID);
-      security.authToken = authToken;
-      await security.save();
-      return security;
-    },
-
-    upsertRefreshToken: async (userId, refreshToken) => {
-      const user = await User.findById(userId);
-      const security = await Security.findById(user.securityID);
-      security.refreshToken = refreshToken;
-      await security.save();
-      return security;
-    },
-  };
-
+        upsertRefreshToken: async (userId, refreshToken) => {
+            const user = await User.findById(userId);
+            const security = await Security.findById(user.securityID);
+            security.refreshToken = refreshToken;
+            await security.save();
+            return security;
+        }
+    };
 }
