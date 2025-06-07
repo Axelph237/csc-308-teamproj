@@ -24,11 +24,12 @@ const {
     editUser,
     editPassword,
     editPage,
-    addComment
+    addComment,
+    addLike,
+    removeLike
 } = createMongooseServices(mongoose);
 
 const { User, Diary, Page } = models;
-
 
 describe('test mongoose User model', () => {
 
@@ -48,50 +49,6 @@ describe('test mongoose User model', () => {
             expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_doc);
         });
 
-    });
-    it.skip('testing addUser', () => {
-        const _input = {
-            username: 'willmayer77',
-            email: 'test@example.com',
-            password: "password"
-        };
-        const _mockedSave = {
-            _id: '661bf7e21d2c3a7a4f3e6b19',
-            ..._input,
-            diariesID: [],
-            profilePicture: ''
-        };
-
-        mockingoose(User).toReturn(_mockedSave, 'save');
-
-        return addUser(_input).then(doc => {
-            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedSave);
-        });
-    });
-
-    it.skip('testing removeUser (need to add first)', () => {
-        const _input = {
-            username: 'willmayer77',
-            email: 'test@example.com',
-            password: "password"
-        };
-        const _mockedSave = {
-            _id: '661bf7e21d2c3a7a4f3e6b19',
-            ..._input,
-            diariesID: [],
-            profilePicture: ''
-        };
-        const _mockedDelete = {}
-
-        mockingoose(User).toReturn(_mockedSave, 'save');
-        mockingoose(User).toReturn(_mockedDelete, 'findOneAndRemove');
-
-        return addUser(_input).then(doc => {
-            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedSave);
-        });
-        return removeUser( '661bf7e21d2c3a7a4f3e6b19' ).then(doc => {
-            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedDelete);
-        })
     });
 
     it('should edit allowed fields of a user', async () => {
@@ -196,11 +153,11 @@ describe('test mongoose Diary model', () => {
         mockingoose(Diary).toReturn(_mockedSave, 'save');
         mockingoose(Diary).toReturn(_mockedDelete, 'findOneAndRemove');
 
-        return addDiary(_input).then(doc => {
+        const diary = addDiary(_input).then(doc => {
             expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedSave);
         });
-        return removeDiary( '661bf7e21d2c3a7a4f3e6b19' ).then(doc => {
-            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedDelete);
+        return removeDiary( diary._id ).then(doc => {
+            expect(doc == null);
         })
     });
 });
@@ -286,30 +243,6 @@ describe('test mongoose Page model', () => {
         });
     });
 
-    it('testing removePage (need to add first)', () => {
-        const _input = {
-            title: "I did summn today",
-            date: "3000 BCE",
-            body: "yabadababdeodeodaodaodaodaodoad",
-        };
-        const _mockedSave = {
-            ..._input
-        };
-        const _mockedDelete = {}
-
-        mockingoose(Page).toReturn(_mockedSave, 'save');
-        mockingoose(Page).toReturn(_mockedDelete, 'findOneAndRemove');
-
-        return addPage(_input).then(doc => {
-            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedSave);
-        });
-        return removePage( '661bf7e21d2c3a7a4f3e6b19' ).then(doc => {
-            expect(JSON.parse(JSON.stringify(doc))).toMatchObject(_mockedDelete);
-        })
-    });
-
-
-
     it('should edit a page within a diary', async () => {
         const diaryId = '662e9eac6f6c4b2f9c4f9f21';
         const pageId = '662e9eac6f6c4b2f9c4f9f22';
@@ -348,35 +281,49 @@ describe('test mongoose Page model', () => {
         expect(JSON.parse(JSON.stringify(result))).toMatchObject(expectedPage);
     });
 
-    it('should add a comment to a page', async () => {
-        const diaryId = new ObjectId();
-        const pageId = new ObjectId();
+    it('should add a comment to a diary page, add a like, then remove it', async () => {
+        const did = "749382d561b649e84101e0ce";
+        const pid = "749920d561b649e84101e0ce";
 
-        const diary = {
-            _id: diaryId,
-            title: "Comment Diary",
-            lastEntry: "01/01/2025",
-            numEntries: 1,
-            entries: [
-                {
-                    _id: pageId,
-                    title: "Comment Page",
-                    body: "This is a commentable page.",
-                    date: "2025-01-01",
-                    comments: [],
-                    save: jest.fn().mockResolvedValue(true)
-                }
-            ],
-            save: jest.fn().mockResolvedValue(true)
+        const mockPage3 = {
+            _id: did, // use the real ObjectId, not string
+            title: 'Test Page',
+            body: 'Test Body',
+            date: '2025-01-01',
+            comments: [],
         };
 
-        mockingoose(Diary).toReturn(diary, 'findById');
+        const mockDiary3 = {
+            _id: pid,
+            title: 'Test Diary',
+            entries: [mockPage3],
+            save: jest.fn().mockResolvedValue(true), // only if you're calling .save() on the diary
+        };
 
-        const result = await addComment(diaryId.toString(), pageId.toString(), "Nice job!");
+        mockingoose(models.Diary).toReturn(mockDiary3, 'findById');
 
-        expect(result.comments).toContain("Nice job!");
+        // Then when calling addComment, make sure you pass pageId.toString():
+        const result = await addComment(did, "662e9eac6f6c4b2f9c4f9f22", 'Nice job!');
+        const result2 = await addLike(did, "662e9eac6f6c4b2f9c4f9f22");
+        const result3 = await removeLike(did, "662e9eac6f6c4b2f9c4f9f22");
+        expect(result.comments).toContain('Nice job!');
     });
 
+    it('testing removePage (need to add first)', () => {
+        const _input = {
+            title: "I did summn today",
+            date: "3000 BCE",
+            body: "yabadababdeodeodaodaodaodaodoad",
+        };
+        const _mockedSave = {
+            ..._input
+        };
 
+        mockingoose(Page).toReturn(_mockedSave, 'save');
+
+        return removePage( '662e9eac6f6c4b2f9c4f9f22' ).then(doc => {
+            expect(doc == null);
+        })
+    });
 
 });

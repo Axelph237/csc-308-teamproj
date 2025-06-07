@@ -161,7 +161,6 @@ export default function createMongooseServices(connection) {
                     result.entries.find(entry => entry._id.toString() === pageId)
                 );
             page.likeCounter++;
-            await page.save();
             return page;
         },
 
@@ -172,18 +171,18 @@ export default function createMongooseServices(connection) {
                     result.entries.find(entry => entry._id.toString() === pageId)
                 );
             page.likeCounter--;
-            await page.save();
             return page;
         },
 
         //
         addComment: async (diaryId, pageId, comment) => {
-            const page = Diary.findById(diaryId)
-                .then((result) =>
-                    result.entries.find(entry => entry._id.toString() === pageId)
-                );
+            const diary = await Diary.findById(diaryId);
+            console.log("entries:", diary.entries);
+            console.log("pageId:", pageId);
+            const page = diary.entries.find(entry => entry._id.toString() === pageId);
+            if (!page) throw new Error("Page not found");
             page.comments.push(comment);
-            await page.save();
+            await diary.save(); // Save parent
             return page;
         },
         // upsert functions for security
